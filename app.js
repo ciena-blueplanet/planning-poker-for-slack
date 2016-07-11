@@ -6,7 +6,7 @@ var app = express();
 var pokerbot = require('./pokerbot');
 
 
-var port = process.env.PORT ? process.env.PORT : 3000;
+var port = process.argv[2] ? process.argv[2] : 3000;
 
 app.use(bodyParser.urlencoded({ extended: true }));
 
