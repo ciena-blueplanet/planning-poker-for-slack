@@ -12,4 +12,4 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 http.createServer(app).listen(port);
 
-app.get('/', pokerbot.root);
+app.post('/', pokerbot.root);
