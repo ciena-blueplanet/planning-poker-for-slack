@@ -1,17 +1,25 @@
+var app = require('./app');
 var pokerbot = {};
 
 pokerbot.root = function (req, res, next) {
 
-  console.log(req.body);
+  var jiraId = req.body.text.split(" ")[1] ? req.body.text.split(" ")[1] : undefined;
+  var jiraId = isNaN(req.body.text.split(" ")[2]) ? -1 : number(req.body.text.split(" ")[2]);
 
-  var  botPayload = {
+  if(jiraId===undefined || jiraId===-1){
+    var responseForBadRequestFormat = {
+            text: "Please enter the command in correct format e.g. /planning-poker start JIRA-1001 5"
+    }
+    return res.status(200).json(responseForBadRequestFormat);
+  }
+
+
+  var  response = {
       response_type: "in_channel",
-      text: "Please give your poker vote for JIRA-1111 ",
+      text: "Please give your poker vote for "+jiraId,
       attachments: [
           {
               text: "Please give your vote",
-              fallback: "You are unable to choose a game",
-              callback_id: "wopr_game",
               color: "#3AA3E3",
               attachment_type: "default",
               actions: [
@@ -23,6 +31,18 @@ pokerbot.root = function (req, res, next) {
                       confirm: {
                         title: "Are you sure?",
                         text: "Are you sure you want to vote 1 ?",
+                        ok_text: "Yes",
+                        dismiss_text: "No"
+                     }
+                  },
+                  {
+                      name: "two",
+                      text: "2",
+                      type: "button",
+                      value: "2",
+                      confirm: {
+                        title: "Are you sure?",
+                        text: "Are you sure you want to vote 2 ?",
                         ok_text: "Yes",
                         dismiss_text: "No"
                      }
@@ -52,36 +72,49 @@ pokerbot.root = function (req, res, next) {
                      }
                   },
                   {
-                      name: "seven",
-                      text: "7",
+                      name: "eight",
+                      text: "8",
                       type: "button",
-                      value: "7",
+                      value: "8",
                       confirm: {
                         title: "Are you sure?",
-                        text: "Are you sure you want to vote 7 ?",
+                        text: "Are you sure you want to vote 8 ?",
                         ok_text: "Yes",
                         dismiss_text: "No"
                      }
                   },
                   {
-                      name: "eleven",
-                      text: "11",
+                      name: "thirteen",
+                      text: "13",
                       type: "button",
                       value: "11",
                       confirm: {
                         title: "Are you sure?",
-                        text: "Are you sure you want to vote 11 ?",
+                        text: "Are you sure you want to vote 13 ?",
+                        ok_text: "Yes",
+                        dismiss_text: "No"
+                     }
+                  },
+                  {
+                      name: "tweenty0ne",
+                      text: "21",
+                      type: "button",
+                      value: "21",
+                      confirm: {
+                        title: "Are you sure?",
+                        text: "Are you sure you want to vote 21 ?",
                         ok_text: "Yes",
                         dismiss_text: "No"
                      }
                   }
+
 
               ]
           }
       ]
   }
 
-  return res.status(200).json(botPayload);
+  return res.status(200).json(response);
 }
 
  module.exports=pokerbot;
