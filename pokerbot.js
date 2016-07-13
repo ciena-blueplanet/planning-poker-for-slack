@@ -2,6 +2,8 @@ var pokerbot = {};
 
 pokerbot.root = function (req, res, next) {
 
+  console.log(req.body);
+
   var  botPayload = {
       response_type: "in_channel",
       text: "Please give your poker vote for JIRA-1111 ",
