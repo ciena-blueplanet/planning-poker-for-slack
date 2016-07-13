@@ -15,3 +15,4 @@ app.use(bodyParser.urlencoded({ extended: true })); // for parsing application/x
 http.createServer(app).listen(port);
 
 app.post('/', pokerbot.root);
+app.post('/vote/:id', pokerbot.vote);
