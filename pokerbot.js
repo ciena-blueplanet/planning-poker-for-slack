@@ -41,6 +41,19 @@ pokerbot.root = function (req, res, next) {
                       type: "button",
                       value: "7"
                   },
+                  {
+                      name: "eleven",
+                      text: "11",
+                      type: "button",
+                      value: "11",
+                      confirm: {
+                        title: "Are you sure?",
+                        text: "Wouldn't you prefer to vote ?",
+                        ok_text: "Yes",
+                        dismiss_text: "No"
+                    }
+
+                  }
 
               ]
           }
