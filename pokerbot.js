@@ -11,17 +11,35 @@ pokerbot.root = function (req, res, next) {
       text: "Would you like to play a game?",
       attachments: [
           {
-              text: "Choose a game to play",
+              text: "Please give your vote",
               fallback: "You are unable to choose a game",
               callback_id: "wopr_game",
               color: "#3AA3E3",
               attachment_type: "default",
               actions: [
                   {
-                      name: "chess",
-                      text: "Chess",
+                      name: "one",
+                      text: "1",
                       type: "button",
-                      value: "chess"
+                      value: "1"
+                  },
+                  {
+                      name: "three",
+                      text: "3",
+                      type: "button",
+                      value: "3"
+                  },
+                  {
+                      name: "five",
+                      text: "5",
+                      type: "button",
+                      value: "5"
+                  },
+                  {
+                      name: "seven",
+                      text: "7",
+                      type: "button",
+                      value: "7"
                   },
 
               ]
