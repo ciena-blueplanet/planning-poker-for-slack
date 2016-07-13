@@ -1,14 +1,9 @@
 var pokerbot = {};
 
 pokerbot.root = function (req, res, next) {
-  console.log(req.connection.remoteAddress);
-  /*var botPayload = {
-    text : 'Hello, World!'
-  };*/
-  console.log(res.statusCode);
 
   var  botPayload = {
-      text: "Would you like to play a game?",
+      text: "Please give your poker vote for JIRA-1111 ",
       attachments: [
           {
               text: "Please give your vote",
@@ -21,25 +16,49 @@ pokerbot.root = function (req, res, next) {
                       name: "one",
                       text: "1",
                       type: "button",
-                      value: "1"
+                      value: "1",
+                      confirm: {
+                        title: "Are you sure?",
+                        text: "Are you sure you want to vote 1 ?",
+                        ok_text: "Yes",
+                        dismiss_text: "No"
+                     }
                   },
                   {
                       name: "three",
                       text: "3",
                       type: "button",
-                      value: "3"
+                      value: "3",
+                      confirm: {
+                        title: "Are you sure?",
+                        text: "Are you sure you want to vote 3 ?",
+                        ok_text: "Yes",
+                        dismiss_text: "No"
+                     }
                   },
                   {
                       name: "five",
                       text: "5",
                       type: "button",
-                      value: "5"
+                      value: "5",
+                      confirm: {
+                        title: "Are you sure?",
+                        text: "Are you sure you want to vote 5 ?",
+                        ok_text: "Yes",
+                        dismiss_text: "No"
+                     }
                   },
                   {
                       name: "seven",
                       text: "7",
                       type: "button",
-                      value: "7"
+                      value: "7",
+                      confirm: {
+                        title: "Are you sure?",
+                        text: "Are you sure you want to vote 7 ?",
+                        ok_text: "Yes",
+                        dismiss_text: "No"
+                     }
                   },
                   {
                       name: "eleven",
@@ -48,11 +67,10 @@ pokerbot.root = function (req, res, next) {
                       value: "11",
                       confirm: {
                         title: "Are you sure?",
-                        text: "Wouldn't you prefer to vote ?",
+                        text: "Are you sure you want to vote 11 ?",
                         ok_text: "Yes",
                         dismiss_text: "No"
-                    }
-
+                     }
                   }
 
               ]
