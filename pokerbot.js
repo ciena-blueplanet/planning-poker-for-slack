@@ -6,6 +6,7 @@ pokerbot.root = function (req, res, next) {
       text: "Please give your poker vote for JIRA-1111 ",
       attachments: [
           {
+              response_type: "in_channel",
               text: "Please give your vote",
               fallback: "You are unable to choose a game",
               callback_id: "wopr_game",
