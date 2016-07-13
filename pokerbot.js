@@ -4,7 +4,7 @@ var pokerbot = {};
 pokerbot.root = function (req, res, next) {
 
   var jiraId = req.body.text.split(" ")[1] ? req.body.text.split(" ")[1] : undefined;
-  var jiraId = isNaN(req.body.text.split(" ")[2]) ? -1 : number(req.body.text.split(" ")[2]);
+  var jiraId = isNaN(req.body.text.split(" ")[2]) ? -1 : Number(req.body.text.split(" ")[2]);
 
   if(jiraId===undefined || jiraId===-1){
     var responseForBadRequestFormat = {
