@@ -7,7 +7,7 @@ pokerbot.root = function (req, res, next) {
   };
   console.log(res.statusCode);
 
-  var  botPayload =
+  var  botPayload = {
       "text": "Would you like to play a game?",
       "attachments": [
           {
