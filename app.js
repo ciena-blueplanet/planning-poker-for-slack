@@ -16,3 +16,6 @@ http.createServer(app).listen(port);
 
 app.post('/', pokerbot.root);
 app.post('/vote/:id', pokerbot.vote);
+app.get('/index.html', function(req, res) {
+    res.sendFile(path.join(__dirname + '/public/index.html'));
+});
