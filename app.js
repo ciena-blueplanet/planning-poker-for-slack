@@ -15,8 +15,8 @@ app.use(bodyParser.urlencoded({ extended: true })); // for parsing application/x
 
 http.createServer(app).listen(port);
 
-app.post('/', pokerbot.root);
+app.post('/start', pokerbot.root);
 app.post('/vote/:id', pokerbot.vote);
-app.get('/index.html', function(req, res) {
+app.get('/', function(req, res) {
     res.sendFile(path.join(__dirname + '/public/index.html'));
 });
