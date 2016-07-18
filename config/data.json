@@ -90,7 +90,7 @@
 					"dismiss_text": "No"
 				}
 			}, {
-				"name": "tweenty0ne",
+				"name": "thirtyfour",
 				"text": "34",
 				"type": "button",
 				"value": 34,
@@ -100,7 +100,20 @@
 					"ok_text": "Yes",
 					"dismiss_text": "No"
 				}
-			}]
+			},
+			{
+				"name": "fiftyfive",
+				"text": "55",
+				"type": "button",
+				"value": 55,
+				"confirm": {
+					"title": "Are you sure?",
+					"text": "Are you sure you want to vote 34 ?",
+					"ok_text": "Yes",
+					"dismiss_text": "No"
+				}
+			}
+		 ]
 		}
 	]
 }

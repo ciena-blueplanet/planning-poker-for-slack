@@ -1,7 +1,7 @@
 var app = require('./app');
 var fs = require('fs');
 var path = require('path');
-//var attachments = require("./config/data.json");
+var UserRating = require('./pojo/userrating');
 
 
 var pokerbot = {};
@@ -31,7 +31,11 @@ pokerbot.root = function (req, res, next) {
 pokerbot.vote = function (req, res, next) {
   var requestBody = JSON.parse(req.body.payload);
   console.log(requestBody);
-  return res.status(200).json({'Response':'You have voted :'+requestBody.actions[0].value});
+  var vote = requestBody.actions[0].value;
+  var user = requestBody.user.name;
+  var userRating = new UserRating(user.vote);
+  console.log(userRating);
+  return res.status(200).json({'Response':'You have voted :'+vote});
 }
 
  module.exports=pokerbot;
