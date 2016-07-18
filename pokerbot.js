@@ -28,7 +28,7 @@ pokerbot.root = function (req, res, next) {
    }
    return res.status(200).json(responseForBadRequestFormat);
  }
- playersModel.jiraId = numberOfParticipants;
+ playersModel[jiraId] = numberOfParticipants;
  console.log(playersModel);
  var attachments = JSON.parse(fs.readFileSync(path.join(__dirname + '/config/data.json'), 'utf8'));
  console.log(attachments);
@@ -50,7 +50,7 @@ pokerbot.vote = function (req, res, next) {
   console.log('JIRAID : '+jiraId);
   console.log(userRating);
   if(!ratingModel.hasOwnProperty(jiraId)){
-    ratingModel.jiraId = new Array();
+    ratingModel[jiraId] = new Array();
   }
   ratingModel.jiraId.push(userRating);
   return res.status(200).json(ratingModel);
