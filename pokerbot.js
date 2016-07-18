@@ -1,6 +1,7 @@
 var app = require('./app');
 var fs = require('fs');
 var path = require('path');
+var attachments = require("./config/data.json");
 
 
 var pokerbot = {};
@@ -17,7 +18,7 @@ pokerbot.root = function (req, res, next) {
   return res.status(200).json(responseForBadRequestFormat);
  }
 
- var attachments = fs.readFileSync(path.join(__dirname + '/config/data.json'));
+ //var attachments = fs.readFileSync(path.join(__dirname + '/config/data.json'));
  console.log(attachments);
  var  response = {
   response_type: "in_channel",
