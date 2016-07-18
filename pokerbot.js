@@ -33,7 +33,7 @@ pokerbot.vote = function (req, res, next) {
   console.log(requestBody);
   var vote = requestBody.actions[0].value;
   var user = requestBody.user.name;
-  var userRating = new UserRating(user.vote);
+  var userRating = new UserRating(user,vote);
   console.log(userRating);
   return res.status(200).json({'Response':'You have voted :'+vote});
 }
