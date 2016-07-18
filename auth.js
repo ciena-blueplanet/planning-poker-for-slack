@@ -13,7 +13,7 @@ auth.getToken = function (req, res, next) {
   path: '/api/oauth.access?client_id=55672736423.58936834261&redirect_uri=https://orchestraion-india.slack.com/messages/&client_secret=831e9b5e514c9587d7f3820aac9b0299&code='+code,
   method: 'GET'
  };
- console.log('Request object from Client : '+extServerOptions);
+ console.log(extServerOptions);
  var req = https.request(extServerOptions, (res) => {
   res.on('data', (d) => {
    process.stdout.write(d);
