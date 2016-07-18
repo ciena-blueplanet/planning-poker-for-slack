@@ -2,7 +2,7 @@ var app = require('./app');
 var https = require('https');
 var auth = {};
 
-pokerbot.getToken = function (req, res, next) {
+auth.getToken = function (req, res, next) {
 
  /*var code =  req.params.code;
 
