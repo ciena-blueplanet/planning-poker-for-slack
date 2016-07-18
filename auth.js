@@ -5,7 +5,7 @@ var auth = {};
 auth.getToken = function (req, res, next) {
 
  console.log(req.params);
- var code =  req.params.code;
+ var code =  req.query.code;
 
  var extServerOptions = {
   host: 'https://slack.com',
