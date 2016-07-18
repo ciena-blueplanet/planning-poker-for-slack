@@ -1,5 +1,6 @@
 var app = require('./app');
 var fs = require('fs');
+var path = require('path');
 
 
 var pokerbot = {};
