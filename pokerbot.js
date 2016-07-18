@@ -121,7 +121,7 @@ pokerbot.vote = function (req, res, next) {
   var requestBody = JSON.parse(req.body.payload);
   console.log(requestBody);
 
-  return res.status(200).json({'Response':'You have voted :'+requestBody.actions.value});
+  return res.status(200).json({'Response':'You have voted :'+requestBody.actions[0].value});
  }
 
  module.exports=pokerbot;
