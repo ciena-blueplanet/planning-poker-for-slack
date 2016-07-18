@@ -1,8 +1,10 @@
 var app = require('./app');
+var fs = require('fs');
+
+
 var pokerbot = {};
 
 pokerbot.root = function (req, res, next) {
-
  var requestBodyTextArray =  req.body.text.split(" ");
  var jiraId = requestBodyTextArray[1] ? requestBodyTextArray[1] : undefined;
  var numberOfParticipants = isNaN(requestBodyTextArray[2]) ? -1 : requestBodyTextArray[2];
