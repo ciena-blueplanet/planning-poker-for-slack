@@ -19,7 +19,21 @@ auth.getToken = function (req, res, next) {
  var req = https.request(extServerOptions, (res) => {
   res.on('data', (d) => {
    process.stdout.write(d);
-   res.sendFile(path.join(__dirname + '/public/index.html'));
+   console.log(res);
+   /*var successPageOptions = {
+    hostname: 'localhost',
+    method: 'GET'
+   };
+   https.get(successPageOptions, (res) => {
+    console.log('statusCode: ', res.statusCode);
+    console.log('headers: ', res.headers);
+    res.on('data', (d) => {
+     process.stdout.write(d);
+    });
+   }).on('error', (e) => {
+    console.error(e);
+  });*/
+
   });
  });
  req.end();

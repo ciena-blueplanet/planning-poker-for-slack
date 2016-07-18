@@ -21,4 +21,7 @@ app.post('/vote/:id', pokerbot.vote);
 app.get('/', function(req, res) {
     res.sendFile(path.join(__dirname + '/public/index.html'));
 });
+app.get('/successpage', function(req, res) {
+    res.sendFile(path.join(__dirname + '/public/successpage.html'));
+});
 app.get('/token',auth.getToken);
