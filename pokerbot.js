@@ -38,8 +38,11 @@ pokerbot.vote = function (req, res, next) {
   var jiraId = requestBody.original_message.text.split("JIRA-")[1];
   console.log('JIRAID : '+jiraId);
   console.log(userRating);
-
-  return res.status(200).json({'Response':'You have voted :'+vote});
+  if(!ratingModel.hasOwnProperty(userRating)){
+    ratingModel.ratingModel = new Array();
+  }
+  ratingModel.ratingModel.push(userRating);
+  return res.status(200).json(ratingModel);
 }
 
  module.exports=pokerbot;
