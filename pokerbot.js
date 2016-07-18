@@ -26,7 +26,7 @@ pokerbot.root = function (req, res, next) {
    var responseForDuplicateJira = {
     text: "Planning for this JIRA ID is already in progress."
    }
-   return res.status(200).json(responseForBadRequestFormat);
+   return res.status(200).json(responseForDuplicateJira);
  }
  playersModel[jiraId] = numberOfParticipants;
  console.log(playersModel);
