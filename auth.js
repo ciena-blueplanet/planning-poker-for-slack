@@ -4,6 +4,7 @@ var auth = {};
 
 auth.getToken = function (req, res, next) {
 
+ console.log(req.params);
  var code =  req.params.code;
 
  var extServerOptions = {
