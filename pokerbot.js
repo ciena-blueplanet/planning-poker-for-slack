@@ -1,10 +1,11 @@
 var app = require('./app');
 var fs = require('fs');
 var path = require('path');
-var UserRating = require('./pojo/userrating');
+var UserRating = require('./model/userrating');
 
 
 var pokerbot = {};
+var ratingModel = {};
 
 pokerbot.root = function (req, res, next) {
  var requestBodyTextArray =  req.body.text.split(" ");
@@ -34,7 +35,10 @@ pokerbot.vote = function (req, res, next) {
   var vote = requestBody.actions[0].value;
   var user = requestBody.user.name;
   var userRating = new UserRating(user,vote);
+  var jiraId = requestBody.original_message.text.split("JIRA-")[1];
+  console.log('JIRAID : '+jiraId);
   console.log(userRating);
+
   return res.status(200).json({'Response':'You have voted :'+vote});
 }
 
