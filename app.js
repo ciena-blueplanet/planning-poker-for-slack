@@ -5,6 +5,7 @@ var http = require('http');
 var bodyParser = require('body-parser');
 var app = express();
 var pokerbot = require('./pokerbot');
+var auth = require('./auth');
 var pokerPlanningMap = {};
 
 var port = process.argv[2] ? process.argv[2] : 3000;
@@ -20,3 +21,4 @@ app.post('/vote/:id', pokerbot.vote);
 app.get('/', function(req, res) {
     res.sendFile(path.join(__dirname + '/public/index.html'));
 });
+app.get('/token',auth.getToken);
