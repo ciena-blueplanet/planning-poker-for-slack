@@ -19,7 +19,8 @@ auth.getToken = function (req, res, next) {
  var req = https.request(extServerOptions, (res) => {
   res.on('data', (d) => {
    process.stdout.write(d);
-   console.log(res);
+   console.log(res.statusCode);
+   res.send('HELLO WORLD');
    /*var successPageOptions = {
     hostname: 'localhost',
     method: 'GET'
