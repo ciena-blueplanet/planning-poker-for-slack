@@ -4,16 +4,18 @@ var auth = {};
 
 auth.getToken = function (req, res, next) {
 
- /*var code =  req.params.code;
+ var code =  req.params.code;
 
  var extServerOptions = {
-  host: 'https://slack.com/api/oauth.access',
+  host: 'https://slack.com',
+  path: '/api/oauth.access?client_id=55672736423.58936834261&client_secret=831e9b5e514c9587d7f3820aac9b0299&code='+code,
   method: 'GET'
  };
 
+ console.log(extServerOptions);
  var req = https.request(extServerOptions, (res) => {
-  console.log('statusCode: ', res.statusCode);
-  console.log('headers: ', res.headers);
+  //console.log('statusCode: ', res.statusCode);
+  //console.log('headers: ', res.headers);
 
   res.on('data', (d) => {
    process.stdout.write(d);
@@ -22,8 +24,8 @@ auth.getToken = function (req, res, next) {
  req.end();
  req.on('error', (e) => {
   console.error(e);
-});*/
- console.log(req.params.code);
+});
+
 
 }
  module.exports=auth;
