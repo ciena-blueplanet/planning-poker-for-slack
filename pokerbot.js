@@ -24,18 +24,6 @@ var  response = {
   attachment_type: "default",
   callback_id: "planning-poker",
   actions: [
-   {
-    name: "one",
-    text: "1",
-    type: "button",
-    value: "1",
-    confirm: {
-      title: "Are you sure?",
-      text: "Are you sure you want to vote 1 ?",
-      ok_text: "Yes",
-      dismiss_text: "No"
-    }
-  },
   {
     name: "two",
     text: "2",
