@@ -8,7 +8,7 @@ auth.getToken = function (req, res, next) {
 
  var extServerOptions = {
   host: 'https://slack.com',
-  path: '/api/oauth.access?client_id=55672736423.58936834261&client_secret=831e9b5e514c9587d7f3820aac9b0299&code='+code,
+  path: '%2Fapi%2Foauth.access%3Fclient_id%3D55672736423.58936834261%26client_secret%3D831e9b5e514c9587d7f3820aac9b0299%26code='+code,
   method: 'GET'
  };
 
