@@ -118,8 +118,8 @@ return res.status(200).json(response);
 
 pokerbot.vote = function (req, res, next) {
 
- var requestParams =  req.params.id;
-  console.log('Request params : '+requestParams);
+ var requestParams =  req.body;
+  console.log('Request body : '+requestParams);
   return res.status(200).json({'Text':'Hello world'});
  }
 
