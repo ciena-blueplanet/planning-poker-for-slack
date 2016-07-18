@@ -6,21 +6,16 @@ auth.getToken = function (req, res, next) {
 
  console.log(req.params);
  var code =  req.query.code;
+ var encodedPath = encodeURIComponent('/api/oauth.access?client_id=55672736423.58936834261&redirect_uri=https://orchestraion-india.slack.com/messages/&client_secret=831e9b5e514c9587d7f3820aac9b0299&code=')+code;
 
  var extServerOptions = {
-
-  //hostname: 'https://slack.com/api/oauth.access?client_id=55672736423.58936834261&client_secret=831e9b5e514c9587d7f3820aac9b0299&code='+code,
   hostname: 'slack.com',
-  path: '/api/oauth.access?client_id=55672736423.58936834261&client_secret=831e9b5e514c9587d7f3820aac9b0299&code='+code,
-  //port:443,
+  path: encodedPath,
   method: 'GET'
  };
 
  console.log(extServerOptions);
  var req = https.request(extServerOptions, (res) => {
-  //console.log('statusCode: ', res.statusCode);
-  //console.log('headers: ', res.headers);
-
   res.on('data', (d) => {
    process.stdout.write(d);
   });
