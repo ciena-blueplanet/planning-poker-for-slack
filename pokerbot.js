@@ -2,10 +2,12 @@ var app = require('./app');
 var fs = require('fs');
 var path = require('path');
 var UserRating = require('./model/userrating');
+var Players = require('./model/players');
 
 
 var pokerbot = {};
-var ratingModel = {};
+var ratingModel = {};    // It conatins the rating by each user.
+var playersModel = {};  //it conatins the number of players for jira.
 
 pokerbot.root = function (req, res, next) {
  var requestBodyTextArray =  req.body.text.split(" ");
@@ -19,6 +21,15 @@ pokerbot.root = function (req, res, next) {
   return res.status(200).json(responseForBadRequestFormat);
  }
 
+ //var players = new Players(jiraId,numberOfParticipants);
+ if(playersModel.hasOwnProperty(jiraId)){
+   var responseForDuplicateJira = {
+    text: "Planning for this JIRA ID is already in progress."
+   }
+   return res.status(200).json(responseForBadRequestFormat);
+ }
+ playersModel.jiraId = numberOfParticipants;
+ console.log(playersModel);
  var attachments = JSON.parse(fs.readFileSync(path.join(__dirname + '/config/data.json'), 'utf8'));
  console.log(attachments);
  var  response = {
@@ -38,10 +49,10 @@ pokerbot.vote = function (req, res, next) {
   var jiraId = requestBody.original_message.text.split("JIRA-")[1];
   console.log('JIRAID : '+jiraId);
   console.log(userRating);
-  if(!ratingModel.hasOwnProperty(userRating)){
-    ratingModel.ratingModel = new Array();
+  if(!ratingModel.hasOwnProperty(jiraId)){
+    ratingModel.jiraId = new Array();
   }
-  ratingModel.ratingModel.push(userRating);
+  ratingModel.jiraId.push(userRating);
   return res.status(200).json(ratingModel);
 }
 
