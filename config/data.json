@@ -1,0 +1,82 @@
+[
+ {
+  text: "Please give your vote",
+  color: "#3AA3E3",
+  attachment_type: "default",
+  callback_id: "planning-poker",
+  actions: [
+  {
+   name: "two",
+   text: "2",
+   type: "button",
+   value: "2",
+   confirm: {
+    title: "Are you sure?",
+    text: "Are you sure you want to vote 2 ?",
+    ok_text: "Yes",
+    dismiss_text: "No"
+   }
+  },
+  {
+    name: "three",
+    text: "3",
+    type: "button",
+    value: "3",
+    confirm: {
+      title: "Are you sure?",
+      text: "Are you sure you want to vote 3 ?",
+      ok_text: "Yes",
+      dismiss_text: "No"
+    }
+  },
+  {
+    name: "five",
+    text: "5",
+    type: "button",
+    value: "5",
+    confirm: {
+      title: "Are you sure?",
+      text: "Are you sure you want to vote 5 ?",
+      ok_text: "Yes",
+      dismiss_text: "No"
+    }
+   },
+   {
+     name: "eight",
+     text: "8",
+     type: "button",
+     value: "8",
+     confirm: {
+      title: "Are you sure?",
+      text: "Are you sure you want to vote 8 ?",
+      ok_text: "Yes",
+      dismiss_text: "No"
+    }
+   },
+   {
+     name: "thirteen",
+     text: "13",
+     type: "button",
+     value: "11",
+     confirm: {
+       title: "Are you sure?",
+       text: "Are you sure you want to vote 13 ?",
+       ok_text: "Yes",
+       dismiss_text: "No"
+     }
+   },
+   {
+     name: "tweenty0ne",
+     text: "21",
+     type: "button",
+     value: "21",
+     confirm: {
+      title: "Are you sure?",
+      text: "Are you sure you want to vote 21 ?",
+      ok_text: "Yes",
+      dismiss_text: "No"
+    }
+   }
+  ]
+ }
+]
