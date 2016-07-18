@@ -52,7 +52,7 @@ pokerbot.vote = function (req, res, next) {
   if(!ratingModel.hasOwnProperty(jiraId)){
     ratingModel[jiraId] = new Array();
   }
-  ratingModel.jiraId.push(userRating);
+  ratingModel[jiraId].push(userRating);
   return res.status(200).json(ratingModel);
 }
 
