@@ -1,7 +1,7 @@
 var app = require('./app');
 var fs = require('fs');
 var path = require('path');
-var attachments = require("./config/data.json");
+//var attachments = require("./config/data.json");
 
 
 var pokerbot = {};
@@ -18,12 +18,12 @@ pokerbot.root = function (req, res, next) {
   return res.status(200).json(responseForBadRequestFormat);
  }
 
- //var attachments = fs.readFileSync(path.join(__dirname + '/config/data.json'));
+ var attachments = JSON.parse(fs.readFileSync(path.join(__dirname + '/config/data.json'), 'utf8'));
  console.log(attachments);
  var  response = {
   response_type: "in_channel",
   text: "Please give your poker vote for "+jiraId,
-  attachments : attachments
+  attachments : attachments.attachments
  }
  return res.status(200).json(response);
 }
