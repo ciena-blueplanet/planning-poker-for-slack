@@ -4,8 +4,7 @@ var path = require('path');
 var UserRating = require('./model/userrating');
 
 var pokerbot = {};
-var ratingModel = {};    // It conatins the rating by each user.
-var playersModel = {};  //it conatins the number of players for jira.
+var ratingModel = {};    // It conatins the rating by each user. It is a map having key as unique Jira ID and value has an array comtaining ratingModel objects.
 
 pokerbot.root = function (req, res, next) {
  var requestBodyTextArray =  req.body.text.split(" ");
@@ -21,7 +20,7 @@ pokerbot.root = function (req, res, next) {
  }
 
  //Closing the unstarted Jira Planning.
- if(option=='stop' && (!playersModel.hasOwnProperty(jiraId))){
+ if(option=='stop' && (!ratingModel.hasOwnProperty(jiraId))){
     var response_unstarted_jira = {
      text: "Planning for this JIRA ID is not started yet."
     }
@@ -29,7 +28,7 @@ pokerbot.root = function (req, res, next) {
  }
 
  //Closing the planning activity.
- if(option=='stop' && (playersModel.hasOwnProperty(jiraId))){
+ if(option=='stop' && (ratingModel.hasOwnProperty(jiraId))){
     var response_Planning_complete = {
      text: "Planning for this JIRA ID is complete. Thanks for Playing."
     }
@@ -38,10 +37,10 @@ pokerbot.root = function (req, res, next) {
  }
 
  //Star the Poker game.
- if(option=='start' && (!playersModel.hasOwnProperty(jiraId))){
-  console.log(playersModel);
+ if(option=='start' && (!ratingModel.hasOwnProperty(jiraId))){
+  console.log(ratingModel);
+  ratingModel[jiraId] = new Array();
   var attachments = JSON.parse(fs.readFileSync(path.join(__dirname + '/config/data.json'), 'utf8'));
-  console.log(attachments);
   var  response = {
    response_type: "in_channel",
     text: "Please give your poker vote for "+jiraId,
@@ -54,12 +53,11 @@ pokerbot.root = function (req, res, next) {
 
 pokerbot.vote = function (req, res, next) {
   var requestBody = JSON.parse(req.body.payload);
-  console.log(requestBody);
   var vote = requestBody.actions[0].value;
-  var user = requestBody.user.name;
-  var userRating = new UserRating(user,vote);
+  var userName = requestBody.user.name;
+  var userId = requestBody.user.id;
+  var userRating = new UserRating(userId,userName,vote);
   var jiraId = requestBody.original_message.text.split("JIRA-")[1];
-  console.log('JIRAID : '+jiraId);
   console.log(userRating);
   if(!ratingModel.hasOwnProperty(jiraId)){
     ratingModel[jiraId] = new Array();
@@ -76,11 +74,6 @@ pokerbot.vote = function (req, res, next) {
    replace_original : true
   }
   return res.status(200).json(response_member);
-  /*if(true){
-    return res.status(200).json(response_member);
-  }else{
-    return res.status(200).json(response_channel);
-  }*/
-
 }
+
 module.exports=pokerbot;
