@@ -4,9 +4,9 @@
   "description": "Planning poker for spint planning on slack",
   "main": "app.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start" : ". source.env && forever app.js 3000"
   },
-  "author": "SatpalBhandari <satpal@ciena.com>",
+  "author": "SatpalBhandari <satpal82bhandari@gmail.com>",
   "license": "ISC",
   "devDependencies": {
     "express": "^4.14.0",
