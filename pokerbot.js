@@ -9,23 +9,42 @@ var playersModel = {};  //it conatins the number of players for jira.
 
 pokerbot.root = function (req, res, next) {
  var requestBodyTextArray =  req.body.text.split(" ");
+ var option =  requestBodyTextArray[0] ? requestBodyTextArray[0] : undefined;
  var jiraId = requestBodyTextArray[1] ? requestBodyTextArray[1] : undefined;
- var numberOfParticipants = isNaN(requestBodyTextArray[2]) ? -1 : requestBodyTextArray[2];
+ if((option!='start' && option!='stop')||jiraId===undefined){
+   var responseForBadRequestFormat = {
+    text: "Please enter the command in correct format e.g. /planning-poker start JIRA-1001"
+   }
+   return res.status(200).json(responseForBadRequestFormat);
+ }
 
- if(jiraId===undefined || numberOfParticipants===-1){
+
+ var numberOfParticipants = isNaN(requestBodyTextArray[2]) ? 0 : requestBodyTextArray[2];
+
+ //if(jiraId===undefined || numberOfParticipants===0){
+ /*if(jiraId===undefined || option===0){
   var responseForBadRequestFormat = {
    text: "Please enter the command in correct format e.g. /planning-poker start JIRA-1001 5"
   }
   return res.status(200).json(responseForBadRequestFormat);
- }
+}*/
 
  //var players = new Players(jiraId,numberOfParticipants);
- if(playersModel.hasOwnProperty(jiraId)){
+ if(option=='start' && playersModel.hasOwnProperty(jiraId)){
    var responseForDuplicateJira = {
     text: "Planning for this JIRA ID is already in progress."
    }
    return res.status(200).json(responseForDuplicateJira);
  }
+
+ if(option=='stop' && (!playersModel.hasOwnProperty(jiraId))){
+   var responseForDuplicateJira = {
+    text: "Planning for this JIRA ID is not started yet."
+   }
+   return res.status(200).json(responseForDuplicateJira);
+ }
+
+
  playersModel[jiraId] = numberOfParticipants;
  console.log(playersModel);
  var attachments = JSON.parse(fs.readFileSync(path.join(__dirname + '/config/data.json'), 'utf8'));
@@ -51,14 +70,24 @@ pokerbot.vote = function (req, res, next) {
     ratingModel[jiraId] = new Array();
   }
   ratingModel[jiraId].push(userRating);
-  var  response = {
+  var  response_member = {
    response_type: "ephemeral",
-   text: "You have voted for "+jiraId,
+   text: "You have voted "+vote" for JIRA ID : "+jiraId,
    replace_original : false
   }
+  var  response_channel = {
+   response_type: "in_channel",
+   text: "Voting for "+jiraId+ "is finished. Thanks for voting.",
+   replace_original : true
+  }
+  if(true){
+    return res.status(200).json(response_member);
+  }else{
+    return res.status(200).json(response_channel);
+  }
 
-  //ratingModel.response_type = "ephemeral";
-  return res.status(200).json(response);
 }
+
+
 
  module.exports=pokerbot;

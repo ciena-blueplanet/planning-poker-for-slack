@@ -108,7 +108,7 @@
 				"value": 55,
 				"confirm": {
 					"title": "Are you sure?",
-					"text": "Are you sure you want to vote 34 ?",
+					"text": "Are you sure you want to vote 55 ?",
 					"ok_text": "Yes",
 					"dismiss_text": "No"
 				}
