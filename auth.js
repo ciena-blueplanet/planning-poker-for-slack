@@ -1,6 +1,7 @@
 var app = require('./app');
 var https = require('https');
 var path = require('path');
+var fs = require('fs');
 var auth = {};
 
 auth.getToken = function (req, res, next) {
