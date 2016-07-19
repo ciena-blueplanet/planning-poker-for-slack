@@ -11,50 +11,45 @@ pokerbot.root = function (req, res, next) {
  var requestBodyTextArray =  req.body.text.split(" ");
  var option =  requestBodyTextArray[0] ? requestBodyTextArray[0] : undefined;
  var jiraId = requestBodyTextArray[1] ? requestBodyTextArray[1] : undefined;
+
+ //Bad command syntex.
  if((option!='start' && option!='stop')||jiraId===undefined){
    var responseForBadRequestFormat = {
-    text: "Please enter the command in correct format e.g. /planning-poker start JIRA-1001"
+    text: "Please enter the command in correct format e.g. /planning-poker start or stop JIRA-1001"
    }
    return res.status(200).json(responseForBadRequestFormat);
  }
 
-
- var numberOfParticipants = isNaN(requestBodyTextArray[2]) ? 0 : requestBodyTextArray[2];
-
- //if(jiraId===undefined || numberOfParticipants===0){
- /*if(jiraId===undefined || option===0){
-  var responseForBadRequestFormat = {
-   text: "Please enter the command in correct format e.g. /planning-poker start JIRA-1001 5"
-  }
-  return res.status(200).json(responseForBadRequestFormat);
-}*/
-
- //var players = new Players(jiraId,numberOfParticipants);
- if(option=='start' && playersModel.hasOwnProperty(jiraId)){
-   var responseForDuplicateJira = {
-    text: "Planning for this JIRA ID is already in progress."
-   }
-   return res.status(200).json(responseForDuplicateJira);
- }
-
+ //Closing the unstarted Jira Planning.
  if(option=='stop' && (!playersModel.hasOwnProperty(jiraId))){
-   var responseForDuplicateJira = {
-    text: "Planning for this JIRA ID is not started yet."
+    var response_unstarted_jira = {
+     text: "Planning for this JIRA ID is not started yet."
+    }
+    return res.status(200).json(response_unstarted_jira);
+ }
+
+ //Closing the planning activity.
+ if(option=='stop' && (playersModel.hasOwnProperty(jiraId))){
+    var response_Planning_complete = {
+     text: "Planning for this JIRA ID is complete. Thanks for Playing."
+    }
+    // write the complete logic for average calculation.
+    return res.status(200).json(response_Planning_complete);
+ }
+
+ //Star the Poker game.
+ if(option=='start' && (!playersModel.hasOwnProperty(jiraId))){
+  console.log(playersModel);
+  var attachments = JSON.parse(fs.readFileSync(path.join(__dirname + '/config/data.json'), 'utf8'));
+  console.log(attachments);
+  var  response = {
+   response_type: "in_channel",
+    text: "Please give your poker vote for "+jiraId,
+    attachments : attachments.attachments
    }
-   return res.status(200).json(responseForDuplicateJira);
+   return res.status(200).json(response);
  }
 
-
- playersModel[jiraId] = numberOfParticipants;
- console.log(playersModel);
- var attachments = JSON.parse(fs.readFileSync(path.join(__dirname + '/config/data.json'), 'utf8'));
- console.log(attachments);
- var  response = {
-  response_type: "in_channel",
-  text: "Please give your poker vote for "+jiraId,
-  attachments : attachments.attachments
- }
- return res.status(200).json(response);
 }
 
 pokerbot.vote = function (req, res, next) {
@@ -88,7 +83,4 @@ pokerbot.vote = function (req, res, next) {
   }*/
 
 }
-
-
-
- module.exports=pokerbot;
+module.exports=pokerbot;
