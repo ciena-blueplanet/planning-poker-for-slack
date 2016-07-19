@@ -5,11 +5,13 @@ var auth = {};
 
 auth.getToken = function (req, res, next) {
 
- var code =  req.query.code;
+ var authCode =  req.query.code;
+ var slackKey = JSON.parse(fs.readFileSync(path.join(__dirname + '/config/slackAppKey.json'), 'utf8'));
+ console.log(slackKey);
  var encodedUrlRedirect = encodeURIComponent('https://orchestraion-india.slack.com/messages');
  var extServerOptions = {
   hostname: 'slack.com',
-  path: '/api/oauth.access?client_id=55672736423.58936834261&client_secret=831e9b5e514c9587d7f3820aac9b0299&code='+code,
+  path: '/api/oauth.access?client_id='+slackKey.client_id+'&client_secret='+slackKey.client_secret+'&code='+authCode,
   method: 'GET'
  };
  console.log(extServerOptions);
