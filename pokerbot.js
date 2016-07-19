@@ -51,6 +51,7 @@ pokerbot.vote = function (req, res, next) {
     ratingModel[jiraId] = new Array();
   }
   ratingModel[jiraId].push(userRating);
+  ratingModel.response_type = "ephemeral";
   return res.status(200).json(ratingModel);
 }
 
