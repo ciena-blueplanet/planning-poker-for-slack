@@ -29,11 +29,19 @@ pokerbot.root = function (req, res, next) {
 
  //Closing the planning activity.
  if(option=='stop' && (ratingModel.hasOwnProperty(jiraId))){
-    var response_Planning_complete = {
+    var response_planning_complete = {
      text: "Planning for this JIRA ID is complete. Thanks for Playing."
     }
     // write the complete logic for average calculation.
-    return res.status(200).json(response_Planning_complete);
+    return res.status(200).json(response_planning_complete);
+ }
+
+ //Starting the duplicate jira.
+ if(option=='start' && (ratingModel.hasOwnProperty(jiraId))){
+  var  response_duplicate_jira = {
+    text: "Planning for this Jira : "+jiraId+ " is already in progress"
+   }
+   return res.status(200).json(response);
  }
 
  //Star the Poker game.
