@@ -80,11 +80,12 @@ pokerbot.vote = function (req, res, next) {
    text: "Voting for "+jiraId+ "is finished. Thanks for voting.",
    replace_original : true
   }
-  if(true){
+  return res.status(200).json(response_member);
+  /*if(true){
     return res.status(200).json(response_member);
   }else{
     return res.status(200).json(response_channel);
-  }
+  }*/
 
 }
 
