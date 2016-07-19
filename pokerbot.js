@@ -39,8 +39,8 @@ pokerbot.root = function (req, res, next) {
     }
     // write the complete logic for average calculation.
     var userRatingArray = ratingModel[jiraId];
-    console.log(sortedUserRatingArray);
-    var sortedUserRatingArray = util.sortArrayBasedOnObjectProperty(userRatingArray,rating);
+    console.log(userRatingArray);
+    var sortedUserRatingArray = util.sortArrayBasedOnObjectProperty(userRatingArray,'rating');
     console.log(userRatingArray);
 
     delete ratingModel[jiraId];
