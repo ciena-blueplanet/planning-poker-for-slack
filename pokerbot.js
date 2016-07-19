@@ -53,7 +53,8 @@ pokerbot.vote = function (req, res, next) {
   ratingModel[jiraId].push(userRating);
   var  response = {
    response_type: "ephemeral",
-   text: "You have voted for "+jiraId
+   text: "You have voted for "+jiraId,
+   replace_original : false
   }
 
   //ratingModel.response_type = "ephemeral";
