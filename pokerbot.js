@@ -2,8 +2,6 @@ var app = require('./app');
 var fs = require('fs');
 var path = require('path');
 var UserRating = require('./model/userrating');
-var Players = require('./model/players');
-
 
 var pokerbot = {};
 var ratingModel = {};    // It conatins the rating by each user.
