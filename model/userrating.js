@@ -1,7 +1,7 @@
 function UserRating(userid,userName,rating) {
   this.userid = userid;
   this.userName = userName;
-  this.rating = (typeof rating !== 'undefined') ? rating :1;
+  this.rating = (typeof rating !== 'undefined') ? parseInt(rating) :1;
 }
 
 // class methods

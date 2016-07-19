@@ -22,4 +22,21 @@ util.getUserCountInChannel = function (token,channelId) {
   return JSON.parse(d);
  });
 }
+
+util.sortArrayBasedOnObjectProperty = function(items,prop){
+  var sortedArray = items.sort(function(a,b){
+    if (a.prop > b.prop) {
+     return 1;
+   }
+   if (a.prop < b.prop) {
+     return -1;
+   }
+   // a must be equal to b
+   return 0;
+ });
+ return sortedArray;
+}
+
+
+
  module.exports=util;

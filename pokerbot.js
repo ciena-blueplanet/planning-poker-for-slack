@@ -1,6 +1,7 @@
 var app = require('./app');
 var fs = require('fs');
 var path = require('path');
+var util = require('./util');
 var UserRating = require('./model/userrating');
 
 var pokerbot = {};
@@ -31,13 +32,19 @@ pokerbot.root = function (req, res, next) {
  //Closing the planning activity.
  if(option=='stop' && (ratingModel.hasOwnProperty(jiraId))){
     console.log(ratingModel);
-    delete ratingModel[jiraId];
-    console.log(ratingModel);
+
     var response_planning_complete = {
      response_type: "in_channel",
      text: "Planning for this JIRA ID is complete. Thanks for Playing."
     }
     // write the complete logic for average calculation.
+    var userRatingArray = ratingModel[jiraId];
+    console.log(sortedUserRatingArray);
+    var sortedUserRatingArray = util.sortArrayBasedOnObjectProperty(userRatingArray,rating);
+    console.log(userRatingArray);
+
+    delete ratingModel[jiraId];
+    console.log(ratingModel);
     return res.status(200).json(response_planning_complete);
  }
 
