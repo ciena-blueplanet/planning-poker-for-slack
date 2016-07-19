@@ -18,8 +18,18 @@ pokerbot.root = function (req, res, next) {
    return res.status(200).json(responseForBadRequestFormat);
  }
 
+
  var numberOfParticipants = isNaN(requestBodyTextArray[2]) ? 0 : requestBodyTextArray[2];
 
+ //if(jiraId===undefined || numberOfParticipants===0){
+ /*if(jiraId===undefined || option===0){
+  var responseForBadRequestFormat = {
+   text: "Please enter the command in correct format e.g. /planning-poker start JIRA-1001 5"
+  }
+  return res.status(200).json(responseForBadRequestFormat);
+}*/
+
+ //var players = new Players(jiraId,numberOfParticipants);
  if(option=='start' && playersModel.hasOwnProperty(jiraId)){
    var responseForDuplicateJira = {
     text: "Planning for this JIRA ID is already in progress."
