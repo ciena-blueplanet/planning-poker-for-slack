@@ -4,7 +4,8 @@
   "description": "Planning poker for spint planning on slack",
   "main": "app.js",
   "scripts": {
-    "start" : ". source.env && forever app.js 3000"
+    "start" : "./start.sh",
+    "stop" : "./stop.sh"
   },
   "author": "SatpalBhandari <satpal82bhandari@gmail.com>",
   "license": "ISC",

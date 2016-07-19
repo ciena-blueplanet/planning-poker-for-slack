@@ -4,6 +4,7 @@ var path = require('path');
 var fs = require('fs');
 var auth = {};
 
+//To get the oauth token from slack server.
 auth.getToken = function (req, res, next) {
 
  var authCode =  req.query.code;

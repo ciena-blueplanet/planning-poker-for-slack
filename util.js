@@ -2,6 +2,7 @@ var app = require('./app');
 var https = require('https');
 var util = {};
 
+// This is utilty method for getting channel info from slack server.
 util.getUserCountInChannel = function (token,channelId) {
  var extServerOptions = {
   hostname: 'slack.com',

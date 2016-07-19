@@ -10,5 +10,6 @@ UserRating.prototype.toString = function userRatingToString() {
   return ret;
 }
 
+
 // export the class
 module.exports = UserRating;
