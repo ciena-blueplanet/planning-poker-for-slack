@@ -1,1 +1,1 @@
-web: node app.js $PORT
+web: forever app.js $PORT
