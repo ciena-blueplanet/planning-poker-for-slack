@@ -21,8 +21,6 @@
     "node": ">= 5.0"
   },
   "keywords": [
-   "github",
-   "pull-request",
    "poker"
  ],
   "author": "Satpal Bhandari <https://github.com/satpal82bhandari>",
