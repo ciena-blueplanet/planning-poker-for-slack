@@ -13,7 +13,7 @@ pokerbot.root = function (req, res, next) {
  var jiraId = requestBodyTextArray[1] ? requestBodyTextArray[1] : undefined;
 
  //Bad command syntex.
- if((option!='start' && option!='stop')||jiraId===undefined){
+ if((option!='start' && option!='stop')|| jiraId.indexOf("JIRA-")<0){
    var responseForBadRequestFormat = {
     text: "Please enter the command in correct format e.g. /planning-poker start or stop JIRA-1001"
    }
