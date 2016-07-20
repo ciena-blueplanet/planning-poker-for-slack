@@ -4,7 +4,10 @@
   "description": "Planning poker for spint planning on slack",
   "main": "app.js",
   "scripts": {
-    "start" : "forever app.js 3000",
+    "lint": "eslint *.js model config tests",
+    "utest": "istanbul cover tests",
+    "test": "npm run lint && npm run utest",
+    "start" : "forever app.js",
     "stop" : "forever stopall"
   },
   "bin": {
@@ -35,7 +38,11 @@
   "devDependencies": {
     "chai": "^3.4.1",
     "eslint": "^2.9.0",
-    "mocha": "^2.3.4"
+    "eslint-config-frost-standard": "^2.0.0",
+    "mocha": "^2.3.4",
+    "istanbul": "^0.4.2",
+    "rewire": "^2.5.1",
+    "sinon": "^1.17.3"
   },
   "dependencies": {
     "express": "^4.14.0",
