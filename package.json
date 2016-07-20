@@ -1,5 +1,5 @@
 {
-  "name": "slack-planning-poker",
+  "name": "planning-poker-for-slack",
   "version": "1.0.0",
   "description": "Planning poker for spint planning on slack",
   "main": "app.js",
@@ -7,11 +7,34 @@
     "start" : "./start.sh",
     "stop" : "./stop.sh"
   },
-  "author": "SatpalBhandari <satpal82bhandari@gmail.com>",
-  "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ciena-frost/planning-poker-for-slack.git"
+  },
+  "engines": {
+    "node": ">= 5.0"
+  },
+  "keywords": [
+   "github",
+   "pull-request",
+   "poker"
+ ],
+  "author": "Satpal Bhandari <https://github.com/satpal82bhandari>",
+  "contributors": [
+    "Satpal Bhandari <https://github.com/satpal82bhandari",
+    "Peter Banka <https://github.com/psbanka"
+  ],
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/ciena-frost/planning-poker-for-slack/issues"
+  },
+  "homepage": "https://github.com/ciena-frost/planning-poker-for-slack#readme",
   "devDependencies": {
     "express": "^4.14.0",
     "body-parser": "^1.15.2",
-    "forever": "^0.15.2"
+    "forever": "^0.15.2",
+    "chai": "^3.4.1",
+    "eslint": "^2.9.0",
+    "mocha": "^2.3.4"
   }
 }

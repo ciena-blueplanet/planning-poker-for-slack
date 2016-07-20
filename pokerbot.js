@@ -2,7 +2,7 @@ var app = require('./app');
 var fs = require('fs');
 var path = require('path');
 var util = require('./util');
-var UserRating = require('./model/userrating');
+var UserRating = require('./model/user-rating');
 
 var pokerbot = {};
 var ratingModel = {};    // It conatins the rating by each user. It is a map having key as unique Jira ID and value has an array comtaining ratingModel objects.
