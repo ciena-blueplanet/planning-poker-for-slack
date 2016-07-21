@@ -7,7 +7,7 @@
     "lint": "eslint  *.js model config tests",
     "test": "npm run-script lint && npm run-script intergartion-test",
     "intergartion-test": "npm run-script start && npm run-script code-coverage && npm run-script stop",
-    "code-coverage": "istanbul cover _mocha tests tests/it tests/unit",
+    "code-coverage": "istanbul cover _mocha tests tests/it",
     "start" : "forever --minUptime=5000 app.js 3000 &",
     "stop" : "forever stopall"
   },
