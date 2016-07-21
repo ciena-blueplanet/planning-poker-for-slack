@@ -19,5 +19,5 @@ app.get('/', function (req, res) {
 })
 app.get('/token', auth.getToken)
 
-const server = app.listen(port)
+app.listen(port)
 console.log('Application listening on port : ' + port)
