@@ -5,10 +5,9 @@
   "main": "app.js",
   "scripts": {
     "lint": "eslint  *.js model config tests",
-    "utest": "istanbul cover tests",
-    "test": "npm run lint && npm run utest",
-    "intergartion-test": "istanbul cover _mocha tests tests/it",
-    "start" : "forever app.js",
+    "test": "npm run-script lint && npm run-script intergartion-test",
+    "intergartion-test": "npm run-script start && istanbul cover _mocha tests tests/it && npm run-script stop",
+    "start" : "forever --minUptime=5000 app.js 3000 &",
     "stop" : "forever stopall"
   },
   "bin": {
