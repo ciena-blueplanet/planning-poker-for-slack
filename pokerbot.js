@@ -62,7 +62,7 @@ pokerbot.root = function (req, res, next) {
     return res.status(200).json(responseDuplicateJira)
   }
 
- // Star the Poker game.
+ // Start the Poker game.
   if (option === 'start' && (!ratingModel.hasOwnProperty(jiraId))) {
     console.log(ratingModel)
     ratingModel[jiraId] = []
