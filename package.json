@@ -1,0 +1,53 @@
+{
+  "name": "planning-poker-for-slack",
+  "version": "0.1.0",
+  "description": "Planning poker for spint planning on slack",
+  "main": "app.js",
+  "scripts": {
+    "lint": "eslint  *.js model config tests",
+    "test": "npm run-script lint && npm run-script intergartion-test",
+    "intergartion-test": "npm run-script start && npm run-script code-coverage && npm run-script stop",
+    "code-coverage": "istanbul cover _mocha tests tests/it",
+    "start" : "forever --minUptime=5000 app.js 3000 &",
+    "stop" : "forever stopall"
+  },
+  "bin": {
+    "forever": "../forever/bin/forever"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ciena-frost/planning-poker-for-slack.git"
+  },
+  "engines": {
+    "node": ">= 5.0"
+  },
+  "keywords": [
+   "poker"
+ ],
+  "author": "Satpal Bhandari <https://github.com/satpal82bhandari>",
+  "contributors": [
+    "Satpal Bhandari <https://github.com/satpal82bhandari",
+    "Peter Banka <https://github.com/psbanka"
+  ],
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/ciena-frost/planning-poker-for-slack/issues"
+  },
+  "homepage": "https://github.com/ciena-frost/planning-poker-for-slack#readme",
+  "devDependencies": {
+    "eslint": "^2.9.0",
+    "eslint-config-frost-standard": "^2.0.0",
+    "mocha": "^2.3.4",
+    "istanbul": "^0.4.2",
+    "rewire": "^2.5.1",
+    "sinon": "^1.17.3",
+    "should":"^10.0.0",
+    "supertest": "^1.2.0"
+  },
+  "dependencies": {
+    "express": "^4.14.0",
+    "body-parser": "^1.15.2",
+    "forever": "^0.15.2",
+    "lodash": "^4.0.1"
+  }
+}
