@@ -35,6 +35,7 @@ describe('GET for root route ', function () {
       })
   })
 
+  /*
   it('Start and stop playing.', function testSlash (done) {
     let jiraId = Math.floor((Math.random() * 1000) + 1)
     request(url)
@@ -59,6 +60,7 @@ describe('GET for root route ', function () {
       })
     })
   })
+  */
 
   it('responds to /vote with start', function testSlash (done) {
     let jiraId = 'JIRA-' + Math.floor((Math.random() * 1000) + 1)
