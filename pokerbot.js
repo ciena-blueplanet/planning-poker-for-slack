@@ -110,12 +110,12 @@ pokerbot.vote = function (req, res, next) {
   var vote = requestBody.actions[0].value
   var userName = requestBody.user.name
   var userId = requestBody.user.id
-  var userRating = {}
-  userRating.userId = userId
-  userRating.userName = userName
-  userRating.vote = vote
-  // var userRating = new UserRating(userId, userName, vote)
-  var jiraId = requestBody.original_message.text.split('JIRA-')[1]
+  // var userRating = {}
+  // userRating.userId = userId
+  // userRating.userName = userName
+  // userRating.vote = vote
+  var userRating = new UserRating(userId, userName, vote)
+  var jiraId = 'JIRA-' + requestBody.original_message.text.split('JIRA-')[1]
   console.log(userRating)
   if (!ratingModel.hasOwnProperty(jiraId)) {
     ratingModel[jiraId] = []
