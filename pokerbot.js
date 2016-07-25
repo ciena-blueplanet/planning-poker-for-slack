@@ -65,6 +65,42 @@ pokerbot.root = function (req, res, next) {
  // Start the Poker game.
   if (option === 'start' && (!ratingModel.hasOwnProperty(jiraId))) {
     console.log(ratingModel)
+    var attachment1 = {
+      'text': '',
+      'color': '#3AA3E3',
+      'attachment_type': 'default',
+      'callback_id': 'planning-poker',
+      'actions': []
+    }
+    var attachment2 = {
+      'text': '',
+      'color': '#3AA3E3',
+      'attachment_type': 'default',
+      'callback_id': 'planning-poker',
+      'actions': []
+    }
+    const fibonacci = [1, 2, 3, 5, 8, 13, 21, 34, 55]
+    var action
+    for (var index = 0; index < fibonacci.lenth; index++) {
+      action = {}
+      action.name = fibonacci[index]
+      action.text = fibonacci[index]
+      action.type = 'button'
+      action.value = fibonacci[index]
+      action.confirm = {
+        'title': 'Are you sure ?',
+        'text': 'Are you sure you want to vote ' + fibonacci[index] + '  ?',
+        'ok_text': 'Yes',
+        'dismiss_text': 'No'
+      }
+      if (index < 5) {
+        attachment1.actions.push(action)
+      } else {
+        attachment2.actions.push(action)
+      }
+    }
+
+    /*
     var action1 = require('./config/data.json').action
     var action2 = require('./config/data.json').action
     var action3 = require('./config/data.json').action
@@ -113,7 +149,7 @@ pokerbot.root = function (req, res, next) {
     attachment2.actions.push(action7)
     attachment2.actions.push(action8)
     attachment2.actions.push(action9)
-
+    */
     ratingModel[jiraId] = []
     // var attachments = JSON.parse(fs.readFileSync(path.join(__dirname, '/config/data.json'), 'utf8'))
     var response = {
