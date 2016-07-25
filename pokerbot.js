@@ -42,8 +42,9 @@ pokerbot.root = function (req, res, next) {
     }
     console.log(responsePlanningComplete)
 
-    // var sortedUserRatingArray = util.sortArrayBasedOnObjectProperty(userRatingArray,'rating');
-    // console.log(userRatingArray);
+    var sortedUserRatingArray = util.sortArrayBasedOnObjectProperty(userRatingArray,'rating');
+    console.log(sortedUserRatingArray[0]);
+    console.log(sortedUserRatingArray[sortedUserRatingArray.length -1]);
     delete ratingModel[jiraId]
     console.log(ratingModel)
     return res.status(200).json(responsePlanningComplete)
@@ -110,10 +111,6 @@ pokerbot.vote = function (req, res, next) {
   var vote = requestBody.actions[0].value
   var userName = requestBody.user.name
   var userId = requestBody.user.id
-  // var userRating = {}
-  // userRating.userId = userId
-  // userRating.userName = userName
-  // userRating.vote = vote
   var userRating = new UserRating(userId, userName, vote)
   var jiraId = 'JIRA-' + requestBody.original_message.text.split('JIRA-')[1]
   console.log(userRating)
@@ -126,13 +123,6 @@ pokerbot.vote = function (req, res, next) {
     text: 'You have voted ' + vote + ' for JIRA ID : ' + jiraId,
     replace_original: false
   }
-  /*
-    var responseChannel = {
-    response_type: IN_CHANNEL,
-    text: 'Voting for ' + jiraId + 'is finished. Thanks for voting.',
-    replace_original: true
-    }
-  */
   return res.status(200).json(responseEphemeral)
 }
 
