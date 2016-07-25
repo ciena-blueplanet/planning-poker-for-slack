@@ -38,11 +38,11 @@ pokerbot.root = function (req, res, next) {
     var userRatingArray = ratingModel[jiraId]
     var responseText
     if (userRatingArray.length > 0) {
-      var sortedUserRatingArray = util.sortArrayBasedOnObjectProperty(userRatingArray, 'rating')
+      // var sortedUserRatingArray = util.sortArrayBasedOnObjectProperty(userRatingArray, 'rating')
       responseText = 'Voting Result : '
-      for (var ratingIndex = 0; ratingIndex < sortedUserRatingArray.length; ratingIndex++) {
-        responseText = responseText + sortedUserRatingArray[ratingIndex].userName + ' voted : '
-        responseText = responseText + sortedUserRatingArray[ratingIndex].rating + '. '
+      for (var ratingIndex = 0; ratingIndex < userRatingArray.length; ratingIndex++) {
+        responseText = responseText + userRatingArray[ratingIndex].userName + ' voted : '
+        responseText = responseText + userRatingArray[ratingIndex].rating + '. '
       }
       responseText = responseText + ' . Thanks for voting.'
     } else {
