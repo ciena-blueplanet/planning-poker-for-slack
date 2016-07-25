@@ -120,9 +120,6 @@ pokerbot.vote = function (req, res, next) {
   var userRating = new UserRating(userId, userName, vote)
   var jiraId = 'JIRA-' + requestBody.original_message.text.split('JIRA-')[1]
   console.log(userRating)
-  if (!ratingModel.hasOwnProperty(jiraId)) {
-    ratingModel[jiraId] = []
-  }
   ratingModel[jiraId].push(userRating)
   var responseEphemeral = {
     response_type: EPHEMERAL,
