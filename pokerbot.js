@@ -36,18 +36,23 @@ pokerbot.root = function (req, res, next) {
   if (option === 'stop' && (ratingModel.hasOwnProperty(jiraId))) {
     console.log(ratingModel)
     var userRatingArray = ratingModel[jiraId]
-    console.log(userRatingArray.toString())
+    var responseText
+    if (userRatingArray.length > 0) {
+      var sortedUserRatingArray = util.sortArrayBasedOnObjectProperty(userRatingArray, 'rating')
+      responseText = 'Voting Result : '
+      for (var ratingIndex = 0; ratingIndex < sortedUserRatingArray.length; ratingIndex++) {
+        responseText = responseText + 'USER : ' + sortedUserRatingArray[ratingIndex].userName
+        responseText = responseText + 'VOTE : ' + sortedUserRatingArray[ratingIndex].rating
+      }
+      responseText = responseText + ' . Thanks for voting.'
+    } else {
+      responseText = 'No Voting for this JIRA yet. Closing the voting now.'
+    }
     var responsePlanningComplete = {
       response_type: IN_CHANNEL,
-      text: userRatingArray.toString()
+      text: responseText
     }
-    console.log(responsePlanningComplete)
-
-    var sortedUserRatingArray = util.sortArrayBasedOnObjectProperty(userRatingArray,'rating');
-    console.log(sortedUserRatingArray[0]);
-    console.log(sortedUserRatingArray[sortedUserRatingArray.length -1]);
     delete ratingModel[jiraId]
-    console.log(ratingModel)
     return res.status(200).json(responsePlanningComplete)
   }
 
