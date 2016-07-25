@@ -41,8 +41,8 @@ pokerbot.root = function (req, res, next) {
       var sortedUserRatingArray = util.sortArrayBasedOnObjectProperty(userRatingArray, 'rating')
       responseText = 'Voting Result : '
       for (var ratingIndex = 0; ratingIndex < sortedUserRatingArray.length; ratingIndex++) {
-        responseText = responseText + 'USER : ' + sortedUserRatingArray[ratingIndex].userName
-        responseText = responseText + 'VOTE : ' + sortedUserRatingArray[ratingIndex].rating
+        responseText = responseText + sortedUserRatingArray[ratingIndex].userName + ' voted : '
+        responseText = responseText + sortedUserRatingArray[ratingIndex].rating + '. '
       }
       responseText = responseText + ' . Thanks for voting.'
     } else {
