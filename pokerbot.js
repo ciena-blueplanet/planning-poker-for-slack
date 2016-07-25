@@ -80,7 +80,7 @@ pokerbot.root = function (req, res, next) {
       actions: []
     }
     const fibonacci = [1, 2, 3, 5, 8, 13, 21, 34, 55]
-
+    console.log(fibonacci.lenth)
     for (var index = 0; index < fibonacci.lenth; index++) {
       var action = {}
       action.name = fibonacci[index]
@@ -88,12 +88,12 @@ pokerbot.root = function (req, res, next) {
       action.type = 'button'
       action.value = fibonacci[index]
       action.confirm = {
-        'title': 'Are you sure ?',
-        'text': 'Are you sure you want to vote ' + fibonacci[index] + '  ?',
-        'ok_text': 'Yes',
-        'dismiss_text': 'No'
+        title: 'Are you sure ?',
+        text: 'Are you sure you want to vote ' + fibonacci[index] + '  ?',
+        ok_text: 'Yes',
+        dismiss_text: 'No'
       }
-      console.log('We are here')
+      console.log(index)
       if (index < 5) {
         console.log(attachment1.actions[attachment1.actions.length])
         attachment1.actions[attachment1.actions.length] = action
