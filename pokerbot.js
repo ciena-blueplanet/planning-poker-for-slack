@@ -80,8 +80,7 @@ pokerbot.root = function (req, res, next) {
       actions: []
     }
     const fibonacci = [1, 2, 3, 5, 8, 13, 21, 34, 55]
-    console.log(fibonacci.lenth)
-    for (var index = 0; index < fibonacci.lenth; index++) {
+    for (var index = 0; index < fibonacci.length; index++) {
       var action = {}
       action.name = fibonacci[index]
       action.text = fibonacci[index]
@@ -95,10 +94,9 @@ pokerbot.root = function (req, res, next) {
       }
       console.log(index)
       if (index < 5) {
-        console.log(attachment1.actions[attachment1.actions.length])
+
         attachment1.actions[attachment1.actions.length] = action
       } else {
-        console.log(attachment2.actions[attachment2.actions.length])
         attachment2.actions[attachment2.actions.length] = action
       }
     }
