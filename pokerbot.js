@@ -1,7 +1,5 @@
 'use strict'
 
-// const fs = require('fs')
-// const path = require('path')
 const UserRating = require('./model/user-rating')
 const IN_CHANNEL = 'in_channel'
 const EPHEMERAL = 'ephemeral'
@@ -92,72 +90,18 @@ pokerbot.root = function (req, res, next) {
         ok_text: 'Yes',
         dismiss_text: 'No'
       }
-      console.log(index)
       if (index < 5) {
-
         attachment1.actions[attachment1.actions.length] = action
       } else {
         attachment2.actions[attachment2.actions.length] = action
       }
     }
-    /*
-    var action1 = require('./config/data.json').action
-    var action2 = require('./config/data.json').action
-    var action3 = require('./config/data.json').action
-    var action4 = require('./config/data.json').action
-    var action5 = require('./config/data.json').action
-    var action6 = require('./config/data.json').action
-    var action7 = require('./config/data.json').action
-    var action8 = require('./config/data.json').action
-    var action9 = require('./config/data.json').action
-    action1.value = 1
-    action1.text = 1
-    action1.confirm.text = 'Are you sure you want to vote 1 ?'
-    action2.value = 2
-    action2.text = 2
-    action2.confirm.text = 'Are you sure you want to vote 2 ?'
-    action3.value = 3
-    action3.text = 3
-    action3.confirm.text = 'Are you sure you want to vote 3 ?'
-    action4.value = 5
-    action4.text = 5
-    action4.confirm.text = 'Are you sure you want to vote 5 ?'
-    action5.value = 8
-    action5.text = 8
-    action5.confirm.text = 'Are you sure you want to vote 8 ?'
-    action6.value = 13
-    action6.text = 13
-    action6.confirm.text = 'Are you sure you want to vote 13 ?'
-    action7.value = 21
-    action7.text = 21
-    action7.confirm.text = 'Are you sure you want to vote 21 ?'
-    action8.value = 34
-    action8.text = 34
-    action8.confirm.text = 'Are you sure you want to vote 34 ?'
-    action9.value = 55
-    action9.text = 55
-    action9.confirm.text = 'Are you sure you want to vote 55 ?'
-
-    var attachment1 = require('./config/data.json').attachment
-    attachment1.actions.push(action1)
-    attachment1.actions.push(action2)
-    attachment1.actions.push(action3)
-    attachment1.actions.push(action4)
-    attachment1.actions.push(action5)
-    var attachment2 = require('./config/data.json').attachment
-    attachment2.actions.push(action6)
-    attachment2.actions.push(action7)
-    attachment2.actions.push(action8)
-    attachment2.actions.push(action9)
-    */
     ratingModel[jiraId] = []
-    // var attachments = JSON.parse(fs.readFileSync(path.join(__dirname, '/config/data.json'), 'utf8'))
     var response = {
       response_type: IN_CHANNEL,
       text: 'Please give your poker vote for ' + jiraId,
       attachments: [attachment1, attachment2]
     }
-    console.log(response)
     return res.status(200).json(response)
   }
 }
