@@ -3,6 +3,7 @@
 const UserRating = require('./model/user-rating')
 const IN_CHANNEL = 'in_channel'
 const EPHEMERAL = 'ephemeral'
+const util = require('./util')
 
 var pokerbot = {}
 var ratingModel = {}    // It conatins the rating by each user. It is a map having key as unique Jira ID and value has an array comtaining ratingModel objects.
