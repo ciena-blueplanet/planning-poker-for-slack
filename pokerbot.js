@@ -35,12 +35,13 @@ pokerbot.root = function (req, res, next) {
   if (option === 'stop' && (ratingModel.hasOwnProperty(jiraId))) {
     console.log(ratingModel)
     var userRatingArray = ratingModel[jiraId]
+    console.log(userRatingArray.toString())
     var responsePlanningComplete = {
       response_type: IN_CHANNEL,
-      text: userRatingArray
+      text: userRatingArray.toString()
     }
     console.log(responsePlanningComplete)
-    console.log(userRatingArray)
+
     // var sortedUserRatingArray = util.sortArrayBasedOnObjectProperty(userRatingArray,'rating');
     // console.log(userRatingArray);
     delete ratingModel[jiraId]
