@@ -6,7 +6,12 @@ const fs = require('fs')
 const querystring = require('querystring')
 var auth = {}
 
-// To get the oauth token from slack server.
+/**
+ * We are getting the OAuth token from slack server for our app
+  * @param {Object} req - request object of the express module
+ * @param {Object} res -  response object of the express module
+ * @param {Object} next - next object of the express module
+*/
 auth.getToken = function (req, res, next) {
   var authCode = req.query.code
   var slackKey = JSON.parse(fs.readFileSync(path.join(__dirname, '/config/slackAppKey.json'), 'utf8'))

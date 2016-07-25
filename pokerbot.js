@@ -3,11 +3,17 @@
 const UserRating = require('./model/user-rating')
 const IN_CHANNEL = 'in_channel'
 const EPHEMERAL = 'ephemeral'
-const util = require('./util')
 
 var pokerbot = {}
 var ratingModel = {}    // It conatins the rating by each user. It is a map having key as unique Jira ID and value has an array comtaining ratingModel objects.
 
+/**
+ * We have received a request to start or stop the poker planning
+ * @param {Object} req - request object of the express module
+ * @param {Object} res -  response object of the express module
+ * @param {Object} next - next object of the express module
+ * @returns {Object} - response object of the express module
+*/
 pokerbot.root = function (req, res, next) {
   var requestBodyTextArray = req.body.text.split(' ')
   var option = requestBodyTextArray[0] ? requestBodyTextArray[0] : undefined
@@ -24,7 +30,6 @@ pokerbot.root = function (req, res, next) {
 
  // Closing the unstarted Jira Planning.
   if (option === 'stop' && (!ratingModel.hasOwnProperty(jiraId))) {
-    console.log(ratingModel)
     var responseForUnstartedJira = {
       response_type: EPHEMERAL,
       text: 'Planning for this JIRA ID is not started yet.'
@@ -34,7 +39,6 @@ pokerbot.root = function (req, res, next) {
 
  // Closing the planning activity.
   if (option === 'stop' && (ratingModel.hasOwnProperty(jiraId))) {
-    console.log(ratingModel)
     var userRatingArray = ratingModel[jiraId]
     var responseText
     if (userRatingArray.length > 0) {
@@ -68,7 +72,6 @@ pokerbot.root = function (req, res, next) {
 
  // Start the Poker game.
   if (option === 'start' && (!ratingModel.hasOwnProperty(jiraId))) {
-    console.log(ratingModel)
     var attachment1 = {
       text: '',
       color: '#3AA3E3',
@@ -112,6 +115,13 @@ pokerbot.root = function (req, res, next) {
   }
 }
 
+/**
+ * We have received a vote from user
+  * @param {Object} req - request object of the express module
+ * @param {Object} res -  response object of the express module
+ * @param {Object} next - next object of the express module
+ * @returns {Object} - response object of the express module
+*/
 pokerbot.vote = function (req, res, next) {
   var requestBody = JSON.parse(req.body.payload)
   var vote = requestBody.actions[0].value
@@ -120,10 +130,12 @@ pokerbot.vote = function (req, res, next) {
   var userRating = new UserRating(userId, userName, vote)
   var jiraId = 'JIRA-' + requestBody.original_message.text.split('JIRA-')[1]
   console.log(userRating)
+  console.log(ratingModel)
+  console.log(jiraId)
   ratingModel[jiraId].push(userRating)
   var responseEphemeral = {
     response_type: EPHEMERAL,
-    text: 'You have voted ' + vote + ' for JIRA ID : ' + jiraId,
+    text: 'You have voted ' + vote + ' for ' + jiraId,
     replace_original: false
   }
   return res.status(200).json(responseEphemeral)

@@ -35,7 +35,6 @@ describe('GET for root route ', function () {
       })
   })
 
-  /*
   it('Start and stop playing.', function testSlash (done) {
     let jiraId = Math.floor((Math.random() * 1000) + 1)
     request(url)
@@ -54,29 +53,38 @@ describe('GET for root route ', function () {
       })
       .end(function (err, res) {
         if (err) return done(err)
-        should.equal(res.status, 200, 'Status code for /start is not 200')
-        should.equal(res.body.text, 'Planning for this JIRA ID is complete. Thanks for Playing.', 'Response not ok.')
+        should.equal(res.status, 200, 'Status code for stop is not 200')
         done()
       })
     })
   })
-  */
 
   it('responds to /vote with start', function testSlash (done) {
-    let jiraId = 'JIRA-' + Math.floor((Math.random() * 1000) + 1)
-    const startPayload = require('../test-data.json').startPayload
-    startPayload.original_message.text = 'start ' + jiraId
-    let requestBody = {
-      payload: JSON.stringify(startPayload)
-    }
+    let jiraId = Math.floor((Math.random() * 1000) + 1)
     request(url)
-    .post('/vote')
-    .send(requestBody)
+    .post('/start')
+    .send({
+      'text': 'start JIRA-' + jiraId
+    })
     .end(function (err, res) {
       if (err) return done(err)
       should.equal(res.status, 200, 'Status code for /start is not 200')
-      should.equal(res.body.text, 'You have voted 8 for JIRA ID : ' + jiraId.split('JIRA-')[1], 'Response not ok.')
-      done()
+      should.equal(res.body.text, 'Please give your poker vote for JIRA-' + jiraId, 'Response body is not ok.')
+      const startPayload = require('../test-data.json').startPayload
+      startPayload.original_message.text = 'start JIRA-' + jiraId
+      let requestBody = {
+        payload: JSON.stringify(startPayload)
+      }
+      console.log(requestBody)
+      request(url)
+      .post('/vote')
+      .send(requestBody)
+      .end(function (err, res) {
+        if (err) return done(err)
+        should.equal(res.status, 200, 'Status code for /start is not 200')
+        should.equal(res.body.text, 'You have voted 8 for JIRA-' + jiraId, 'Response not ok.')
+        done()
+      })
     })
   })
 
