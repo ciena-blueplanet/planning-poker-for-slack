@@ -66,23 +66,23 @@ pokerbot.root = function (req, res, next) {
   if (option === 'start' && (!ratingModel.hasOwnProperty(jiraId))) {
     console.log(ratingModel)
     var attachment1 = {
-      'text': '',
-      'color': '#3AA3E3',
-      'attachment_type': 'default',
-      'callback_id': 'planning-poker',
-      'actions': []
+      text: '',
+      color: '#3AA3E3',
+      attachment_type: 'default',
+      callback_id: 'planning-poker',
+      actions: []
     }
     var attachment2 = {
-      'text': '',
-      'color': '#3AA3E3',
-      'attachment_type': 'default',
-      'callback_id': 'planning-poker',
-      'actions': []
+      text: '',
+      color: '#3AA3E3',
+      attachment_type: 'default',
+      callback_id: 'planning-poker',
+      actions: []
     }
     const fibonacci = [1, 2, 3, 5, 8, 13, 21, 34, 55]
-    var action
+
     for (var index = 0; index < fibonacci.lenth; index++) {
-      action = {}
+      var action = {}
       action.name = fibonacci[index]
       action.text = fibonacci[index]
       action.type = 'button'
@@ -93,13 +93,15 @@ pokerbot.root = function (req, res, next) {
         'ok_text': 'Yes',
         'dismiss_text': 'No'
       }
+      console.log('We are here')
       if (index < 5) {
-        attachment1.actions.push(action)
+        console.log(attachment1.actions[attachment1.actions.length])
+        attachment1.actions[attachment1.actions.length] = action
       } else {
-        attachment2.actions.push(action)
+        console.log(attachment2.actions[attachment2.actions.length])
+        attachment2.actions[attachment2.actions.length] = action
       }
     }
-
     /*
     var action1 = require('./config/data.json').action
     var action2 = require('./config/data.json').action
@@ -157,6 +159,7 @@ pokerbot.root = function (req, res, next) {
       text: 'Please give your poker vote for ' + jiraId,
       attachments: [attachment1, attachment2]
     }
+    console.log(response)
     return res.status(200).json(response)
   }
 }
