@@ -31,6 +31,7 @@ auth.getToken = function (req, res, next) {
       console.log('Got the oAuth token to be used in slack Web API.')
       process.stdout.write(d)
       fs.writeFileSync(path.join(__dirname, '/config/oauth.json'), JSON.stringify(d), 'utf-8')
+      console.log('Got the oAuth token to be used in slack Web API.')
       res.sendFile(path.join(__dirname, '/public/success.html'))
     })
   })
