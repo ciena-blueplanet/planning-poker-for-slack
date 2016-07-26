@@ -119,7 +119,7 @@ util.runSchedularForInProgressJira = function () {
         that.postMessageToChannel()
       }
     }
-  }, 30000)
+  }, 300000)
 }
 
 module.exports = util
