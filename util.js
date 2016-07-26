@@ -3,7 +3,11 @@
 const https = require('https')
 var util = {}
 
-// This is utilty method for getting channel info from slack server.
+/**
+ * We are asking the slack server to give us channel information
+ * @param {String} token - token id issued to us by slack-server
+ * @param {String} channelId -  channelId for the channel
+*/
 util.getUserCountInChannel = function (token, channelId) {
   var extServerOptions = {
     hostname: 'slack.com',
@@ -24,6 +28,12 @@ util.getUserCountInChannel = function (token, channelId) {
   })
 }
 
+/**
+ * Sorting the array of objects based on object property
+  * @param {object} items - array of objects
+ * @param {String} prop -   property name on bases of which sorting will be done
+ * @returns {Array} - sorted array
+*/
 util.sortArrayBasedOnObjectProperty = function (items, prop) {
   var sortedArray = items.sort(function (a, b) {
     if (a.prop > b.prop) {

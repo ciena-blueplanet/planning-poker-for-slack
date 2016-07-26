@@ -1,0 +1,7 @@
+{
+  "startPayload": {
+    "actions": [{"value": 8}],
+    "user": {"name": "satpal", "id": 1},
+    "original_message": {"text": ""}
+  }
+}
