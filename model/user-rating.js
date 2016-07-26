@@ -1,3 +1,5 @@
+'use strict'
+
 function UserRating (userid, userName, rating) {
   this.userid = userid
   this.userName = userName

@@ -1,7 +1,7 @@
 'use strict'
 
 const https = require('https')
- const ratingModel = require('./pokerbot').ratingModel
+const ratingModel = require('./pokerbot').ratingModel
 const jiraTimestampModel = require('./pokerbot').jiraTimestampModel
 const util = {}
 
@@ -60,14 +60,14 @@ util.runSchedularForInProgressJira = function () {
       differenceTravel = currentEpocTime - startedTimeOfJira
       seconds = Math.floor((differenceTravel) / (1000))
       console.log('Difference : ' + seconds)
-      if(seconds > 120){
+      if (seconds > 120) {
         console.log(ratingModel)
         console.log(jiraTimestampModel)
         delete ratingModel[prop]
         delete jiraTimestampModel[prop]
         console.log(ratingModel)
         console.log(jiraTimestampModel)
-     }
+      }
     }
   }, 10000)
 }
