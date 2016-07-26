@@ -14,7 +14,7 @@ const auth = {}
 */
 auth.getToken = function (req, res, next) {
   const authCode = req.query.code
-  const slackKey = JSON.parse(fs.readFileSync(path.join(__dirname, '/config/slackAppKey.json'), 'utf8'))
+  const slackKey = JSON.parse(fs.readFileSync(path.join(__dirname, '/config/slack-app-key.json'), 'utf8'))
   const querystringObject = {
     client_id: slackKey.client_id,
     client_secret: slackKey.client_secret,
@@ -29,7 +29,7 @@ auth.getToken = function (req, res, next) {
   const request = https.request(extServerOptions, (response) => {
     response.on('data', (d) => {
       process.stdout.write(d)
-      fs.writeFileSync('./config/oauth.json', JSON.stringify(d), 'utf-8')
+      fs.writeFileSync(path.join(__dirname, '/config/oauth.json'), JSON.stringify(d), 'utf-8')
       res.sendFile(path.join(__dirname, '/public/success.html'))
     })
   })
