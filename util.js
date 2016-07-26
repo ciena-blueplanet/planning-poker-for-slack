@@ -3,24 +3,35 @@
 const https = require('https')
 const ratingModel = require('./pokerbot').ratingModel
 const jiraTimestampModel = require('./pokerbot').jiraTimestampModel
+const channelName = require('./config/channel-name.json').name
+const auth = require('./auth')
 const util = {}
 
 /**
  * We are asking the slack server to give us channel information
  * @param {String} token - token id issued to us by slack-server
- * @param {String} channelId -  channelId for the channel
-*/
-util.getUserCountInChannel = function (token, channelId) {
+ */
+util.setChannelInfo = function (token) {
   let extServerOptions = {
     hostname: 'slack.com',
-    path: '/api/channels.info?token=' + token + '&channel=' + channelId,
+    path: '/api/channels.list?token=' + token,
     method: 'GET'
   }
   console.log(extServerOptions)
   let req = https.request(extServerOptions, (res) => {
     res.on('data', (d) => {
       process.stdout.write(d)
-      return JSON.parse(d)
+      // auth.channel = d
+      let allchannels = d
+      console.log(allchannels)
+      let channel
+      for (let index = 0; index < allchannels.length; index++) {
+        channel = allchannels[index]
+        if (channel.name === channelName) {
+          console.log(channel)
+          auth.channel = channel
+        }
+      }
     })
   })
   req.end()
@@ -36,11 +47,13 @@ util.getUserCountInChannel = function (token, channelId) {
  * @param {String} channelId -  channelId for the channel
 */
 util.postMessageToChannel = function () {
-  const token = require('./config/oauth.json').access_token
-  const channelId = 'C1MKJE5PY'
+  // const token = require('./config/oauth.json').access_token
+  // const channelId = 'C1MKJE5PY'
+  const message = encodeURIComponent('Voting finished')
+  const queryParams = 'token=' + auth.oauthToken.access_token + '&channel=' + auth.channel.id + '&text=' + message
   let extServerOptions = {
     hostname: 'slack.com',
-    path: '/api/chat.postMessage?token=' + token + '&channel=' + channelId + '&text=' + encodeURIComponent('Server push event'),
+    path: '/api/chat.postMessage?' + queryParams,
     method: 'GET'
   }
   console.log(extServerOptions)
