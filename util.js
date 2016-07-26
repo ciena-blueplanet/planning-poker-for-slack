@@ -35,10 +35,12 @@ util.getUserCountInChannel = function (token, channelId) {
  * @param {String} token - token id issued to us by slack-server
  * @param {String} channelId -  channelId for the channel
 */
-util.postMessageToChannel = function (token, channelId) {
+util.postMessageToChannel = function () {
+  const token = require('./config/oauth.json').access_token
+  const channelId = 'C1MKJE5PY'
   let extServerOptions = {
     hostname: 'slack.com',
-    path: '/api/chat.postMessage?token=' + token + '&channel=' + channelId,
+    path: '/api/chat.postMessage?token=' + token + '&channel=' + channelId + '&text=' + 'Server push event',
     method: 'GET'
   }
   console.log(extServerOptions)
@@ -76,6 +78,7 @@ util.sortArrayBasedOnObjectProperty = function (items, prop) {
 }
 
 util.runSchedularForInProgressJira = function () {
+  let that = this
   setInterval(function () {
     let currentEpocTime = (new Date()).getTime()
     console.log('Running schedular to see all live planning. Current time : ' + currentEpocTime)
@@ -84,14 +87,15 @@ util.runSchedularForInProgressJira = function () {
       startedTimeOfJira = jiraTimestampModel[prop]
       differenceTravel = currentEpocTime - startedTimeOfJira
       seconds = Math.floor((differenceTravel) / (1000))
-      console.log('Difference : ' + seconds)
-      if (seconds > 120) {
+      // console.log('Difference : ' + seconds)
+      if (seconds > 60) {
         console.log(ratingModel)
         console.log(jiraTimestampModel)
         delete ratingModel[prop]
         delete jiraTimestampModel[prop]
         console.log(ratingModel)
         console.log(jiraTimestampModel)
+        that.postMessageToChannel()
       }
     }
   }, 10000)
