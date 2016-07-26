@@ -54,13 +54,11 @@ util.setChannelInfo = function (token) {
 util.postMessageToChannel = function () {
   // const token = require('./config/oauth.json').access_token
   // const channelId = 'C1MKJE5PY'
-  const oauthToken = require('./auth').oauthToken
-  const channel = require('./auth').channel
-  const message = encodeURIComponent('Voting finished')
+  const access_token = require('./auth').oauthToken.access_token
+  const channelId = require('./auth').channel.id
+  const message = encodeURIComponent('Voting finished. Thanks for voting.')
   console.log('posting message to channel')
-  console.log(oauthToken)
-  console.log(channel.id)
-  const queryParams = 'token=' + oauthToken + '&channel=' + channel.id + '&text=' + message
+  const queryParams = 'token=' + access_token + '&channel=' + channelId + '&text=' + message
   let extServerOptions = {
     hostname: 'slack.com',
     path: '/api/chat.postMessage?' + queryParams,
