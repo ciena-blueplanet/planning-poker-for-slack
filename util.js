@@ -5,7 +5,7 @@ const ratingModel = require('./pokerbot').ratingModel
 const jiraTimestampModel = require('./pokerbot').jiraTimestampModel
 const channelName = require('./config/channel-name.json').name
 const auth = require('./auth')
-const util = {}
+let util = {}
 
 /**
  * We are asking the slack server to give us channel information
@@ -28,8 +28,9 @@ util.setChannelInfo = function (token) {
       for (let index = 0; index < allchannels.length; index++) {
         channel = allchannels[index]
         if (channel.name === channelName) {
-          console.log(channel)
+          console.log('Found our channel detail.')
           auth.channel = channel
+          console.log(auth.channel)
         }
       }
     })
@@ -50,6 +51,9 @@ util.postMessageToChannel = function () {
   // const token = require('./config/oauth.json').access_token
   // const channelId = 'C1MKJE5PY'
   const message = encodeURIComponent('Voting finished')
+  console.log('posting message to channel')
+  console.log(auth.oauthToken)
+  console.log(auth.channel.id)
   const queryParams = 'token=' + auth.oauthToken.access_token + '&channel=' + auth.channel.id + '&text=' + message
   let extServerOptions = {
     hostname: 'slack.com',
