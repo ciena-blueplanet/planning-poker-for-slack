@@ -22,7 +22,7 @@ util.setChannelInfo = function (token) {
     res.on('data', (d) => {
       process.stdout.write(d)
       // auth.channel = d
-      let allchannels = d
+      let allchannels = JSON.parse(d.toString())
       console.log(allchannels)
       let channel
       for (let index = 0; index < allchannels.length; index++) {
