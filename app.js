@@ -22,4 +22,4 @@ app.get('/token', auth.getToken)
 
 app.listen(port)
 console.log('Application listening on port : ' + port)
-util.runSchedularForInProgressJira()
+// util.runSchedularForInProgressJira()
