@@ -29,6 +29,7 @@ auth.getToken = function (req, res, next) {
   const request = https.request(extServerOptions, (response) => {
     response.on('data', (d) => {
       process.stdout.write(d)
+      fs.writeFileSync('./config/oauth.json', JSON.stringify(d), 'utf-8')
       res.sendFile(path.join(__dirname, '/public/success.html'))
     })
   })
