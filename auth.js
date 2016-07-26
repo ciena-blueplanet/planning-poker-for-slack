@@ -6,8 +6,8 @@ const fs = require('fs')
 const querystring = require('querystring')
 const util = require('./util')
 let auth = {}
-auth.oauthToken = {}
-auth.channel = {}
+auth.oauthToken = ''
+auth.channel = ''
 /**
  * We are getting the OAuth token from slack server for our app
  * @param {Object} req - request object of the express module
