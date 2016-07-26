@@ -40,7 +40,7 @@ util.postMessageToChannel = function () {
   const channelId = 'C1MKJE5PY'
   let extServerOptions = {
     hostname: 'slack.com',
-    path: '/api/chat.postMessage?token=' + token + '&channel=' + channelId + '&text=' + 'Server push event',
+    path: '/api/chat.postMessage?token=' + token + '&channel=' + channelId + '&text=' + encodeURIComponent('Server push event'),
     method: 'GET'
   }
   console.log(extServerOptions)
