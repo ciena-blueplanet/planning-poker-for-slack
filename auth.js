@@ -36,6 +36,13 @@ auth.getToken = function (req, res, next) {
       auth.oauthToken = JSON.parse(d.toString())
       console.log(auth.oauthToken)
       util.setChannelInfo(auth.oauthToken.access_token)
+      .then((channel) => {
+        console.log(channel)
+        auth.channel = channel
+      })
+      .catch((err) => {
+        console.error(err)
+      })
       res.sendFile(path.join(__dirname, '/public/success.html'))
     })
   })

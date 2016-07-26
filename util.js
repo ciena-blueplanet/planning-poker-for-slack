@@ -4,12 +4,13 @@ const https = require('https')
 const ratingModel = require('./pokerbot').ratingModel
 const jiraTimestampModel = require('./pokerbot').jiraTimestampModel
 const channelName = require('./config/channel-name.json').name
-const auth = require('./auth')
+// const auth = require('./auth')
 let util = {}
 
 /**
  * We are asking the slack server to give us channel information
  * @param {String} token - token id issued to us by slack-server
+ * @returns {Promise} promise - channel info issued to us by slack-server
  */
 util.setChannelInfo = function (token) {
   let extServerOptions = {
@@ -18,27 +19,30 @@ util.setChannelInfo = function (token) {
     method: 'GET'
   }
   console.log(extServerOptions)
-  let req = https.request(extServerOptions, (res) => {
-    res.on('data', (d) => {
-      process.stdout.write(d)
-      // auth.channel = d
-      let allchannels = JSON.parse(d.toString()).channels
-      console.log('Number of channels : '+ allchannels.length)
-      let channel
-      for (let index = 0; index < allchannels.length; index++) {
-        channel = allchannels[index]
-        if (channel.name === channelName) {
-          console.log('Found our channel detail.')
-          auth.channel = channel
-          console.log(auth.channel)
+  return new Promise((resolve, reject) => {
+    let req = https.request(extServerOptions, (res) => {
+      res.on('data', (d) => {
+        process.stdout.write(d)
+        let allchannels = JSON.parse(d.toString()).channels
+        console.log('Number of channels : ' + allchannels.length)
+        let channel
+        for (let index = 0; index < allchannels.length; index++) {
+          channel = allchannels[index]
+          if (channel.name === channelName) {
+            console.log('Found our channel detail.')
+            // auth.channel = channel
+            console.log(channel)
+            resolve(channel)
+          }
         }
-      }
+      })
     })
-  })
-  req.end()
-  req.on('error', (error) => {
-    console.error(error)
-    return JSON.parse(error)
+    req.end()
+    req.on('error', (error) => {
+      console.error(error)
+      // return JSON.parse(error)
+      reject(error)
+    })
   })
 }
 
@@ -50,11 +54,13 @@ util.setChannelInfo = function (token) {
 util.postMessageToChannel = function () {
   // const token = require('./config/oauth.json').access_token
   // const channelId = 'C1MKJE5PY'
+  const oauthToken = require('./auth').oauthToken
+  const channel = require('./auth').channel
   const message = encodeURIComponent('Voting finished')
   console.log('posting message to channel')
-  console.log(auth.oauthToken)
-  console.log(auth.channel.id)
-  const queryParams = 'token=' + auth.oauthToken.access_token + '&channel=' + auth.channel.id + '&text=' + message
+  console.log(oauthToken)
+  console.log(channel.id)
+  const queryParams = 'token=' + oauthToken + '&channel=' + channel.id + '&text=' + message
   let extServerOptions = {
     hostname: 'slack.com',
     path: '/api/chat.postMessage?' + queryParams,
@@ -115,7 +121,7 @@ util.runSchedularForInProgressJira = function () {
         that.postMessageToChannel()
       }
     }
-  }, 10000)
+  }, 30000)
 }
 
 module.exports = util
