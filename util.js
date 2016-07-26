@@ -1,7 +1,9 @@
 'use strict'
 
 const https = require('https')
-var util = {}
+ const ratingModel = require('./pokerbot').ratingModel
+const jiraTimestampModel = require('./pokerbot').jiraTimestampModel
+const util = {}
 
 /**
  * We are asking the slack server to give us channel information
@@ -9,13 +11,13 @@ var util = {}
  * @param {String} channelId -  channelId for the channel
 */
 util.getUserCountInChannel = function (token, channelId) {
-  var extServerOptions = {
+  let extServerOptions = {
     hostname: 'slack.com',
     path: '/api/channels.info?token=' + token + '&channel=' + channelId,
     method: 'GET'
   }
   console.log(extServerOptions)
-  var req = https.request(extServerOptions, (res) => {
+  let req = https.request(extServerOptions, (res) => {
     res.on('data', (d) => {
       process.stdout.write(d)
       return JSON.parse(d)
@@ -35,7 +37,7 @@ util.getUserCountInChannel = function (token, channelId) {
  * @returns {Array} - sorted array
 */
 util.sortArrayBasedOnObjectProperty = function (items, prop) {
-  var sortedArray = items.sort(function (a, b) {
+  let sortedArray = items.sort(function (a, b) {
     if (a.prop > b.prop) {
       return 1
     }
@@ -46,6 +48,28 @@ util.sortArrayBasedOnObjectProperty = function (items, prop) {
     return 0
   })
   return sortedArray
+}
+
+util.runSchedularForInProgressJira = function () {
+  setInterval(function () {
+    let currentEpocTime = (new Date()).getTime()
+    console.log('Running schedular to see all live planning. Current time : ' + currentEpocTime)
+    let startedTimeOfJira, differenceTravel, seconds
+    for (let prop in jiraTimestampModel) {
+      startedTimeOfJira = jiraTimestampModel[prop]
+      differenceTravel = currentEpocTime - startedTimeOfJira
+      seconds = Math.floor((differenceTravel) / (1000))
+      console.log('Difference : ' + seconds)
+      if(seconds > 120){
+        console.log(ratingModel)
+        console.log(jiraTimestampModel)
+        delete ratingModel[prop]
+        delete jiraTimestampModel[prop]
+        console.log(ratingModel)
+        console.log(jiraTimestampModel)
+     }
+    }
+  }, 10000)
 }
 
 module.exports = util

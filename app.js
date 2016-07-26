@@ -6,6 +6,7 @@ const bodyParser = require('body-parser')
 const app = express()
 const pokerbot = require('./pokerbot')
 const auth = require('./auth')
+const util = require('./util')
 
 const port = process.argv[2] ? process.argv[2] : 3000
 
@@ -21,3 +22,4 @@ app.get('/token', auth.getToken)
 
 app.listen(port)
 console.log('Application listening on port : ' + port)
+util.runSchedularForInProgressJira()
