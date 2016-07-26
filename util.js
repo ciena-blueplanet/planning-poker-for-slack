@@ -38,7 +38,7 @@ util.getUserCountInChannel = function (token, channelId) {
 util.postMessageToChannel = function (token, channelId) {
   let extServerOptions = {
     hostname: 'slack.com',
-    path: '/api/channels.info?token=' + token + '&channel=' + channelId,
+    path: '/api/chat.postMessage?token=' + token + '&channel=' + channelId,
     method: 'GET'
   }
   console.log(extServerOptions)
