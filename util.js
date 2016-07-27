@@ -4,6 +4,8 @@ const https = require('https')
 const ratingModel = require('./pokerbot').ratingModel
 const jiraTimestampModel = require('./pokerbot').jiraTimestampModel
 const channelName = require('./config/channel-name.json').name
+const maxPlayTime = require('./config/schedule.json').maxPlayTime
+const gameInterval = require('./config/schedule.json').gameInterval
 // const auth = require('./auth')
 let util = {}
 
@@ -47,18 +49,16 @@ util.setChannelInfo = function (token) {
 }
 
 /**
- * We are asking the slack server to give us channel information
- * @param {String} token - token id issued to us by slack-server
- * @param {String} channelId -  channelId for the channel
+  * @param {String} message - message to be post to channel
 */
-util.postMessageToChannel = function () {
+util.postMessageToChannel = function (message) {
   // const token = require('./config/oauth.json').access_token
   // const channelId = 'C1MKJE5PY'
-  const access_token = require('./auth').oauthToken.access_token
+  const accessToken = require('./auth').oauthToken.access_token
   const channelId = require('./auth').channel.id
-  const message = encodeURIComponent('Voting finished. Thanks for voting.')
+
   console.log('posting message to channel')
-  const queryParams = 'token=' + access_token + '&channel=' + channelId + '&text=' + message
+  const queryParams = 'token=' + accessToken + '&channel=' + channelId + '&text=' + encodeURIComponent(message)
   let extServerOptions = {
     hostname: 'slack.com',
     path: '/api/chat.postMessage?' + queryParams,
@@ -98,6 +98,9 @@ util.sortArrayBasedOnObjectProperty = function (items, prop) {
   return sortedArray
 }
 
+/**
+ * This is the schedular which will run to send notification for each in-progress poker game.
+*/
 util.runSchedularForInProgressJira = function () {
   let that = this
   setInterval(function () {
@@ -108,18 +111,21 @@ util.runSchedularForInProgressJira = function () {
       startedTimeOfJira = jiraTimestampModel[prop]
       differenceTravel = currentEpocTime - startedTimeOfJira
       seconds = Math.floor((differenceTravel) / (1000))
-      // console.log('Difference : ' + seconds)
-      if (seconds > 60) {
+      if (seconds > maxPlayTime) {
         console.log(ratingModel)
         console.log(jiraTimestampModel)
         delete ratingModel[prop]
         delete jiraTimestampModel[prop]
         console.log(ratingModel)
         console.log(jiraTimestampModel)
-        that.postMessageToChannel()
+        that.postMessageToChannel('Message for poker planning.')
+        return
       }
+      let reminderMessage = 'Planning for JIRA ID ; ' +
+       prop + ' is in progress. Please vote if you have not done yet. '
+      that.postMessageToChannel(reminderMessage)
     }
-  }, 300000)
+  }, gameInterval * 1000)
 }
 
 module.exports = util
