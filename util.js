@@ -2,7 +2,6 @@
 
 const https = require('https')
 const pokerDataModel = require('./pokerbot').pokerDataModel
-// const channelName = require('./config/channel-name.json').name
 const maxPlayTime = require('./config/schedule.json').maxPlayTime
 const gameInterval = require('./config/schedule.json').gameInterval
 
@@ -93,6 +92,7 @@ util.runSchedularForInProgressJira = function () {
   console.log('Util runScheduler : begin')
   let that = this
   setInterval(function () {
+    const token = require('./auth').token.access_token
     let currentEpocTime = (new Date()).getTime()
     console.log('Running schedular to see all live planning. Current time : ' + currentEpocTime)
     let startedTimeOfJira, differenceTravel, seconds, channelId
@@ -105,12 +105,12 @@ util.runSchedularForInProgressJira = function () {
         console.log(pokerDataModel)
         delete pokerDataModel[prop]
         console.log(pokerDataModel)
-        that.postMessageToChannel('token', channelId, 'Voting for ' + prop + 'Finished. Thanks For voting.')
-        return
+        that.postMessageToChannel(token, channelId, 'Voting for ' + prop + 'Finished. Thanks For voting.')
+      } else {
+        let reminderMessage = 'Planning for JIRA ID ' +
+         prop + ' is in progress. Please vote if you have not done yet. '
+        that.postMessageToChannel(token, channelId, reminderMessage)
       }
-      let reminderMessage = 'Planning for JIRA ID ' +
-       prop + ' is in progress. Please vote if you have not done yet. '
-      that.postMessageToChannel('token', channelId, reminderMessage)
     }
   }, gameInterval * 1000)
   console.log('Util runScheduler : end')
