@@ -32,7 +32,7 @@ auth.getToken = function (req, res, next) {
   const request = https.request(extServerOptions, (response) => {
     response.on('data', (d) => {
       process.stdout.write(d)
-      auth.token = JSON.parse(d.toString())
+      auth.token = JSON.parse(d.toString()).access_token
       console.log('Auth getToken : end')
       res.sendFile(path.join(__dirname, '/public/success.html'))
     })
