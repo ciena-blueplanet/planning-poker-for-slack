@@ -16,11 +16,14 @@ pokerbot.token = ''
  * @returns {Object} - response object of the express module
 */
 pokerbot.root = function (req, res, next) {
+  console.log('Option root : begin')
   const requestBodyTextArray = req.body.text.split(' ')
   const option = requestBodyTextArray[0] ? requestBodyTextArray[0] : undefined
   const jiraId = requestBodyTextArray[1] ? requestBodyTextArray[1] : undefined
   const channelId = req.body.channel
+  console.log('Channel Id  : ' + channelId)
   const token = req.body.token
+  console.log('Token Id  : ' + token)
   if (!pokerbot.token) {
     pokerbot.token = token
   }
