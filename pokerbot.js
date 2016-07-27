@@ -57,6 +57,7 @@ pokerbot.root = function (req, res, next) {
       text: responseText
     }
     delete pokerbot.ratingModel[jiraId]
+    delete pokerbot.jiraTimestampModel[jiraId]
     return res.status(200).json(responsePlanningComplete)
   }
 

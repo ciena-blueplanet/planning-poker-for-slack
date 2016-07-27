@@ -112,16 +112,16 @@ util.runSchedularForInProgressJira = function () {
       differenceTravel = currentEpocTime - startedTimeOfJira
       seconds = Math.floor((differenceTravel) / (1000))
       if (seconds > maxPlayTime) {
-        console.log(ratingModel)
-        console.log(jiraTimestampModel)
+        // console.log(ratingModel)
+        // console.log(jiraTimestampModel)
         delete ratingModel[prop]
         delete jiraTimestampModel[prop]
-        console.log(ratingModel)
-        console.log(jiraTimestampModel)
-        that.postMessageToChannel('Message for poker planning.')
+        // console.log(ratingModel)
+        // console.log(jiraTimestampModel)
+        that.postMessageToChannel('Voting for ' + prop + 'Finished. Thanks For voting.')
         return
       }
-      let reminderMessage = 'Planning for JIRA ID ; ' +
+      let reminderMessage = 'Planning for JIRA ID ' +
        prop + ' is in progress. Please vote if you have not done yet. '
       that.postMessageToChannel(reminderMessage)
     }
