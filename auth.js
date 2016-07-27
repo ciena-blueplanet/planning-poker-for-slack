@@ -4,10 +4,9 @@ const https = require('https')
 const path = require('path')
 const fs = require('fs')
 const querystring = require('querystring')
-const util = require('./util')
+// const util = require('./util')
 let auth = {}
-auth.oauthToken = ''
-auth.channel = ''
+
 /**
  * We are getting the OAuth token from slack server for our app
  * @param {Object} req - request object of the express module
@@ -32,17 +31,6 @@ auth.getToken = function (req, res, next) {
     response.on('data', (d) => {
       console.log('Got the oAuth token to be used in slack Web API.')
       process.stdout.write(d)
-      // fs.writeFileSync(path.join(__dirname, '/config/oauth.json'), d, 'utf-8')clear
-      auth.oauthToken = JSON.parse(d.toString())
-      console.log(auth.oauthToken)
-      util.setChannelInfo(auth.oauthToken.access_token)
-      .then((channel) => {
-        console.log(channel)
-        auth.channel = channel
-      })
-      .catch((err) => {
-        console.error(err)
-      })
       res.sendFile(path.join(__dirname, '/public/success.html'))
     })
   })

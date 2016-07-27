@@ -1,42 +1,32 @@
 'use strict'
 
 const https = require('https')
-const ratingModel = require('./pokerbot').ratingModel
-const jiraTimestampModel = require('./pokerbot').jiraTimestampModel
-const channelName = require('./config/channel-name.json').name
+const pokerDataModel = require('./pokerbot').pokerDataModel
+const token = require('./pokerbot').token
+// const channelName = require('./config/channel-name.json').name
 const maxPlayTime = require('./config/schedule.json').maxPlayTime
 const gameInterval = require('./config/schedule.json').gameInterval
-// const auth = require('./auth')
+
 let util = {}
 
 /**
  * We are asking the slack server to give us channel information
  * @param {String} token - token id issued to us by slack-server
+ * @param {String} channelId - channel id
  * @returns {Promise} promise - channel info issued to us by slack-server
  */
-util.setChannelInfo = function (token) {
+util.getChannelInfo = function (token, channelId) {
   let extServerOptions = {
     hostname: 'slack.com',
-    path: '/api/channels.list?token=' + token,
+    path: '/api/channels.info?token=' + token + '&channel=' + channelId,
     method: 'GET'
   }
   console.log(extServerOptions)
   return new Promise((resolve, reject) => {
     let req = https.request(extServerOptions, (res) => {
       res.on('data', (d) => {
-        process.stdout.write(d)
-        let allchannels = JSON.parse(d.toString()).channels
-        console.log('Number of channels : ' + allchannels.length)
-        let channel
-        for (let index = 0; index < allchannels.length; index++) {
-          channel = allchannels[index]
-          if (channel.name === channelName) {
-            console.log('Found our channel detail.')
-            // auth.channel = channel
-            console.log(channel)
-            resolve(channel)
-          }
-        }
+        // process.stdout.write(d)
+        resolve(JSON.parse(d.toString()).channel)
       })
     })
     req.end()
@@ -49,16 +39,13 @@ util.setChannelInfo = function (token) {
 }
 
 /**
+  * @param {String} token - token id issued to us by slack-server
+  * @param {String} channelId - channel id
   * @param {String} message - message to be post to channel
 */
-util.postMessageToChannel = function (message) {
-  // const token = require('./config/oauth.json').access_token
-  // const channelId = 'C1MKJE5PY'
-  const accessToken = require('./auth').oauthToken.access_token
-  const channelId = require('./auth').channel.id
-
+util.postMessageToChannel = function (token, channelId, message) {
   console.log('posting message to channel')
-  const queryParams = 'token=' + accessToken + '&channel=' + channelId + '&text=' + encodeURIComponent(message)
+  const queryParams = 'token=' + token + '&channel=' + channelId + '&text=' + encodeURIComponent(message)
   let extServerOptions = {
     hostname: 'slack.com',
     path: '/api/chat.postMessage?' + queryParams,
@@ -106,24 +93,22 @@ util.runSchedularForInProgressJira = function () {
   setInterval(function () {
     let currentEpocTime = (new Date()).getTime()
     console.log('Running schedular to see all live planning. Current time : ' + currentEpocTime)
-    let startedTimeOfJira, differenceTravel, seconds
-    for (let prop in jiraTimestampModel) {
-      startedTimeOfJira = jiraTimestampModel[prop]
+    let startedTimeOfJira, differenceTravel, seconds, channelId
+    for (let prop in pokerDataModel) {
+      startedTimeOfJira = pokerDataModel[prop].craetedOn
+      channelId = pokerDataModel[prop].channelId.id
       differenceTravel = currentEpocTime - startedTimeOfJira
       seconds = Math.floor((differenceTravel) / (1000))
       if (seconds > maxPlayTime) {
-        // console.log(ratingModel)
-        // console.log(jiraTimestampModel)
-        delete ratingModel[prop]
-        delete jiraTimestampModel[prop]
-        // console.log(ratingModel)
-        // console.log(jiraTimestampModel)
-        that.postMessageToChannel('Voting for ' + prop + 'Finished. Thanks For voting.')
+        console.log(pokerDataModel)
+        delete pokerDataModel[prop]
+        console.log(pokerDataModel)
+        that.postMessageToChannel(token, channelId, 'Voting for ' + prop + 'Finished. Thanks For voting.')
         return
       }
       let reminderMessage = 'Planning for JIRA ID ' +
        prop + ' is in progress. Please vote if you have not done yet. '
-      that.postMessageToChannel(reminderMessage)
+      that.postMessageToChannel(token, channelId, reminderMessage)
     }
   }, gameInterval * 1000)
 }
