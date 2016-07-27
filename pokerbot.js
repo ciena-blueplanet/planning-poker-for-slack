@@ -53,7 +53,8 @@ pokerbot.root = function (req, res, next) {
     let pokerModel = pokerbot.pokerDataModel[jiraId]
     let responseText, responseStopRequest
     if (pokerModel.channelId.id !== channelId) {
-      responseText = 'This stop request can not be processed in this channel. Please raise it from proper channel'
+      responseText = 'This game was not started in this channel.' +
+      'Please go to channel ' + pokerModel.channelId.name + ' to stop the game.'
       responseStopRequest = {
         response_type: EPHEMERAL,
         text: responseText
@@ -62,7 +63,6 @@ pokerbot.root = function (req, res, next) {
       let votingMap = pokerbot.pokerDataModel[jiraId].voting
       let keys = Object.keys(votingMap)
       if (keys.length > 0) {
-        // var sortedUserRatingArray = util.sortArrayBasedOnObjectProperty(userRatingArray, 'rating')
         responseText = 'Voting Result : '
         for (let ratingIndex = 0; ratingIndex < keys.length; ratingIndex++) {
           responseText = responseText + votingMap[keys[ratingIndex]].userName + ' voted : '
@@ -169,9 +169,7 @@ pokerbot.vote = function (req, res, next) {
   const userId = requestBody.user.id
   const userRating = new UserRating(userId, userName, vote)
   const jiraId = 'JIRA-' + requestBody.original_message.text.split('JIRA-')[1]
-  // console.log(userRating)
   console.log(pokerbot.pokerDataModel)
-  // console.log(jiraId)
   let responseEphemeral
   if (pokerbot.pokerDataModel[jiraId]) {
     if (!pokerbot.pokerDataModel[jiraId].voting[userId]) {

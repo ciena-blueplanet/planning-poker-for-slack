@@ -96,17 +96,27 @@ util.runSchedularForInProgressJira = function () {
     let pokerDataModel = require('./pokerbot').pokerDataModel
     let currentEpocTime = (new Date()).getTime()
     console.log('Running schedular to see all live planning. Current time : ' + currentEpocTime)
-    let startedTimeOfJira, differenceTravel, seconds, channelId
+    let startedTimeOfJira, differenceTravel, seconds, channelId, responseText
     for (let prop in pokerDataModel) {
       startedTimeOfJira = pokerDataModel[prop].craetedOn
       channelId = pokerDataModel[prop].channelId.id
       differenceTravel = currentEpocTime - startedTimeOfJira
       seconds = Math.floor((differenceTravel) / (1000))
       if (seconds > maxPlayTime) {
-        console.log(pokerDataModel)
+        let votingMap = pokerDataModel[prop].voting
+        let keys = Object.keys(votingMap)
+        if (keys.length > 0) {
+          responseText = 'Voting Result : '
+          for (let ratingIndex = 0; ratingIndex < keys.length; ratingIndex++) {
+            responseText = responseText + votingMap[keys[ratingIndex]].userName + ' voted : '
+            responseText = responseText + votingMap[keys[ratingIndex]].rating + '. '
+          }
+        } else {
+          responseText = 'No Voting for this JIRA yet. Closing the voting now.'
+        }
+        responseText = responseText + ' . Thanks for voting.'
         delete pokerDataModel[prop]
-        console.log(pokerDataModel)
-        that.postMessageToChannel(token, channelId, 'Voting for ' + prop + 'Finished. Thanks For voting.')
+        that.postMessageToChannel(token, channelId, 'Voting for ' + prop + ' is Finished. Thanks For voting.')
       } else {
         let reminderMessage = 'Planning for JIRA ID ' +
          prop + ' is in progress. Please vote if you have not done yet. '
