@@ -138,7 +138,7 @@ pokerbot.root = function (req, res, next) {
     .then((channel) => {
       pokerbot.pokerDataModel[jiraId].channelId['id'] = channel.id
       pokerbot.pokerDataModel[jiraId].channelId['name'] = channel.name
-      pokerbot.pokerDataModel[jiraId].channelId['members'] = channel.members
+      pokerbot.pokerDataModel[jiraId].channelId['members'] = channel.members.length
       console.log(pokerbot.pokerDataModel)
     })
     .catch((err) => {
@@ -187,10 +187,27 @@ pokerbot.vote = function (req, res, next) {
         replace_original: false
       }
     }
-    responseEphemeral = {
-      response_type: EPHEMERAL,
-      text: 'You have voted ' + vote + ' for ' + jiraId,
-      replace_original: false
+
+    let votingMap = pokerbot.pokerDataModel[jiraId].voting
+    let keys = Object.keys(votingMap)
+    if (pokerbot.pokerDataModel[jiraId].channelId.members === keys.length) {
+      console.log('All member have voted so closing the game now.')
+      let responseText
+      if (keys.length > 0) {
+        responseText = 'Voting Result : '
+        for (let ratingIndex = 0; ratingIndex < keys.length; ratingIndex++) {
+          responseText = responseText + votingMap[keys[ratingIndex]].userName + ' voted : '
+          responseText = responseText + votingMap[keys[ratingIndex]].rating + '. '
+        }
+        responseText = responseText + ' . Thanks for voting.'
+      } else {
+        responseText = 'No Voting for this JIRA yet. Closing the voting now.'
+      }
+      responseEphemeral = {
+        response_type: IN_CHANNEL,
+        text: responseText
+      }
+      delete pokerbot.pokerDataModel[jiraId]
     }
   } else {
     responseEphemeral = {
