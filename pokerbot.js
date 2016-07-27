@@ -17,11 +17,10 @@ pokerbot.token = ''
 */
 pokerbot.root = function (req, res, next) {
   console.log('Option root : begin')
-  console.log(req.body)
   const requestBodyTextArray = req.body.text.split(' ')
   const option = requestBodyTextArray[0] ? requestBodyTextArray[0] : undefined
   const jiraId = requestBodyTextArray[1] ? requestBodyTextArray[1] : undefined
-  const channelId = req.body.channel
+  const channelId = req.body.channel_id
   console.log('Channel Id  : ' + channelId)
   const token = req.body.token
   console.log('Token Id  : ' + token)
