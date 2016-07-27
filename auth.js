@@ -43,4 +43,30 @@ auth.getToken = function (req, res, next) {
     console.log('Auth getToken : end')
   })
 }
+
+auth.test = function (req, res, next) {
+  console.log('Auth Test : begin')
+  const querystringObject = {
+    scope: encodeURIComponent('commands,chat:write:bot,channels:read'),
+    redirect_uri : encodeURIComponent('https://127.0.0.1:3000/vote1'),
+    client_id: '55672736423.58936834261'
+  }
+  const extServerOptions = {
+    hostname: 'slack.com',
+    path: '/oauth/authorize?' + querystring.stringify(querystringObject),
+    method: 'GET'
+  }
+  console.log(extServerOptions)
+  const request = https.request(extServerOptions, (response) => {
+    response.on('data', (d) => {
+      process.stdout.write(d)
+    })
+  })
+  request.end()
+  request.on('error', (e) => {
+    console.error(e)
+    console.log('Auth getToken : end')
+  })
+}
+
 module.exports = auth

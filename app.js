@@ -19,6 +19,8 @@ app.get('/', function (req, res) {
   res.sendFile(path.join(__dirname, '/public/index.html'))
 })
 app.get('/token', auth.getToken)
+app.post('/test', auth.test)
+app.post('/vote1', auth.getToken)
 
 app.listen(port)
 console.log('Application listening on port : ' + port)

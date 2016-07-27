@@ -2,7 +2,6 @@
 
 const https = require('https')
 const pokerDataModel = require('./pokerbot').pokerDataModel
-const token = require('./pokerbot').token
 // const channelName = require('./config/channel-name.json').name
 const maxPlayTime = require('./config/schedule.json').maxPlayTime
 const gameInterval = require('./config/schedule.json').gameInterval
