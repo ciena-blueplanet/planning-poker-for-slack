@@ -133,14 +133,23 @@ pokerbot.vote = function (req, res, next) {
   const userId = requestBody.user.id
   const userRating = new UserRating(userId, userName, vote)
   const jiraId = 'JIRA-' + requestBody.original_message.text.split('JIRA-')[1]
-  console.log(userRating)
+  // console.log(userRating)
   console.log(pokerbot.ratingModel)
-  console.log(jiraId)
-  pokerbot.ratingModel[jiraId].push(userRating)
-  let responseEphemeral = {
-    response_type: EPHEMERAL,
-    text: 'You have voted ' + vote + ' for ' + jiraId,
-    replace_original: false
+  // console.log(jiraId)
+  let responseEphemeral
+  if (pokerbot.ratingModel[jiraId]) {
+    responseEphemeral = {
+      response_type: EPHEMERAL,
+      text: 'You have voted ' + vote + ' for ' + jiraId,
+      replace_original: false
+    }
+    pokerbot.ratingModel[jiraId].push(userRating)
+  } else {
+    responseEphemeral = {
+      response_type: EPHEMERAL,
+      text: 'Voting for ' + jiraId + ' is closed.',
+      replace_original: true
+    }
   }
   return res.status(200).json(responseEphemeral)
 }
