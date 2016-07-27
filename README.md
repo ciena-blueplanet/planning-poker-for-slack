@@ -21,7 +21,7 @@ Go to App Credential tab and note down client ID and Client Secret key.
 ```
 git clone git@github.com/ciena-frost/planning-poker-for-slack.git
 In the config/slack-app-key.json enter the client ID and Client Secret key.
-In the config/channel-name.json give the name of the channel on which app should work.
+In the config/schedule.json enter the maxPlayTime(Game will automatically stop after this point and rsult will be published.) and gameInterval(A reminder will be send in channel to vote).
 In the public/index.html client ID in the href tage of button.
 npm start      # It will start your express server. Say our server is running on URL(https://slack-planning-poker.herokuapp.com)
 GO to https://api.slack.com/apps

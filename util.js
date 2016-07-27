@@ -116,7 +116,7 @@ util.runSchedularForInProgressJira = function () {
         }
         responseText = responseText + ' . Thanks for voting.'
         delete pokerDataModel[prop]
-        that.postMessageToChannel(token, channelId, 'Voting for ' + prop + ' is Finished. Thanks For voting.')
+        that.postMessageToChannel(token, channelId, responseText)
       } else {
         let reminderMessage = 'Planning for JIRA ID ' +
          prop + ' is in progress. Please vote if you have not done yet. '
