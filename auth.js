@@ -32,7 +32,7 @@ auth.getToken = function (req, res, next) {
   const request = https.request(extServerOptions, (response) => {
     response.on('data', (d) => {
       process.stdout.write(d)
-      auth.token = JSON.parse(d.toString()).access_token
+      auth.token = JSON.parse(d.toString())
       console.log('Auth getToken : end')
       res.sendFile(path.join(__dirname, '/public/success.html'))
     })
@@ -44,6 +44,7 @@ auth.getToken = function (req, res, next) {
   })
 }
 
+/*
 auth.test = function (req, res, next) {
   console.log('Auth Test : begin')
   const querystringObject = {
@@ -68,5 +69,5 @@ auth.test = function (req, res, next) {
     console.log('Auth getToken : end')
   })
 }
-
+*/
 module.exports = auth

@@ -105,12 +105,12 @@ util.runSchedularForInProgressJira = function () {
         console.log(pokerDataModel)
         delete pokerDataModel[prop]
         console.log(pokerDataModel)
-        that.postMessageToChannel(token, channelId, 'Voting for ' + prop + 'Finished. Thanks For voting.')
+        that.postMessageToChannel('token', channelId, 'Voting for ' + prop + 'Finished. Thanks For voting.')
         return
       }
       let reminderMessage = 'Planning for JIRA ID ' +
        prop + ' is in progress. Please vote if you have not done yet. '
-      that.postMessageToChannel(token, channelId, reminderMessage)
+      that.postMessageToChannel('token', channelId, reminderMessage)
     }
   }, gameInterval * 1000)
   console.log('Util runScheduler : end')
