@@ -1,7 +1,7 @@
 'use strict'
 
 const https = require('https')
-const pokerDataModel = require('./pokerbot').pokerDataModel
+
 const maxPlayTime = require('./config/schedule.json').maxPlayTime
 const gameInterval = require('./config/schedule.json').gameInterval
 
@@ -93,6 +93,7 @@ util.runSchedularForInProgressJira = function () {
   let that = this
   setInterval(function () {
     const token = require('./auth').token.access_token
+    let pokerDataModel = require('./pokerbot').pokerDataModel
     let currentEpocTime = (new Date()).getTime()
     console.log('Running schedular to see all live planning. Current time : ' + currentEpocTime)
     let startedTimeOfJira, differenceTravel, seconds, channelId

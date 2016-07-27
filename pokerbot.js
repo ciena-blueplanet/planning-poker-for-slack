@@ -170,7 +170,7 @@ pokerbot.vote = function (req, res, next) {
   const userRating = new UserRating(userId, userName, vote)
   const jiraId = 'JIRA-' + requestBody.original_message.text.split('JIRA-')[1]
   // console.log(userRating)
-  console.log(pokerbot.ratingModel)
+  console.log(pokerbot.pokerDataModel)
   // console.log(jiraId)
   let responseEphemeral
   if (pokerbot.pokerDataModel[jiraId]) {
