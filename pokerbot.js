@@ -4,7 +4,7 @@ const UserRating = require('./model/user-rating')
 let util = require('./util')
 const IN_CHANNEL = 'in_channel'
 const EPHEMERAL = 'ephemeral'
-const pokerbot = {}
+let pokerbot = {}
 pokerbot.pokerDataModel = {} //  It is an object with key as jira-id and value as object having poker details e.g {"JIRA-1234":{"channelId":"server","craetedOn":"12121212",userId1:{UserRating1}}}
 pokerbot.token = ''
 
@@ -137,8 +137,9 @@ pokerbot.root = function (req, res, next) {
     pokerbot.pokerDataModel[jiraId]['channelId'] = {}
     util.getChannelInfo(pokerbot.token, channelId)
     .then((channel) => {
-      // console.log(channel)
-      pokerbot.pokerDataModel[jiraId]['channelId'] = channel
+      pokerbot.pokerDataModel[jiraId].channelId['id'] = channel.id
+      pokerbot.pokerDataModel[jiraId].channelId['name'] = channel.name
+      pokerbot.pokerDataModel[jiraId].channelId['members'] = channel.members
       console.log(pokerbot.pokerDataModel)
     })
     .catch((err) => {
