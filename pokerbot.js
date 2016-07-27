@@ -6,7 +6,7 @@ const IN_CHANNEL = 'in_channel'
 const EPHEMERAL = 'ephemeral'
 let pokerbot = {}
 pokerbot.pokerDataModel = {} //  It is an object with key as jira-id and value as object having poker details e.g {"JIRA-1234":{"channelId":"server","craetedOn":"12121212",userId1:{UserRating1}}}
-pokerbot.token = ''
+pokerbot.token = require('./auth').token
 
 /**
  * We have received a request to start or stop the poker planning
@@ -22,13 +22,8 @@ pokerbot.root = function (req, res, next) {
   const jiraId = requestBodyTextArray[1] ? requestBodyTextArray[1] : undefined
   const channelId = req.body.channel_id
   console.log('Channel Id  : ' + channelId)
-  const token = req.body.token
-  console.log('Token Id  : ' + token)
-  if (!pokerbot.token) {
-    pokerbot.token = token
-  }
-
- // Bad command syntex.
+  console.log('Token Id  : ' + pokerbot.token)
+  // Bad command syntex.
   if ((option !== 'start' && option !== 'stop') || jiraId.indexOf('JIRA-') < 0) {
     console.log('Option wrong : begin')
     let responseForBadRequestFormat = {
