@@ -44,7 +44,7 @@ util.getChannelInfo = function (token, channelId) {
   * @param {String} message - message to be post to channel
 */
 util.postMessageToChannel = function (token, channelId, message) {
-  console.log('posting message to channel')
+  console.log('Util postMessage : begin')
   const queryParams = 'token=' + token + '&channel=' + channelId + '&text=' + encodeURIComponent(message)
   let extServerOptions = {
     hostname: 'slack.com',
@@ -55,12 +55,14 @@ util.postMessageToChannel = function (token, channelId, message) {
   let req = https.request(extServerOptions, (res) => {
     res.on('data', (d) => {
       process.stdout.write(d)
+      console.log('Util postMessage : end')
       return JSON.parse(d)
     })
   })
   req.end()
   req.on('error', (error) => {
     console.error(error)
+    console.log('Util postMessage : end')
     return JSON.parse(error)
   })
 }
@@ -89,6 +91,7 @@ util.sortArrayBasedOnObjectProperty = function (items, prop) {
  * This is the schedular which will run to send notification for each in-progress poker game.
 */
 util.runSchedularForInProgressJira = function () {
+  console.log('Util runScheduler : begin')
   let that = this
   setInterval(function () {
     let currentEpocTime = (new Date()).getTime()
@@ -111,6 +114,7 @@ util.runSchedularForInProgressJira = function () {
       that.postMessageToChannel(token, channelId, reminderMessage)
     }
   }, gameInterval * 1000)
+  console.log('Util runScheduler : end')
 }
 
 module.exports = util

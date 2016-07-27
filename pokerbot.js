@@ -27,27 +27,33 @@ pokerbot.root = function (req, res, next) {
 
  // Bad command syntex.
   if ((option !== 'start' && option !== 'stop') || jiraId.indexOf('JIRA-') < 0) {
+    console.log('Option wrong : begin')
     let responseForBadRequestFormat = {
       response_type: EPHEMERAL,
       text: 'Please enter the command in correct format e.g. /planning-poker start or stop JIRA-1001'
     }
+    console.log('Option wrong : end')
     return res.status(200).json(responseForBadRequestFormat)
   }
 
  // Closing the unstarted Jira Planning.
   if (option === 'stop' && (!pokerbot.pokerDataModel.hasOwnProperty(jiraId))) {
+    console.log('Option stop : begin')
     let responseForUnstartedJira = {
       response_type: EPHEMERAL,
       text: 'Planning for this JIRA ID is not started yet.'
     }
+    console.log('Option stop : end')
     return res.status(200).json(responseForUnstartedJira)
   }
 
  // Closing the planning activity.
   if (option === 'stop' && (pokerbot.pokerDataModel.hasOwnProperty(jiraId))) {
+    console.log('Option stop : begin')
+    console.log(pokerbot.pokerDataModel)
     let pokerModel = pokerbot.pokerDataModel[jiraId]
     let responseText, responseStopRequest
-    if (pokerModel.channelId !== channelId) {
+    if (pokerModel.channelId.id !== channelId) {
       responseText = 'This stop request can not be processed in this channel. Please raise it from proper channel'
       responseStopRequest = {
         response_type: EPHEMERAL,
@@ -73,11 +79,13 @@ pokerbot.root = function (req, res, next) {
       }
       delete pokerbot.pokerDataModel[jiraId]
     }
+    console.log('Option stop : end')
     return res.status(200).json(responseStopRequest)
   }
 
  // Starting the duplicate jira.
   if (option === 'start' && (pokerbot.pokerDataModel.hasOwnProperty(jiraId))) {
+    console.log('Option start : begin')
     console.log(pokerbot.ratingModel)
     let responseDuplicateJira = {
       response_type: EPHEMERAL,
@@ -141,6 +149,7 @@ pokerbot.root = function (req, res, next) {
       text: 'Please give your poker vote for ' + jiraId,
       attachments: [attachment1, attachment2]
     }
+    console.log('Option start : end')
     return res.status(200).json(response)
   }
 }
@@ -153,6 +162,7 @@ pokerbot.root = function (req, res, next) {
  * @returns {Object} - response object of the express module
 */
 pokerbot.vote = function (req, res, next) {
+  console.log('Option vote : begin')
   const requestBody = JSON.parse(req.body.payload)
   const vote = requestBody.actions[0].value
   const userName = requestBody.user.name
@@ -191,6 +201,7 @@ pokerbot.vote = function (req, res, next) {
       replace_original: true
     }
   }
+  console.log('Option vote : end')
   return res.status(200).json(responseEphemeral)
 }
 

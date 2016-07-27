@@ -14,6 +14,7 @@ let auth = {}
  * @param {Object} next - next object of the express module
 */
 auth.getToken = function (req, res, next) {
+  console.log('Auth getToken : begin')
   const authCode = req.query.code
   const slackKey = JSON.parse(fs.readFileSync(path.join(__dirname, '/config/slack-app-key.json'), 'utf8'))
   const querystringObject = {
@@ -29,14 +30,15 @@ auth.getToken = function (req, res, next) {
   console.log(extServerOptions)
   const request = https.request(extServerOptions, (response) => {
     response.on('data', (d) => {
-      console.log('Got the oAuth token to be used in slack Web API.')
       process.stdout.write(d)
+      console.log('Auth getToken : end')
       res.sendFile(path.join(__dirname, '/public/success.html'))
     })
   })
   request.end()
   request.on('error', (e) => {
     console.error(e)
+    console.log('Auth getToken : end')
   })
 }
 module.exports = auth
