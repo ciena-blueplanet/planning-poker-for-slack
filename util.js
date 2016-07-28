@@ -69,17 +69,15 @@ util.postMessageToChannel = function (token, channelId, message) {
 
 /**
  * Sorting the array of objects based on object property
-  * @param {object} items - array of objects
+ * @param {Array} items - array of objects
  * @param {String} prop -   property name on bases of which sorting will be done
  * @returns {Array} - sorted array
 */
 util.sortArrayBasedOnObjectProperty = function (items, prop) {
   console.log('Util sortArrayBasedOnObjectProperty : begin')
-  console.log(items)
   let sortedArray = __.sortBy(items, function (item) {
-    return item.prop
+    return item[prop]
   })
-  console.log(sortedArray)
   console.log('Util sortArrayBasedOnObjectProperty : end')
   return sortedArray
 }
