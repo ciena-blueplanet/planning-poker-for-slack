@@ -6,7 +6,7 @@ const fs = require('fs')
 const querystring = require('querystring')
 // const util = require('./util')
 let auth = {}
-auth.token = ''
+// auth.token = ''
 
 /**
  * We are getting the OAuth token from slack server for our app
@@ -32,13 +32,6 @@ auth.getToken = function (req, res, next) {
   const request = https.request(extServerOptions, (response) => {
     response.on('data', (d) => {
       process.stdout.write(d)
-      auth.token = JSON.parse(d.toString())
-      fs.writeFile(path.join(__dirname, '/config/auth.json'), '', function () {
-        fs.writeFile(path.join(__dirname, '/config/auth.json'), d.toString(), (err) => {
-          if (err) throw err
-          console.log('written auth file at : ' + path.join(__dirname, '/config/auth.json'))
-        })
-      })
       console.log('Auth getToken : end')
       res.sendFile(path.join(__dirname, '/public/success.html'))
     })
