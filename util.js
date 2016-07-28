@@ -114,7 +114,7 @@ util.getVotingResult = function (jiraId) {
     for (let index = 0; index < sortedUserRatingArray.length; index++) {
       sum = sum + sortedUserRatingArray[index].rating
     }
-    let avgRating = sum / sortedUserRatingArray.length
+    let avgRating = Math.floor(sum / sortedUserRatingArray.length)
     console.log('Average rating : ' + avgRating)
     if (maxUserVotingIndex - leastUserVotingIndex > 1) {
       console.log('Util getVotingResult : end')
