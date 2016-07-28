@@ -1,4 +1,4 @@
 {
-  "gameInterval" : 30,
-  "maxPlayTime" :  100
+  "gameInterval" : 60,
+  "maxPlayTime" :  150
 }

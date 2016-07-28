@@ -4,6 +4,7 @@ const https = require('https')
 
 const maxPlayTime = require('./config/schedule.json').maxPlayTime
 const gameInterval = require('./config/schedule.json').gameInterval
+const token = require('./config/auth.json').access_token
 
 let util = {}
 
@@ -92,7 +93,6 @@ util.runSchedularForInProgressJira = function () {
   console.log('Util runScheduler : begin')
   let that = this
   setInterval(function () {
-    const token = require('./auth').token.access_token
     let pokerDataModel = require('./pokerbot').pokerDataModel
     let currentEpocTime = (new Date()).getTime()
     console.log('Running schedular to see all live planning. Current time : ' + currentEpocTime)

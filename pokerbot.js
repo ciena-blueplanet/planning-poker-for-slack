@@ -4,9 +4,10 @@ const UserRating = require('./model/user-rating')
 let util = require('./util')
 const IN_CHANNEL = 'in_channel'
 const EPHEMERAL = 'ephemeral'
+const token = require('./config/auth.json').access_token
 let pokerbot = {}
 pokerbot.pokerDataModel = {} //  It is an object with key as jira-id and value as object having poker details e.g {"JIRA-1234":{"channelId":"server","craetedOn":"12121212",userId1:{UserRating1}}}
-pokerbot.token = ''
+// token = ''
 
 /**
  * We have received a request to start or stop the poker planning
@@ -22,16 +23,7 @@ pokerbot.root = function (req, res, next) {
   const jiraId = requestBodyTextArray[1] ? requestBodyTextArray[1] : undefined
   const channelId = req.body.channel_id
   console.log('Channel Id  : ' + channelId)
-  if (!pokerbot.token) {
-    if (require('./config/auth.json').access_token) {
-      try {
-        pokerbot.token = require('./config/auth.json').access_token
-      } catch (err) {
-        console.error(err)
-      }
-    }
-  }
-  console.log('Token Id  : ' + pokerbot.token)
+  console.log('Token Id  : ' + token)
   // Bad command syntex.
   if ((option !== 'start' && option !== 'stop') || jiraId.indexOf('JIRA-') < 0) {
     console.log('Option wrong : begin')
@@ -142,7 +134,7 @@ pokerbot.root = function (req, res, next) {
     pokerbot.pokerDataModel[jiraId]['craetedOn'] = currentEpoc
     pokerbot.pokerDataModel[jiraId]['voting'] = {}
     pokerbot.pokerDataModel[jiraId]['channelId'] = {}
-    util.getChannelInfo(pokerbot.token, channelId)
+    util.getChannelInfo(token, channelId)
     .then((channel) => {
       pokerbot.pokerDataModel[jiraId].channelId['id'] = channel.id
       pokerbot.pokerDataModel[jiraId].channelId['name'] = channel.name

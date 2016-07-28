@@ -2,6 +2,7 @@
 
 const request = require('supertest')
 const should = require('should')
+const token = require('../../config/auth.json').access_token
 const url = 'http://127.0.0.1:3000'
 
 describe('GET for root route ', function () {
@@ -42,7 +43,7 @@ describe('GET for root route ', function () {
     .send({
       'text': 'start JIRA-' + jiraId,
       'channel': 'C1ML2QAJV',
-      'token': 'xoxs-55672736423-55668248624-63180879921-b92cdfd6aa'
+      'token': token
     })
     .end(function (err, res) {
       if (err) return done(err)
@@ -68,7 +69,7 @@ describe('GET for root route ', function () {
     .send({
       'text': 'start JIRA-' + jiraId,
       'channel': 'C1ML2QAJV',
-      'token': 'xoxs-55672736423-55668248624-63180879921-b92cdfd6aa'
+      'token': token
     })
     .end(function (err, res) {
       if (err) return done(err)
