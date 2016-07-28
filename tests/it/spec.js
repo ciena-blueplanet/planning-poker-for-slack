@@ -40,7 +40,9 @@ describe('GET for root route ', function () {
     request(url)
     .post('/start')
     .send({
-      'text': 'start JIRA-' + jiraId
+      'text': 'start JIRA-' + jiraId,
+      'channel': 'C1ML2QAJV',
+      'token': 'xoxs-55672736423-55668248624-63180879921-b92cdfd6aa'
     })
     .end(function (err, res) {
       if (err) return done(err)
@@ -64,7 +66,9 @@ describe('GET for root route ', function () {
     request(url)
     .post('/start')
     .send({
-      'text': 'start JIRA-' + jiraId
+      'text': 'start JIRA-' + jiraId,
+      'channel': 'C1ML2QAJV',
+      'token': 'xoxs-55672736423-55668248624-63180879921-b92cdfd6aa'
     })
     .end(function (err, res) {
       if (err) return done(err)

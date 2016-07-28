@@ -1,11 +1,12 @@
 'use strict'
 
 const UserRating = require('./model/user-rating')
+let util = require('./util')
 const IN_CHANNEL = 'in_channel'
 const EPHEMERAL = 'ephemeral'
-
-var pokerbot = {}
-var ratingModel = {}    // It conatins the rating by each user. It is a map having key as unique Jira ID and value has an array comtaining ratingModel objects.
+let pokerbot = {}
+pokerbot.pokerDataModel = {} //  It is an object with key as jira-id and value as object having poker details e.g {"JIRA-1234":{"channelId":"server","craetedOn":"12121212",userId1:{UserRating1}}}
+pokerbot.token = ''
 
 /**
  * We have received a request to start or stop the poker planning
@@ -15,55 +16,85 @@ var ratingModel = {}    // It conatins the rating by each user. It is a map havi
  * @returns {Object} - response object of the express module
 */
 pokerbot.root = function (req, res, next) {
-  var requestBodyTextArray = req.body.text.split(' ')
-  var option = requestBodyTextArray[0] ? requestBodyTextArray[0] : undefined
-  var jiraId = requestBodyTextArray[1] ? requestBodyTextArray[1] : undefined
-
- // Bad command syntex.
+  console.log('Option root : begin')
+  const requestBodyTextArray = req.body.text.split(' ')
+  const option = requestBodyTextArray[0] ? requestBodyTextArray[0] : undefined
+  const jiraId = requestBodyTextArray[1] ? requestBodyTextArray[1] : undefined
+  const channelId = req.body.channel_id
+  console.log('Channel Id  : ' + channelId)
+  if (!pokerbot.token) {
+    if (require('./config/auth.json').access_token) {
+      try {
+        pokerbot.token = require('./config/auth.json').access_token
+      } catch (err) {
+        console.error(err)
+      }
+    }
+  }
+  console.log('Token Id  : ' + pokerbot.token)
+  // Bad command syntex.
   if ((option !== 'start' && option !== 'stop') || jiraId.indexOf('JIRA-') < 0) {
-    var responseForBadRequestFormat = {
+    console.log('Option wrong : begin')
+    let responseForBadRequestFormat = {
       response_type: EPHEMERAL,
       text: 'Please enter the command in correct format e.g. /planning-poker start or stop JIRA-1001'
     }
+    console.log('Option wrong : end')
     return res.status(200).json(responseForBadRequestFormat)
   }
 
  // Closing the unstarted Jira Planning.
-  if (option === 'stop' && (!ratingModel.hasOwnProperty(jiraId))) {
-    var responseForUnstartedJira = {
+  if (option === 'stop' && (!pokerbot.pokerDataModel.hasOwnProperty(jiraId))) {
+    console.log('Option stop : begin')
+    let responseForUnstartedJira = {
       response_type: EPHEMERAL,
       text: 'Planning for this JIRA ID is not started yet.'
     }
+    console.log('Option stop : end')
     return res.status(200).json(responseForUnstartedJira)
   }
 
  // Closing the planning activity.
-  if (option === 'stop' && (ratingModel.hasOwnProperty(jiraId))) {
-    var userRatingArray = ratingModel[jiraId]
-    var responseText
-    if (userRatingArray.length > 0) {
-      // var sortedUserRatingArray = util.sortArrayBasedOnObjectProperty(userRatingArray, 'rating')
-      responseText = 'Voting Result : '
-      for (var ratingIndex = 0; ratingIndex < userRatingArray.length; ratingIndex++) {
-        responseText = responseText + userRatingArray[ratingIndex].userName + ' voted : '
-        responseText = responseText + userRatingArray[ratingIndex].rating + '. '
+  if (option === 'stop' && (pokerbot.pokerDataModel.hasOwnProperty(jiraId))) {
+    console.log('Option stop : begin')
+    console.log(pokerbot.pokerDataModel)
+    let pokerModel = pokerbot.pokerDataModel[jiraId]
+    let responseText, responseStopRequest
+    if (pokerModel.channelId.id !== channelId) {
+      responseText = 'This game was not started in this channel.' +
+      'Please go to channel ' + pokerModel.channelId.name + ' to stop the game.'
+      responseStopRequest = {
+        response_type: EPHEMERAL,
+        text: responseText
       }
-      responseText = responseText + ' . Thanks for voting.'
     } else {
-      responseText = 'No Voting for this JIRA yet. Closing the voting now.'
+      let votingMap = pokerbot.pokerDataModel[jiraId].voting
+      let keys = Object.keys(votingMap)
+      if (keys.length > 0) {
+        responseText = 'Voting Result : '
+        for (let ratingIndex = 0; ratingIndex < keys.length; ratingIndex++) {
+          responseText = responseText + votingMap[keys[ratingIndex]].userName + ' voted : '
+          responseText = responseText + votingMap[keys[ratingIndex]].rating + '. '
+        }
+        responseText = responseText + ' . Thanks for voting.'
+      } else {
+        responseText = 'No Voting for this JIRA yet. Closing the voting now.'
+      }
+      responseStopRequest = {
+        response_type: IN_CHANNEL,
+        text: responseText
+      }
+      delete pokerbot.pokerDataModel[jiraId]
     }
-    var responsePlanningComplete = {
-      response_type: IN_CHANNEL,
-      text: responseText
-    }
-    delete ratingModel[jiraId]
-    return res.status(200).json(responsePlanningComplete)
+    console.log('Option stop : end')
+    return res.status(200).json(responseStopRequest)
   }
 
  // Starting the duplicate jira.
-  if (option === 'start' && (ratingModel.hasOwnProperty(jiraId))) {
-    console.log(ratingModel)
-    var responseDuplicateJira = {
+  if (option === 'start' && (pokerbot.pokerDataModel.hasOwnProperty(jiraId))) {
+    console.log('Option start : begin')
+    console.log(pokerbot.ratingModel)
+    let responseDuplicateJira = {
       response_type: EPHEMERAL,
       text: 'Planning for this Jira : ' + jiraId + ' is already in progress'
     }
@@ -71,15 +102,15 @@ pokerbot.root = function (req, res, next) {
   }
 
  // Start the Poker game.
-  if (option === 'start' && (!ratingModel.hasOwnProperty(jiraId))) {
-    var attachment1 = {
+  if (option === 'start' && (!pokerbot.pokerDataModel.hasOwnProperty(jiraId))) {
+    let attachment1 = {
       text: '',
       color: '#3AA3E3',
       attachment_type: 'default',
       callback_id: 'planning-poker',
       actions: []
     }
-    var attachment2 = {
+    let attachment2 = {
       text: '',
       color: '#3AA3E3',
       attachment_type: 'default',
@@ -88,7 +119,7 @@ pokerbot.root = function (req, res, next) {
     }
     const fibonacci = [1, 2, 3, 5, 8, 13, 21, 34, 55]
     for (var index = 0; index < fibonacci.length; index++) {
-      var action = {}
+      let action = {}
       action.name = fibonacci[index]
       action.text = fibonacci[index]
       action.type = 'button'
@@ -105,12 +136,28 @@ pokerbot.root = function (req, res, next) {
         attachment2.actions[attachment2.actions.length] = action
       }
     }
-    ratingModel[jiraId] = []
-    var response = {
+    let currentEpoc = (new Date()).getTime()
+    console.log(currentEpoc)
+    pokerbot.pokerDataModel[jiraId] = {}
+    pokerbot.pokerDataModel[jiraId]['craetedOn'] = currentEpoc
+    pokerbot.pokerDataModel[jiraId]['voting'] = {}
+    pokerbot.pokerDataModel[jiraId]['channelId'] = {}
+    util.getChannelInfo(pokerbot.token, channelId)
+    .then((channel) => {
+      pokerbot.pokerDataModel[jiraId].channelId['id'] = channel.id
+      pokerbot.pokerDataModel[jiraId].channelId['name'] = channel.name
+      pokerbot.pokerDataModel[jiraId].channelId['members'] = channel.members.length
+      console.log(pokerbot.pokerDataModel)
+    })
+    .catch((err) => {
+      console.error(err)
+    })
+    let response = {
       response_type: IN_CHANNEL,
       text: 'Please give your poker vote for ' + jiraId,
       attachments: [attachment1, attachment2]
     }
+    console.log('Option start : end')
     return res.status(200).json(response)
   }
 }
@@ -123,21 +170,61 @@ pokerbot.root = function (req, res, next) {
  * @returns {Object} - response object of the express module
 */
 pokerbot.vote = function (req, res, next) {
-  var requestBody = JSON.parse(req.body.payload)
-  var vote = requestBody.actions[0].value
-  var userName = requestBody.user.name
-  var userId = requestBody.user.id
-  var userRating = new UserRating(userId, userName, vote)
-  var jiraId = 'JIRA-' + requestBody.original_message.text.split('JIRA-')[1]
-  console.log(userRating)
-  console.log(ratingModel)
-  console.log(jiraId)
-  ratingModel[jiraId].push(userRating)
-  var responseEphemeral = {
-    response_type: EPHEMERAL,
-    text: 'You have voted ' + vote + ' for ' + jiraId,
-    replace_original: false
+  console.log('Option vote : begin')
+  const requestBody = JSON.parse(req.body.payload)
+  const vote = requestBody.actions[0].value
+  const userName = requestBody.user.name
+  const userId = requestBody.user.id
+  const userRating = new UserRating(userId, userName, vote)
+  const jiraId = 'JIRA-' + requestBody.original_message.text.split('JIRA-')[1]
+  console.log(pokerbot.pokerDataModel)
+  let responseEphemeral
+  if (pokerbot.pokerDataModel[jiraId]) {
+    if (!pokerbot.pokerDataModel[jiraId].voting[userId]) {
+      pokerbot.pokerDataModel[jiraId].voting[userId] = userRating
+      responseEphemeral = {
+        response_type: EPHEMERAL,
+        text: 'You have voted ' + vote + ' for ' + jiraId,
+        replace_original: false
+      }
+    } else {
+      pokerbot.pokerDataModel[jiraId].voting[userId].rating = vote
+      responseEphemeral = {
+        response_type: EPHEMERAL,
+        text: 'You have voted again ' + vote + ' for ' + jiraId,
+        replace_original: false
+      }
+    }
+
+    let votingMap = pokerbot.pokerDataModel[jiraId].voting
+    let keys = Object.keys(votingMap)
+    if (pokerbot.pokerDataModel[jiraId].channelId.members === keys.length) {
+      console.log('All member have voted so closing the game now.')
+      let responseText
+      if (keys.length > 0) {
+        responseText = 'Voting Result : '
+        for (let ratingIndex = 0; ratingIndex < keys.length; ratingIndex++) {
+          responseText = responseText + votingMap[keys[ratingIndex]].userName + ' voted : '
+          responseText = responseText + votingMap[keys[ratingIndex]].rating + '. '
+        }
+        responseText = responseText + ' . Thanks for voting.'
+      } else {
+        responseText = 'No Voting for this JIRA yet. Closing the voting now.'
+      }
+      responseEphemeral = {
+        response_type: IN_CHANNEL,
+        text: responseText
+      }
+      delete pokerbot.pokerDataModel[jiraId]
+    }
+  } else {
+    responseEphemeral = {
+      response_type: EPHEMERAL,
+      text: 'Voting for ' + jiraId + ' is closed.',
+      replace_original: true
+    }
   }
+  console.log('Option vote : end')
   return res.status(200).json(responseEphemeral)
 }
 

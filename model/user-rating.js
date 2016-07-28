@@ -1,3 +1,5 @@
+'use strict'
+
 function UserRating (userid, userName, rating) {
   this.userid = userid
   this.userName = userName
@@ -6,7 +8,7 @@ function UserRating (userid, userName, rating) {
 
 // class methods
 UserRating.prototype.toString = function userRatingToString () {
-  var ret = 'UserRating of ' + this.userName + 'with userId : ' + this.userid + ' is  ' + this.rating
+  let ret = 'UserRating of ' + this.userName + 'with userId : ' + this.userid + ' is  ' + this.rating
   return ret
 }
 
