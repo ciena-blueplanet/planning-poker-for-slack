@@ -4,6 +4,7 @@
  * [Installation](#Installation)
  * [API](#API)
  * [Examples](#Examples)
+ * [Restart app server](#Restart)
 
 
 ## Pre-requisites
@@ -43,6 +44,16 @@ Not applicable at the moment.
 ```
 /planning-poker start JIRA-1234
 /planning-poker stop  JIRA-1234
+
+```
+
+## Restart
+```
+On Authorising the app while installation on team . App server updates its config/auth.json file with the auth token given by slack server.
+This Auth token is used in application for many flow with out which app will not work as expected.
+So if user want to restart its node server user has 2 ways to do that
+ --- Restart the app on cloud. Uninstall the app from slack team on (e.g. https://orchestraion-india.slack.com/apps) . Again install the app in team as given in Installation step.
+ --- Replace the auth.json(containing the auth token value) file in config folder in new cloud instance so that app can use this auth token.
 
 ```
 
