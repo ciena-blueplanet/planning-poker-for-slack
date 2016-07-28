@@ -5,6 +5,7 @@ const https = require('https')
 const maxPlayTime = require('./config/schedule.json').maxPlayTime
 const gameInterval = require('./config/schedule.json').gameInterval
 const token = require('./config/auth.json').access_token
+const __ = require('lodash')
 
 let util = {}
 
@@ -73,17 +74,60 @@ util.postMessageToChannel = function (token, channelId, message) {
  * @returns {Array} - sorted array
 */
 util.sortArrayBasedOnObjectProperty = function (items, prop) {
-  let sortedArray = items.sort(function (a, b) {
-    if (a.prop > b.prop) {
-      return 1
-    }
-    if (a.prop < b.prop) {
-      return -1
-    }
-   // a must be equal to b
-    return 0
+  console.log('Util sortArrayBasedOnObjectProperty : begin')
+  let sortedArray = __.sortBy(items, function (item) {
+    return item.prop
   })
+  console.log('Util sortArrayBasedOnObjectProperty : end')
   return sortedArray
+}
+
+/**
+ * Sorting the array of objects based on object property
+ * @param {String} jiraId - JIRA id for which voting is in progress
+ * @returns {String} - Voting result
+*/
+util.getVotingResult = function (jiraId) {
+  console.log('Util getVotingResult : begin')
+  const fibonacci = [1, 2, 3, 5, 8, 13, 21, 34, 55]
+  let pokerDataModel = require('./pokerbot').pokerDataModel
+  let userRatingArray = []
+  if (pokerDataModel.hasOwnProperty(jiraId)) {
+    let votingDataModel = pokerDataModel[jiraId].voting
+    for (let prop in votingDataModel) {
+      userRatingArray.push(votingDataModel[prop])
+    }
+  }
+  let sortedUserRatingArray = util.sortArrayBasedOnObjectProperty(userRatingArray, 'rating')
+  if (sortedUserRatingArray.length > 0) {
+    let leastUserVotingModel = sortedUserRatingArray[0]
+    console.log(leastUserVotingModel)
+    let leastUserVoting = leastUserVotingModel.rating
+    let maxUserVotingModel = sortedUserRatingArray[sortedUserRatingArray.length - 1]
+    console.log(maxUserVotingModel)
+    let maxUserVoting = maxUserVotingModel.rating
+    let leastUserVotingIndex = fibonacci.indexOf(leastUserVoting)
+    let maxUserVotingIndex = fibonacci.indexOf(maxUserVoting)
+    let sum = 0
+    for (let index = 0; index < sortedUserRatingArray.length; index++) {
+      sum = sum + sortedUserRatingArray[index].rating
+    }
+    let avgRating = sum / sortedUserRatingArray.length
+    console.log('Average rating : ' + avgRating)
+    if (maxUserVotingIndex - leastUserVotingIndex > 1) {
+      console.log('Util getVotingResult : end')
+      return 'Minimum vote : ' + leastUserVotingModel.rating + ' by ' + leastUserVotingModel.userName +
+     ', Maximum vote : ' + maxUserVotingModel.rating + ' by ' + maxUserVotingModel.userName +
+     ', Average vote : ' + avgRating
+    } else {
+      console.log('All rating are in expected range')
+      console.log('Util getVotingResult : end')
+      return 'Average vote : ' + avgRating
+    }
+  } else {
+    console.log('Util getVotingResult : end')
+    return 'Average vote : 0'
+  }
 }
 
 /**
@@ -103,18 +147,8 @@ util.runSchedularForInProgressJira = function () {
       differenceTravel = currentEpocTime - startedTimeOfJira
       seconds = Math.floor((differenceTravel) / (1000))
       if (seconds > maxPlayTime) {
-        let votingMap = pokerDataModel[prop].voting
-        let keys = Object.keys(votingMap)
-        if (keys.length > 0) {
-          responseText = 'Voting Result : '
-          for (let ratingIndex = 0; ratingIndex < keys.length; ratingIndex++) {
-            responseText = responseText + votingMap[keys[ratingIndex]].userName + ' voted : '
-            responseText = responseText + votingMap[keys[ratingIndex]].rating + '. '
-          }
-        } else {
-          responseText = 'No Voting for this JIRA yet. Closing the voting now.'
-        }
-        responseText = responseText + ' . Thanks for voting.'
+        responseText = util.getVotingResult(prop)
+        responseText = responseText + ' Thanks for voting.'
         delete pokerDataModel[prop]
         that.postMessageToChannel(token, channelId, responseText)
       } else {
