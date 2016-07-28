@@ -118,17 +118,18 @@ util.getVotingResult = function (jiraId) {
     console.log('Average rating : ' + avgRating)
     if (maxUserVotingIndex - leastUserVotingIndex > 1) {
       console.log('Util getVotingResult : end')
-      return 'Minimum vote : ' + leastUserVotingModel.rating + ' by ' + leastUserVotingModel.userName +
-     ', Maximum vote : ' + maxUserVotingModel.rating + ' by ' + maxUserVotingModel.userName +
-     ', Average vote : ' + avgRating
+      return 'Planning for ' + jiraId + ' is complete.' +
+      'Minimum vote : ' + leastUserVotingModel.rating + ' by ' + leastUserVotingModel.userName +
+      ', Maximum vote : ' + maxUserVotingModel.rating + ' by ' + maxUserVotingModel.userName +
+      ', Average vote : ' + avgRating
     } else {
       console.log('All rating are in expected range')
       console.log('Util getVotingResult : end')
-      return 'Average vote : ' + avgRating
+      return 'Planning for ' + jiraId + ' is complete. Average vote : ' + avgRating
     }
   } else {
     console.log('Util getVotingResult : end')
-    return 'Average vote : 0'
+    return 'Planning for ' + jiraId + ' is complete. Average vote : 0'
   }
 }
 
