@@ -23,10 +23,12 @@ pokerbot.root = function (req, res, next) {
   const channelId = req.body.channel_id
   console.log('Channel Id  : ' + channelId)
   if (!pokerbot.token) {
-    try {
-      pokerbot.token = require('./config/auth.json').access_token
-    } catch (err) {
-      console.error(err)
+    if (require('./config/auth.json').access_token) {
+      try {
+        pokerbot.token = require('./config/auth.json').access_token
+      } catch (err) {
+        console.error(err)
+      }
     }
   }
   console.log('Token Id  : ' + pokerbot.token)
