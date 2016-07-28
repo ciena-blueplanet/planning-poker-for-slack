@@ -75,9 +75,11 @@ util.postMessageToChannel = function (token, channelId, message) {
 */
 util.sortArrayBasedOnObjectProperty = function (items, prop) {
   console.log('Util sortArrayBasedOnObjectProperty : begin')
+  console.log(items)
   let sortedArray = __.sortBy(items, function (item) {
     return item.prop
   })
+  console.log(sortedArray)
   console.log('Util sortArrayBasedOnObjectProperty : end')
   return sortedArray
 }
@@ -98,7 +100,9 @@ util.getVotingResult = function (jiraId) {
       userRatingArray.push(votingDataModel[prop])
     }
   }
+  console.log(userRatingArray)
   let sortedUserRatingArray = util.sortArrayBasedOnObjectProperty(userRatingArray, 'rating')
+  console.log(sortedUserRatingArray)
   if (sortedUserRatingArray.length > 0) {
     let leastUserVotingModel = sortedUserRatingArray[0]
     console.log(leastUserVotingModel)
