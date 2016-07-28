@@ -22,7 +22,13 @@ pokerbot.root = function (req, res, next) {
   const jiraId = requestBodyTextArray[1] ? requestBodyTextArray[1] : undefined
   const channelId = req.body.channel_id
   console.log('Channel Id  : ' + channelId)
-  pokerbot.token = require('./auth').token.access_token
+  if (!pokerbot.token) {
+    try {
+      pokerbot.token = require('./config/auth.json').access_token
+    } catch (err) {
+      console.error(err)
+    }
+  }
   console.log('Token Id  : ' + pokerbot.token)
   // Bad command syntex.
   if ((option !== 'start' && option !== 'stop') || jiraId.indexOf('JIRA-') < 0) {

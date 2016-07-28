@@ -33,6 +33,12 @@ auth.getToken = function (req, res, next) {
     response.on('data', (d) => {
       process.stdout.write(d)
       auth.token = JSON.parse(d.toString())
+      if (!require('./config/auth.json').access_token) {
+        fs.writeFile(path.join(__dirname, '/config/auth.json'), d.toString(), (err) => {
+          if (err) throw err
+          console.log('written auth file at : ' + path.join(__dirname, '/config/auth.json'))
+        })
+      }
       console.log('Auth getToken : end')
       res.sendFile(path.join(__dirname, '/public/success.html'))
     })
