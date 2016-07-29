@@ -8,7 +8,7 @@ branches:
 before_install:
  - npm install -g coveralls
  - npm install -g pr-bumper
- - pr-bumper check
+ - echo "To be replaced by pr-bumper check "
 before_script:
  - echo "Executing the before script"
 after_success:
