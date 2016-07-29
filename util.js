@@ -112,7 +112,7 @@ util.getVotingResult = function (jiraId) {
     let maxUserVotingIndex = fibonacci.indexOf(maxUserVoting)
     let sum = 0
     for (let index = 0; index < sortedUserRatingArray.length; index++) {
-      sum = sum + sortedUserRatingArray[index].rating
+      sum = sum + parseInt(sortedUserRatingArray[index].rating)
     }
     let avgRating = sum / sortedUserRatingArray.length
     if (avgRating !== 0) {
