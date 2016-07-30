@@ -5,9 +5,9 @@
   "main": "app.js",
   "scripts": {
     "lint": "eslint  *.js model config tests",
-    "test": "npm run-script lint && npm run-script integration-test",
-    "integration-test": "npm run-script start && npm run-script code-coverage && npm run-script stop",
-    "code-coverage": "istanbul cover _mocha tests/it",
+    "test": "npm run-script lint && npm run-script unit-test && npm run-script integration-test",
+    "integration-test": "npm run-script start && istanbul cover _mocha tests/it  && npm run-script stop",
+    "unit-test": "istanbul cover _mocha tests/unit tests/unit/model",
     "start" : "forever --minUptime=5000 app.js 3000 &",
     "stop" : "forever stopall"
   },
@@ -42,7 +42,8 @@
     "rewire": "^2.5.1",
     "sinon": "^1.17.3",
     "should":"^10.0.0",
-    "supertest": "^1.2.0"
+    "supertest": "^1.2.0",
+    "chai": "^3.4.1"
   },
   "dependencies": {
     "express": "^4.14.0",
