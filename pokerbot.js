@@ -160,6 +160,9 @@ pokerbot.vote = function (req, res, next) {
   const vote = requestBody.actions[0].value
   const userName = requestBody.user.name
   const userId = requestBody.user.id
+  if(isNaN(vote)){
+    vote = 0
+  }
   const userRating = new UserRating(userId, userName, vote)
   const jiraId = requestBody.original_message.text.match(/\w+-\d+$/)
   // const jiraId = 'JIRA-' + requestBody.original_message.text.split('JIRA-')[1]

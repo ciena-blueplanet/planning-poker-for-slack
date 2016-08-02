@@ -89,13 +89,18 @@ util.sortArrayBasedOnObjectProperty = function (items, prop) {
 */
 util.getVotingResult = function (jiraId, pokerDataModel) {
   console.log('Util getVotingResult : begin')
-  const fibonacci = [1, 2, 3, 5, 8, 13, 21, 34, 55]
+  const fibonacci = [1, 2, 3, 5, 8, 13, 21, 34, '?']
   // let pokerDataModel = require('./pokerbot').pokerDataModel
   let userRatingArray = []
+  let userAbstainedArray = []
   if (pokerDataModel.hasOwnProperty(jiraId)) {
     let votingDataModel = pokerDataModel[jiraId].voting
     for (let prop in votingDataModel) {
-      userRatingArray.push(votingDataModel[prop])
+      if(votingDataModel[prop].rating > 0){
+        userRatingArray.push(votingDataModel[prop])
+      } else {
+        userAbstainedArray.push(votingDataModel[prop])
+      }
     }
   }
   console.log(userRatingArray)
