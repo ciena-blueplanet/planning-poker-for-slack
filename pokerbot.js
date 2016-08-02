@@ -25,7 +25,7 @@ pokerbot.root = function (req, res, next) {
   console.log('Channel Id  : ' + channelId)
   console.log('Token Id  : ' + token)
   // Bad command syntex.
-  if ((option !== 'start' && option !== 'stop') || jiraId.indexOf('JIRA-') < 0) {
+  if ((option !== 'start' && option !== 'stop') || jiraId === undefined) {
     console.log('Option wrong : begin')
     let responseForBadRequestFormat = {
       response_type: EPHEMERAL,
