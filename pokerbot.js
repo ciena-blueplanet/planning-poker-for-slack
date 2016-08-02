@@ -157,7 +157,7 @@ pokerbot.root = function (req, res, next) {
 pokerbot.vote = function (req, res, next) {
   console.log('Option vote : begin')
   const requestBody = JSON.parse(req.body.payload)
-  const vote = requestBody.actions[0].value
+  let vote = requestBody.actions[0].value
   const userName = requestBody.user.name
   const userId = requestBody.user.id
   if(isNaN(vote)){
