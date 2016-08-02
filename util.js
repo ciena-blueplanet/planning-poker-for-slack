@@ -126,7 +126,7 @@ util.getVotingResult = function (jiraId, pokerDataModel) {
     console.log('Average rating : ' + avgRating)
     let responseResult = ''
     if(userAbstainedArray.length>0){
-      responseResult = 'Following members have abstained from voting : \n'
+      responseResult = '\nFollowing members have abstained from voting : \n'
       for(let index=0;index<userAbstainedArray.length;index++){
         responseResult += userAbstainedArray[index].userName + "\n"
       }
