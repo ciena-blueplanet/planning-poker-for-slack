@@ -124,16 +124,24 @@ util.getVotingResult = function (jiraId, pokerDataModel) {
       avgRating = avgRating.toFixed(2)
     }
     console.log('Average rating : ' + avgRating)
+    let responseResult = ''
+    if(userAbstainedArray.length>0){
+      responseResult = 'Following members have abstained from voting : \n'
+      for(let index=0;index<userAbstainedArray.length;index++){
+        responseResult += userAbstainedArray[index].userName + "\n"
+      }
+    }
     if (maxUserVotingIndex - leastUserVotingIndex > 1) {
       console.log('Util getVotingResult : end')
+      //responseResult =
       return 'Planning for ' + jiraId + ' is complete.' +
       'Minimum vote : ' + leastUserVotingModel.rating + ' by ' + leastUserVotingModel.userName +
       ', Maximum vote : ' + maxUserVotingModel.rating + ' by ' + maxUserVotingModel.userName +
-      ', Average vote : ' + avgRating
+      ', Average vote : ' + avgRating + responseResult
     } else {
       console.log('All rating are in expected range')
       console.log('Util getVotingResult : end')
-      return 'Planning for ' + jiraId + ' is complete. Average vote : ' + avgRating
+      return 'Planning for ' + jiraId + ' is complete. Average vote : ' + avgRating + responseResult
     }
   } else {
     console.log('Util getVotingResult : end')
