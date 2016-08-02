@@ -158,7 +158,8 @@ pokerbot.vote = function (req, res, next) {
   const userName = requestBody.user.name
   const userId = requestBody.user.id
   const userRating = new UserRating(userId, userName, vote)
-  const jiraId = 'JIRA-' + requestBody.original_message.text.split('JIRA-')[1]
+  const jiraId = requestBody.original_message.text.match(/\w+-\d+$/)
+  // const jiraId = 'JIRA-' + requestBody.original_message.text.split('JIRA-')[1]
   console.log(userName + ' has voted ' + vote + ' for ' + jiraId)
   let responseEphemeral
   if (pokerbot.pokerDataModel[jiraId]) {

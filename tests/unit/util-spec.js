@@ -1,36 +1,34 @@
 'use strict'
 
 // const rewire = require('rewire')
-// const sinon = require('sinon')
+const sinon = require('sinon')
 const expect = require('chai').expect
 const util = require('./../../util')
+// const pokerDataModel = require('./pokerDataModel')
 
 describe('util', () => {
+  let sandbox
   beforeEach(() => {
+    sandbox = sinon.sandbox.create()
   })
 
   afterEach(() => {
     // remove all stubs/spies
-    // sandbox.restore()
+    sandbox.restore()
   })
 
-  it('saves the sortArrayBasedOnObjectProperty', () => {
+  it('Test util.sortArrayBasedOnObjectProperty based on voting object', () => {
     let unSortedArray = [
-       {x: 4, y: 2},
-       {x: 1, y: 9},
-       {x: 2, y: 3},
-       {x: 8, y: 4}
+      {'userId': 'U1MKN7AJC', 'userName': 'satpal', 'rating': 5},
+      {'userId': 'U1MKN7AJC', 'userName': 'satpal', 'rating': 3},
+      {'userId': 'U1MKN7AJC', 'userName': 'satpal', 'rating': 8},
+      {'userId': 'U1MKN7AJC', 'userName': 'satpal', 'rating': 2}
     ]
-    let sortedArray
-    sortedArray = util.sortArrayBasedOnObjectProperty(unSortedArray, 'x')
-    expect(sortedArray[0].x).to.be.equal(1)
-    expect(sortedArray[1].x).to.be.equal(2)
-    expect(sortedArray[2].x).to.be.equal(4)
-    expect(sortedArray[3].x).to.be.equal(8)
-    sortedArray = util.sortArrayBasedOnObjectProperty(unSortedArray, 'y')
-    expect(sortedArray[0].y).to.be.equal(2)
-    expect(sortedArray[1].y).to.be.equal(3)
-    expect(sortedArray[2].y).to.be.equal(4)
-    expect(sortedArray[3].y).to.be.equal(9)
+    let sortedArray = util.sortArrayBasedOnObjectProperty(unSortedArray, 'rating')
+    console.log(sortedArray)
+    expect(sortedArray[0].rating).to.be.equal(2)
+    expect(sortedArray[1].rating).to.be.equal(3)
+    expect(sortedArray[2].rating).to.be.equal(5)
+    expect(sortedArray[3].rating).to.be.equal(8)
   })
 })

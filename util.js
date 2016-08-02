@@ -1,7 +1,6 @@
 'use strict'
 
 const https = require('https')
-
 const maxPlayTime = require('./config/schedule.json').maxPlayTime
 const gameInterval = require('./config/schedule.json').gameInterval
 const token = require('./config/auth.json').access_token
