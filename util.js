@@ -106,6 +106,13 @@ util.getVotingResult = function (jiraId, pokerDataModel) {
   console.log(userRatingArray)
   let sortedUserRatingArray = util.sortArrayBasedOnObjectProperty(userRatingArray, 'rating')
   console.log(sortedUserRatingArray)
+  let responseResult = ''
+  if(userAbstainedArray.length>0){
+    responseResult = '\nFollowing members have abstained from voting : \n'
+    for(let index=0;index<userAbstainedArray.length;index++){
+      responseResult += userAbstainedArray[index].userName + "\n"
+    }
+  }
   if (sortedUserRatingArray.length > 0) {
     let leastUserVotingModel = sortedUserRatingArray[0]
     console.log(leastUserVotingModel)
@@ -124,13 +131,6 @@ util.getVotingResult = function (jiraId, pokerDataModel) {
       avgRating = avgRating.toFixed(2)
     }
     console.log('Average rating : ' + avgRating)
-    let responseResult = ''
-    if(userAbstainedArray.length>0){
-      responseResult = '\nFollowing members have abstained from voting : \n'
-      for(let index=0;index<userAbstainedArray.length;index++){
-        responseResult += userAbstainedArray[index].userName + "\n"
-      }
-    }
     if (maxUserVotingIndex - leastUserVotingIndex > 1) {
       console.log('Util getVotingResult : end')
       //responseResult =
@@ -145,7 +145,7 @@ util.getVotingResult = function (jiraId, pokerDataModel) {
     }
   } else {
     console.log('Util getVotingResult : end')
-    return 'Planning for ' + jiraId + ' is complete. Average vote : 0'
+    return 'Planning for ' + jiraId + ' is complete. Average vote : 0' + responseResult
   }
 }
 
