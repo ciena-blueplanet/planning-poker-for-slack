@@ -31,7 +31,6 @@ util.getChannelInfo = function (token, channelId) {
     req.end()
     req.on('error', (error) => {
       console.error(error)
-      // return JSON.parse(error)
       reject(error)
     })
   })
@@ -90,7 +89,6 @@ util.sortArrayBasedOnObjectProperty = function (items, prop) {
 util.getVotingResult = function (jiraId, pokerDataModel) {
   console.log('Util getVotingResult : begin')
   const fibonacci = [1, 2, 3, 5, 8, 13, 21, 34, '?']
-  // let pokerDataModel = require('./pokerbot').pokerDataModel
   let userRatingArray = []
   let userAbstainedArray = []
   if (pokerDataModel.hasOwnProperty(jiraId)) {
@@ -133,7 +131,6 @@ util.getVotingResult = function (jiraId, pokerDataModel) {
     console.log('Average rating : ' + avgRating)
     if (maxUserVotingIndex - leastUserVotingIndex > 1) {
       console.log('Util getVotingResult : end')
-      // responseResult =
       return 'Planning for ' + jiraId + ' is complete.' +
       'Minimum vote : ' + leastUserVotingModel.rating + ' by ' + leastUserVotingModel.userName +
       ', Maximum vote : ' + maxUserVotingModel.rating + ' by ' + maxUserVotingModel.userName +
@@ -157,7 +154,6 @@ util.runSchedularForInProgressJira = function (pokerDataModel) {
   console.log('Util runScheduler : begin')
   let that = this
   setInterval(function () {
-    // let pokerDataModel = require('./pokerbot').pokerDataModel
     let currentEpocTime = (new Date()).getTime()
     console.log('Running schedular to see all live planning. Current time : ' + currentEpocTime)
     let startedTimeOfJira, differenceTravel, seconds, channelId, responseText
@@ -198,7 +194,7 @@ util.getAllUsersInTeam = function (token) {
       try {
         res.on('data', (d) => {
           // process.stdout.write(d)
-          resolve(JSON.parse(d.toString()).members)
+          // resolve(JSON.parse(d.toString()).members)
         })
       } catch (err) {
         reject(err)
@@ -207,7 +203,6 @@ util.getAllUsersInTeam = function (token) {
     req.end()
     req.on('error', (error) => {
       console.error(error)
-      // return JSON.parse(error)
       reject(error)
     })
   })

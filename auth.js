@@ -4,9 +4,7 @@ const https = require('https')
 const path = require('path')
 const fs = require('fs')
 const querystring = require('querystring')
-// const util = require('./util')
 let auth = {}
-// auth.token = ''
 
 /**
  * We are getting the OAuth token from slack server for our app

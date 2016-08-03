@@ -24,6 +24,7 @@ pokerbot.root = function (req, res, next) {
   const channelId = req.body.channel_id
   console.log('Channel Id  : ' + channelId)
   console.log('Token Id  : ' + token)
+
   // Bad command syntex.
   if ((option !== 'start' && option !== 'stop') || jiraId === undefined) {
     console.log('Option wrong : begin')
@@ -165,7 +166,6 @@ pokerbot.vote = function (req, res, next) {
   }
   const userRating = new UserRating(userId, userName, vote)
   const jiraId = requestBody.original_message.text.match(/\w+-\d+$/)
-  // const jiraId = 'JIRA-' + requestBody.original_message.text.split('JIRA-')[1]
   console.log(userName + ' has voted ' + vote + ' for ' + jiraId)
   let responseEphemeral
   if (pokerbot.pokerDataModel[jiraId]) {

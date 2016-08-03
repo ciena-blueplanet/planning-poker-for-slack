@@ -1,10 +1,8 @@
 'use strict'
 
-// const rewire = require('rewire')
 const sinon = require('sinon')
 const expect = require('chai').expect
 const util = require('./../../util')
-// const pokerDataModel = require('./pokerDataModel')
 
 describe('util', () => {
   let sandbox
@@ -13,7 +11,6 @@ describe('util', () => {
   })
 
   afterEach(() => {
-    // remove all stubs/spies
     sandbox.restore()
   })
 

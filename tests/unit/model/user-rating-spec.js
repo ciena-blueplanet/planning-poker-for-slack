@@ -16,7 +16,7 @@ describe('UserRating', () => {
     sandbox.restore()
   })
 
-  it('craete new user-rating object', () => {
+  it('create new user-rating object', () => {
     expect(userRating.userid).to.be.equal('ABCDEF')
     expect(userRating.userName).to.be.equal('testuser')
     expect(userRating.rating).to.be.equal(5)
