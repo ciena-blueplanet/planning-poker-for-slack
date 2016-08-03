@@ -3,8 +3,10 @@
 const https = require('https')
 const maxPlayTime = require('./config/schedule.json').maxPlayTime
 const gameInterval = require('./config/schedule.json').gameInterval
+const usersUpdateFreequency = require('./config/schedule.json').usersUpdateFreequency
 const token = require('./config/auth.json').access_token
 const __ = require('lodash')
+const pokerbot = require('./pokerbot')
 
 let util = {}
 
@@ -158,10 +160,10 @@ util.getVotingResult = function (jiraId, pokerDataModel) {
 
 /**
  * This is the schedular which will run to send notification for each in-progress poker game.
- * @param {Object} pokerDataModel - pokerDataModel having all in-progress jira
 */
-util.runSchedularForInProgressJira = function (pokerDataModel) {
-  console.log('Util runScheduler : begin')
+util.runSchedularForInProgressJira = function () {
+  console.log('Util runSchedularForInProgressJira : begin')
+  let pokerDataModel = pokerbot.pokerDataModel
   let that = this
   setInterval(function () {
     let currentEpocTime = (new Date()).getTime()
@@ -184,7 +186,7 @@ util.runSchedularForInProgressJira = function (pokerDataModel) {
       }
     }
   }, gameInterval * 1000)
-  console.log('Util runScheduler : end')
+  console.log('Util runSchedularForInProgressJira : end')
 }
 
 /**
@@ -226,6 +228,27 @@ util.getAllUsersInTeam = function (token) {
       reject(error)
     })
   })
+}
+
+/**
+ * This is a recursive function which will run to to update users info from slack-server.
+*/
+util.runSchedularToUpdateUsers = function () {
+  console.log('Util runSchedularToUpdateUsers : begin')
+  util.getAllUsersInTeam(token)
+  .then((users) => {
+    pokerbot.allUsersInTeam = {}
+    for (let index = 0; index < users.length; index++) {
+      pokerbot.allUsersInTeam[users[index].id] = users[index].name
+    }
+    console.log('Got all users in team from  slack.')
+    console.log(pokerbot.allUsersInTeam)
+  })
+  .catch((err) => {
+    console.error(err)
+  })
+  setTimeout(util.runSchedularToUpdateUsers, usersUpdateFreequency * 1000)
+  console.log('Util runSchedularToUpdateUsers : end')
 }
 
 module.exports = util
