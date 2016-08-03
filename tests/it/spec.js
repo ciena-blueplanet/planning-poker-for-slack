@@ -88,7 +88,67 @@ describe('GET for root route ', function () {
         if (err) return done(err)
         should.equal(res.status, 200, 'Status code for /start is not 200')
         should.equal(res.body.text, 'You have voted 8 for JIRA-' + jiraId, 'Response not ok.')
-        done()
+
+        request(url)
+        .post('/start')
+        .send({
+          'text': 'stop JIRA-' + jiraId,
+          'channel': 'C1ML2QAJV',
+          'token': token
+        })
+        .end(function (err, res) {
+          if (err) return done(err)
+          should.equal(res.status, 200, 'Status code for stop is not 200')
+          should.equal(res.body.text, 'Planning for JIRA-' + jiraId + ' is complete. ' +
+          'Average vote : 8.00 Thanks for voting.', 'Response not ok.')
+          done()
+        })
+      })
+    })
+  })
+
+  it('user abstains from voting', function testSlash (done) {
+    let jiraId = Math.floor((Math.random() * 1000) + 1)
+    request(url)
+    .post('/start')
+    .send({
+      'text': 'start JIRA-' + jiraId,
+      'channel': 'C1ML2QAJV',
+      'token': token
+    })
+    .end(function (err, res) {
+      if (err) return done(err)
+      should.equal(res.status, 200, 'Status code for /start is not 200')
+      should.equal(res.body.text, 'Please give your poker vote for JIRA-' + jiraId, 'Response body is not ok.')
+      const startPayload = require('../abstain-vote-test-data.json').startPayload
+      startPayload.original_message.text = 'vote JIRA-' + jiraId
+      let requestBody = {
+        payload: JSON.stringify(startPayload)
+      }
+      request(url)
+      .post('/vote')
+      .send(requestBody)
+      .end(function (err, res) {
+        if (err) return done(err)
+        should.equal(res.status, 200, 'Status code for /vote is not 200')
+        should.equal(res.body.text, 'You have voted 0 for JIRA-' + jiraId, 'Response not ok.')
+
+        request(url)
+        .post('/start')
+        .send({
+          'text': 'stop JIRA-' + jiraId,
+          'channel': 'C1ML2QAJV',
+          'token': token
+        })
+        .end(function (err, res) {
+          if (err) return done(err)
+          console.log('xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx \n' + res.body.text)
+          should.equal(res.status, 200, 'Status code for stop is not 200')
+          should.equal(res.body.text, 'Planning for JIRA-' + jiraId + ' is complete. Average vote : 0' +
+          '\nFollowing members have abstained from voting : \nuser' + '\n Thanks for voting.',
+          'Response not ok.')
+          done()
+        })
       })
     })
   })
