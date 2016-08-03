@@ -1,0 +1,14 @@
+{
+  "JIRA-1234": {
+    "createdOn": 1469855608495,
+    "channelId": {
+      "id": "C1ML2QAJV", "name": "planning-poker", "members": 4
+    },
+    "voting": {
+      "U1MKN7AJC": {"userId": "U1MKN7AJC" , "userName": "satpal" , "rating": 5},
+      "U1MKN7AJC": {"userId": "U1MKN7AJC" , "userName": "satpal" , "rating": 3},
+      "U1MKN7AJC": {"userId": "U1MKN7AJC" , "userName": "satpal" , "rating": 8},
+      "U1MKN7AJC": {"userId": "U1MKN7AJC" , "userName": "satpal" , "rating": 2}
+    }
+  }
+}

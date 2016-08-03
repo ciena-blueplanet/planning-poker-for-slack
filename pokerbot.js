@@ -25,7 +25,7 @@ pokerbot.root = function (req, res, next) {
   console.log('Channel Id  : ' + channelId)
   console.log('Token Id  : ' + token)
   // Bad command syntex.
-  if ((option !== 'start' && option !== 'stop') || jiraId.indexOf('JIRA-') < 0) {
+  if ((option !== 'start' && option !== 'stop') || jiraId === undefined) {
     console.log('Option wrong : begin')
     let responseForBadRequestFormat = {
       response_type: EPHEMERAL,
@@ -60,7 +60,7 @@ pokerbot.root = function (req, res, next) {
         text: responseText
       }
     } else {
-      responseText = util.getVotingResult(jiraId)
+      responseText = util.getVotingResult(jiraId, pokerbot.pokerDataModel)
       responseText = responseText + ' Thanks for voting.'
       responseStopRequest = {
         response_type: IN_CHANNEL,
@@ -158,8 +158,9 @@ pokerbot.vote = function (req, res, next) {
   const userName = requestBody.user.name
   const userId = requestBody.user.id
   const userRating = new UserRating(userId, userName, vote)
-  const jiraId = 'JIRA-' + requestBody.original_message.text.split('JIRA-')[1]
-  console.log(pokerbot.pokerDataModel)
+  const jiraId = requestBody.original_message.text.match(/\w+-\d+$/)
+  // const jiraId = 'JIRA-' + requestBody.original_message.text.split('JIRA-')[1]
+  console.log(userName + ' has voted ' + vote + ' for ' + jiraId)
   let responseEphemeral
   if (pokerbot.pokerDataModel[jiraId]) {
     if (!pokerbot.pokerDataModel[jiraId].voting[userId]) {
@@ -183,7 +184,7 @@ pokerbot.vote = function (req, res, next) {
     if (pokerbot.pokerDataModel[jiraId].channelId.members === keys.length) {
       console.log('All member have voted so closing the game now.')
       let responseText
-      responseText = util.getVotingResult(jiraId)
+      responseText = util.getVotingResult(jiraId, pokerbot.pokerDataModel)
       responseText = responseText + ' Thanks for voting.'
       responseEphemeral = {
         response_type: IN_CHANNEL,

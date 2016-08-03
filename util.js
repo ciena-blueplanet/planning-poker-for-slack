@@ -1,7 +1,6 @@
 'use strict'
 
 const https = require('https')
-
 const maxPlayTime = require('./config/schedule.json').maxPlayTime
 const gameInterval = require('./config/schedule.json').gameInterval
 const token = require('./config/auth.json').access_token
@@ -85,12 +84,13 @@ util.sortArrayBasedOnObjectProperty = function (items, prop) {
 /**
  * Sorting the array of objects based on object property
  * @param {String} jiraId - JIRA id for which voting is in progress
+ * @param {Object} pokerDataModel - pokerDataModel having all in-progress jira
  * @returns {String} - Voting result
 */
-util.getVotingResult = function (jiraId) {
+util.getVotingResult = function (jiraId, pokerDataModel) {
   console.log('Util getVotingResult : begin')
   const fibonacci = [1, 2, 3, 5, 8, 13, 21, 34, 55]
-  let pokerDataModel = require('./pokerbot').pokerDataModel
+  // let pokerDataModel = require('./pokerbot').pokerDataModel
   let userRatingArray = []
   if (pokerDataModel.hasOwnProperty(jiraId)) {
     let votingDataModel = pokerDataModel[jiraId].voting
@@ -112,9 +112,12 @@ util.getVotingResult = function (jiraId) {
     let maxUserVotingIndex = fibonacci.indexOf(maxUserVoting)
     let sum = 0
     for (let index = 0; index < sortedUserRatingArray.length; index++) {
-      sum = sum + sortedUserRatingArray[index].rating
+      sum = sum + parseInt(sortedUserRatingArray[index].rating)
     }
-    let avgRating = Math.floor(sum / sortedUserRatingArray.length)
+    let avgRating = sum / sortedUserRatingArray.length
+    if (avgRating !== 0) {
+      avgRating = avgRating.toFixed(2)
+    }
     console.log('Average rating : ' + avgRating)
     if (maxUserVotingIndex - leastUserVotingIndex > 1) {
       console.log('Util getVotingResult : end')
@@ -135,12 +138,13 @@ util.getVotingResult = function (jiraId) {
 
 /**
  * This is the schedular which will run to send notification for each in-progress poker game.
+ * @param {Object} pokerDataModel - pokerDataModel having all in-progress jira
 */
-util.runSchedularForInProgressJira = function () {
+util.runSchedularForInProgressJira = function (pokerDataModel) {
   console.log('Util runScheduler : begin')
   let that = this
   setInterval(function () {
-    let pokerDataModel = require('./pokerbot').pokerDataModel
+    // let pokerDataModel = require('./pokerbot').pokerDataModel
     let currentEpocTime = (new Date()).getTime()
     console.log('Running schedular to see all live planning. Current time : ' + currentEpocTime)
     let startedTimeOfJira, differenceTravel, seconds, channelId, responseText
@@ -150,7 +154,7 @@ util.runSchedularForInProgressJira = function () {
       differenceTravel = currentEpocTime - startedTimeOfJira
       seconds = Math.floor((differenceTravel) / (1000))
       if (seconds > maxPlayTime) {
-        responseText = util.getVotingResult(prop)
+        responseText = util.getVotingResult(prop, pokerDataModel)
         responseText = responseText + ' Thanks for voting.'
         delete pokerDataModel[prop]
         that.postMessageToChannel(token, channelId, responseText)
