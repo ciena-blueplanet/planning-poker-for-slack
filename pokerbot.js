@@ -167,8 +167,10 @@ pokerbot.root = function (req, res, next) {
       let keys = Object.keys(votingModel)
       let unPlayedUserMap = {}
       console.log(pokerModel.channelId.membersList)
+      console.log(pokerbot.allUsersInTeam)
       for (let index = 0; index < pokerModel.channelId.membersList.length; index++) {
-        if (!keys.indexOf(pokerModel.channelId.membersList[index]) > 0) {
+        console.log(pokerModel.channelId.membersList[index])
+        if (keys.indexOf(pokerModel.channelId.membersList[index]) < 0) {
           unPlayedUserMap[pokerModel.channelId.membersList[index]] =
           pokerbot.allUsersInTeam[pokerModel.channelId.membersList[index]]
         }
