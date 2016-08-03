@@ -96,7 +96,7 @@ util.getVotingResult = function (jiraId, pokerDataModel) {
   if (pokerDataModel.hasOwnProperty(jiraId)) {
     let votingDataModel = pokerDataModel[jiraId].voting
     for (let prop in votingDataModel) {
-      if(votingDataModel[prop].rating > 0){
+      if (votingDataModel[prop].rating > 0) {
         userRatingArray.push(votingDataModel[prop])
       } else {
         userAbstainedArray.push(votingDataModel[prop])
@@ -107,10 +107,10 @@ util.getVotingResult = function (jiraId, pokerDataModel) {
   let sortedUserRatingArray = util.sortArrayBasedOnObjectProperty(userRatingArray, 'rating')
   console.log(sortedUserRatingArray)
   let responseResult = ''
-  if(userAbstainedArray.length>0){
+  if (userAbstainedArray.length > 0) {
     responseResult = '\nFollowing members have abstained from voting : \n'
-    for(let index=0;index<userAbstainedArray.length;index++){
-      responseResult += userAbstainedArray[index].userName + "\n"
+    for (let index = 0; index < userAbstainedArray.length; index++) {
+      responseResult += userAbstainedArray[index].userName + '\n'
     }
   }
   if (sortedUserRatingArray.length > 0) {
@@ -133,7 +133,7 @@ util.getVotingResult = function (jiraId, pokerDataModel) {
     console.log('Average rating : ' + avgRating)
     if (maxUserVotingIndex - leastUserVotingIndex > 1) {
       console.log('Util getVotingResult : end')
-      //responseResult =
+      // responseResult =
       return 'Planning for ' + jiraId + ' is complete.' +
       'Minimum vote : ' + leastUserVotingModel.rating + ' by ' + leastUserVotingModel.userName +
       ', Maximum vote : ' + maxUserVotingModel.rating + ' by ' + maxUserVotingModel.userName +
@@ -195,10 +195,14 @@ util.getAllUsersInTeam = function (token) {
   console.log(extServerOptions)
   return new Promise((resolve, reject) => {
     let req = https.request(extServerOptions, (res) => {
-      res.on('data', (d) => {
-        // process.stdout.write(d)
-        resolve(JSON.parse(d.toString()).members)
-      })
+      try {
+        res.on('data', (d) => {
+          // process.stdout.write(d)
+          resolve(JSON.parse(d.toString()).members)
+        })
+      } catch (err) {
+        reject(err)
+      }
     })
     req.end()
     req.on('error', (error) => {

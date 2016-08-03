@@ -112,8 +112,8 @@ pokerbot.root = function (req, res, next) {
         ok_text: 'Yes',
         dismiss_text: 'No'
       }
-      if(isNaN(fibonacci[index])){
-        action.confirm.text = "Are you sure you want to abstain from voting?"
+      if (isNaN(fibonacci[index])) {
+        action.confirm.text = 'Are you sure you want to abstain from voting?'
       }
       if (index < 5) {
         attachment1.actions[attachment1.actions.length] = action
@@ -160,7 +160,7 @@ pokerbot.vote = function (req, res, next) {
   let vote = requestBody.actions[0].value
   const userName = requestBody.user.name
   const userId = requestBody.user.id
-  if(isNaN(vote)){
+  if (isNaN(vote)) {
     vote = 0
   }
   const userRating = new UserRating(userId, userName, vote)
