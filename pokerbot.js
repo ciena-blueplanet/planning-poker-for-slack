@@ -99,7 +99,7 @@ pokerbot.root = function (req, res, next) {
       callback_id: 'planning-poker',
       actions: []
     }
-    const fibonacci = [1, 2, 3, 5, 8, 13, 21, 34, 55]
+    const fibonacci = [1, 2, 3, 5, 8, 13, 21, 34, '?']
     for (var index = 0; index < fibonacci.length; index++) {
       let action = {}
       action.name = fibonacci[index]
@@ -111,6 +111,9 @@ pokerbot.root = function (req, res, next) {
         text: 'Are you sure you want to vote ' + fibonacci[index] + '  ?',
         ok_text: 'Yes',
         dismiss_text: 'No'
+      }
+      if(isNaN(fibonacci[index])){
+        action.confirm.text = "Are you sure you want to abstain from voting?"
       }
       if (index < 5) {
         attachment1.actions[attachment1.actions.length] = action
@@ -154,9 +157,12 @@ pokerbot.root = function (req, res, next) {
 pokerbot.vote = function (req, res, next) {
   console.log('Option vote : begin')
   const requestBody = JSON.parse(req.body.payload)
-  const vote = requestBody.actions[0].value
+  let vote = requestBody.actions[0].value
   const userName = requestBody.user.name
   const userId = requestBody.user.id
+  if(isNaN(vote)){
+    vote = 0
+  }
   const userRating = new UserRating(userId, userName, vote)
   const jiraId = requestBody.original_message.text.match(/\w+-\d+$/)
   // const jiraId = 'JIRA-' + requestBody.original_message.text.split('JIRA-')[1]

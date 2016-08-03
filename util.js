@@ -89,18 +89,30 @@ util.sortArrayBasedOnObjectProperty = function (items, prop) {
 */
 util.getVotingResult = function (jiraId, pokerDataModel) {
   console.log('Util getVotingResult : begin')
-  const fibonacci = [1, 2, 3, 5, 8, 13, 21, 34, 55]
+  const fibonacci = [1, 2, 3, 5, 8, 13, 21, 34, '?']
   // let pokerDataModel = require('./pokerbot').pokerDataModel
   let userRatingArray = []
+  let userAbstainedArray = []
   if (pokerDataModel.hasOwnProperty(jiraId)) {
     let votingDataModel = pokerDataModel[jiraId].voting
     for (let prop in votingDataModel) {
-      userRatingArray.push(votingDataModel[prop])
+      if(votingDataModel[prop].rating > 0){
+        userRatingArray.push(votingDataModel[prop])
+      } else {
+        userAbstainedArray.push(votingDataModel[prop])
+      }
     }
   }
   console.log(userRatingArray)
   let sortedUserRatingArray = util.sortArrayBasedOnObjectProperty(userRatingArray, 'rating')
   console.log(sortedUserRatingArray)
+  let responseResult = ''
+  if(userAbstainedArray.length>0){
+    responseResult = '\nFollowing members have abstained from voting : \n'
+    for(let index=0;index<userAbstainedArray.length;index++){
+      responseResult += userAbstainedArray[index].userName + "\n"
+    }
+  }
   if (sortedUserRatingArray.length > 0) {
     let leastUserVotingModel = sortedUserRatingArray[0]
     console.log(leastUserVotingModel)
@@ -121,18 +133,19 @@ util.getVotingResult = function (jiraId, pokerDataModel) {
     console.log('Average rating : ' + avgRating)
     if (maxUserVotingIndex - leastUserVotingIndex > 1) {
       console.log('Util getVotingResult : end')
+      //responseResult =
       return 'Planning for ' + jiraId + ' is complete.' +
       'Minimum vote : ' + leastUserVotingModel.rating + ' by ' + leastUserVotingModel.userName +
       ', Maximum vote : ' + maxUserVotingModel.rating + ' by ' + maxUserVotingModel.userName +
-      ', Average vote : ' + avgRating
+      ', Average vote : ' + avgRating + responseResult
     } else {
       console.log('All rating are in expected range')
       console.log('Util getVotingResult : end')
-      return 'Planning for ' + jiraId + ' is complete. Average vote : ' + avgRating
+      return 'Planning for ' + jiraId + ' is complete. Average vote : ' + avgRating + responseResult
     }
   } else {
     console.log('Util getVotingResult : end')
-    return 'Planning for ' + jiraId + ' is complete. Average vote : 0'
+    return 'Planning for ' + jiraId + ' is complete. Average vote : 0' + responseResult
   }
 }
 
