@@ -31,7 +31,9 @@ util.getChannelInfo = function (token, channelId) {
       })
       res.on('end', function () {
         try {
-          resolve(JSON.parse(response.toString()).channel)
+          console.log(response.toString())
+          resolve({})
+          // resolve(JSON.parse(response.toString()).channel)
         } catch (err) {
           resolve({})
         }
@@ -209,8 +211,9 @@ util.getAllUsersInTeam = function (token) {
         })
         res.on('end', function () {
           try {
-            process.stdout.write(response.toString())
-            resolve(JSON.parse(response.toString()).members)
+            console.log(response.toString())
+            resolve([])
+            // resolve(JSON.parse(response.toString()).members)
           } catch (err) {
             resolve([])
           }
