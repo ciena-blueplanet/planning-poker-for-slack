@@ -133,6 +133,7 @@ pokerbot.root = function (req, res, next) {
       pokerbot.pokerDataModel[jiraId].channelId['id'] = channel.id
       pokerbot.pokerDataModel[jiraId].channelId['name'] = channel.name
       pokerbot.pokerDataModel[jiraId].channelId['members'] = channel.members.length
+      pokerbot.pokerDataModel[jiraId].channelId['membersList'] = []
       pokerbot.pokerDataModel[jiraId].channelId['membersList'] = channel.members
       console.log(pokerbot.pokerDataModel)
     })
@@ -165,6 +166,7 @@ pokerbot.root = function (req, res, next) {
       let votingModel = pokerModel.voting
       let keys = Object.keys(votingModel)
       let unPlayedUserMap = {}
+      console.log(pokerModel.channelId.membersList)
       for (let index = 0; index < pokerModel.channelId.membersList.length; index++) {
         if (!keys.indexOf(pokerModel.channelId.membersList[index]) > 0) {
           unPlayedUserMap[pokerModel.channelId.membersList[index]] =
