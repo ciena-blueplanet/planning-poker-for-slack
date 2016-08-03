@@ -23,9 +23,18 @@ util.getChannelInfo = function (token, channelId) {
   console.log(extServerOptions)
   return new Promise((resolve, reject) => {
     let req = https.request(extServerOptions, (res) => {
-      res.on('data', (d) => {
-        // process.stdout.write(d)
-        resolve(JSON.parse(d.toString()).channel)
+      let response
+      res.on('data', (chunk) => {
+        if (chunk !== null && chunk !== '') {
+          response += chunk
+        }
+      })
+      res.on('end', function () {
+        try {
+          resolve(JSON.parse(response.toString()).channel)
+        } catch (err) {
+          resolve({})
+        }
       })
     })
     req.end()
@@ -191,10 +200,20 @@ util.getAllUsersInTeam = function (token) {
   console.log(extServerOptions)
   return new Promise((resolve, reject) => {
     let req = https.request(extServerOptions, (res) => {
+      let response
       try {
-        res.on('data', (d) => {
-          // process.stdout.write(d)
-          // resolve(JSON.parse(d.toString()).members)
+        res.on('data', (chunk) => {
+          if (chunk !== null && chunk !== '') {
+            response += chunk
+          }
+        })
+        res.on('end', function () {
+          try {
+            process.stdout.write(response.toString())
+            resolve(JSON.parse(response.toString()).members)
+          } catch (err) {
+            resolve([])
+          }
         })
       } catch (err) {
         reject(err)
