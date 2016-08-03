@@ -95,7 +95,8 @@ describe('GET for root route ', function () {
 
   it('responds to /start with wrong format', function testSlash (done) {
     const errorMessage = 'Response not ok.'
-    const successMessage = 'Please enter the command in correct format e.g. /planning-poker start or stop JIRA-1001'
+    const successMessage = 'Please enter the command in correct format ' +
+    'e.g. /planning-poker start or stop or status JIRA-1001'
     request(url)
     .post('/start')
     .send({'text': 'wrongFormat'})

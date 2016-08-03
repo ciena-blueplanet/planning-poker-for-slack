@@ -30,14 +30,14 @@ pokerbot.root = function (req, res, next) {
     console.log('Option wrong : begin')
     let responseForBadRequestFormat = {
       response_type: EPHEMERAL,
-      text: 'Please enter the command in correct format e.g. /planning-poker start or stop JIRA-1001'
+      text: 'Please enter the command in correct format e.g. /planning-poker start or stop or status JIRA-1001'
     }
     console.log('Option wrong : end')
     return res.status(200).json(responseForBadRequestFormat)
   }
 
  // Closing the unstarted Jira Planning.
-  if (option === 'stop' && (!pokerbot.pokerDataModel.hasOwnProperty(jiraId))) {
+  if ((option === 'stop' || option === 'status') && (!pokerbot.pokerDataModel.hasOwnProperty(jiraId))) {
     console.log('Option stop : begin')
     let responseForUnstartedJira = {
       response_type: EPHEMERAL,
@@ -133,6 +133,7 @@ pokerbot.root = function (req, res, next) {
       pokerbot.pokerDataModel[jiraId].channelId['id'] = channel.id
       pokerbot.pokerDataModel[jiraId].channelId['name'] = channel.name
       pokerbot.pokerDataModel[jiraId].channelId['members'] = channel.members.length
+      pokerbot.pokerDataModel[jiraId].channelId['membersList'] = channel.members
       console.log(pokerbot.pokerDataModel)
     })
     .catch((err) => {
@@ -145,6 +146,45 @@ pokerbot.root = function (req, res, next) {
     }
     console.log('Option start : end')
     return res.status(200).json(response)
+  }
+
+  // Get the status of game
+  if (option === 'status' && (pokerbot.pokerDataModel.hasOwnProperty(jiraId))) {
+    console.log('Option status : begin')
+    console.log(pokerbot.pokerDataModel)
+    let pokerModel = pokerbot.pokerDataModel[jiraId]
+    let responseText, responseStopRequest
+    if (pokerModel.channelId.id !== channelId) {
+      responseText = 'This game was not started in this channel.' +
+      'Please go to channel ' + pokerModel.channelId.name + ' to stop or get status of the game.'
+      responseStopRequest = {
+        response_type: EPHEMERAL,
+        text: responseText
+      }
+    } else {
+      let votingModel = pokerModel.voting
+      let keys = Object.keys(votingModel)
+      let unPlayedUserMap = {}
+      for (let index = 0; index < pokerModel.channelId.membersList.length; index++) {
+        if (!keys.indexOf(pokerModel.channelId.membersList[index]) > 0) {
+          unPlayedUserMap[pokerModel.channelId.membersList[index]] =
+          pokerbot.allUsersInTeam[pokerModel.channelId.membersList[index]]
+        }
+      }
+      console.log(unPlayedUserMap)
+      let unPlayedUsersNames = 'Following are the players who have not voted :'
+      for (let prop in unPlayedUserMap) {
+        unPlayedUsersNames += '\n' + unPlayedUserMap[prop]
+      }
+      console.log(unPlayedUsersNames)
+      responseText = unPlayedUsersNames
+      responseStopRequest = {
+        response_type: IN_CHANNEL,
+        text: responseText
+      }
+    }
+    console.log('Option status : end')
+    return res.status(200).json(responseStopRequest)
   }
 }
 

@@ -23,7 +23,7 @@ util.getChannelInfo = function (token, channelId) {
   console.log(extServerOptions)
   return new Promise((resolve, reject) => {
     let req = https.request(extServerOptions, (res) => {
-      let response=''
+      let response = ''
       res.on('data', (chunk) => {
         if (chunk !== null && chunk !== '') {
           response += chunk
@@ -201,7 +201,7 @@ util.getAllUsersInTeam = function (token) {
   console.log(extServerOptions)
   return new Promise((resolve, reject) => {
     let req = https.request(extServerOptions, (res) => {
-      let response=''
+      let response = ''
       try {
         res.on('data', (chunk) => {
           if (chunk !== null && chunk !== '') {
