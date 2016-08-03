@@ -168,4 +168,32 @@ util.runSchedularForInProgressJira = function (pokerDataModel) {
   console.log('Util runScheduler : end')
 }
 
+/**
+ * We are asking the slack server to give us channel information
+ * @param {String} token - token id issued to us by slack-server
+ * @returns {Promise} promise - All users info issued to us by slack-server
+ */
+util.getAllUsersInTeam = function (token) {
+  let extServerOptions = {
+    hostname: 'slack.com',
+    path: '/api/users.list?token=' + token,
+    method: 'GET'
+  }
+  console.log(extServerOptions)
+  return new Promise((resolve, reject) => {
+    let req = https.request(extServerOptions, (res) => {
+      res.on('data', (d) => {
+        // process.stdout.write(d)
+        resolve(JSON.parse(d.toString()).members)
+      })
+    })
+    req.end()
+    req.on('error', (error) => {
+      console.error(error)
+      // return JSON.parse(error)
+      reject(error)
+    })
+  })
+}
+
 module.exports = util

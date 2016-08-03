@@ -7,7 +7,7 @@ const EPHEMERAL = 'ephemeral'
 const token = require('./config/auth.json').access_token
 let pokerbot = {}
 pokerbot.pokerDataModel = {} //  It is an object with key as jira-id and value as object having poker details e.g {"JIRA-1234":{"channelId":"server","craetedOn":"12121212",userId1:{UserRating1}}}
-// token = ''
+pokerbot.allUsersInTeam = {} //  It is an object with key as user-id and value containing an object containg the info of user
 
 /**
  * We have received a request to start or stop the poker planning
