@@ -25,7 +25,7 @@ console.log('Application listening on port : ' + port)
 util.runSchedularForInProgressJira(pokerbot.pokerDataModel)
 util.getAllUsersInTeam(token)
 .then((users) => {
-  for (let index = 0; index < users.length; users++) {
+  for (let index = 0; index < users.length; index++) {
     pokerbot.allUsersInTeam[users[index].id] = users[index].name
   }
   console.log('Got all users in team from  slack.')
