@@ -4,6 +4,7 @@ const https = require('https')
 const maxPlayTime = require('./config/schedule.json').maxPlayTime
 const gameInterval = require('./config/schedule.json').gameInterval
 const token = require('./config/auth.json').access_token
+const async = require('async')
 const __ = require('lodash')
 
 let util = {}
@@ -192,7 +193,7 @@ util.runSchedularForInProgressJira = function (pokerDataModel) {
  * @param {String} token - token id issued to us by slack-server
  * @returns {Promise} promise - All users info issued to us by slack-server
  */
-util.getAllUsersInTeam = function (token) {
+util.getAllUsersInTeam = function () {
   let extServerOptions = {
     hostname: 'slack.com',
     path: '/api/users.list?token=' + token,
@@ -226,6 +227,58 @@ util.getAllUsersInTeam = function (token) {
       reject(error)
     })
   })
+}
+
+/**
+ * We are asking the slack server to give us channel information
+ * @param {String} userId - userId issued to us by slack-server
+ * @returns {Promise} promise - All users info issued to us by slack-server
+ */
+util.getUserInTeam = function (userId) {
+  let extServerOptions = {
+    hostname: 'slack.com',
+    path: '/api/users.info?token=' + token + '&user=' + userId,
+    method: 'GET'
+  }
+  console.log(extServerOptions)
+  return new Promise((resolve, reject) => {
+    let req = https.request(extServerOptions, (res) => {
+      let response = ''
+      try {
+        res.on('data', (chunk) => {
+          if (chunk !== null && chunk !== '') {
+            response += chunk
+          }
+        })
+        res.on('end', function () {
+          try {
+            console.log(response.toString())
+            resolve(JSON.parse(response.toString()).user)
+          } catch (err) {
+            resolve([])
+          }
+        })
+      } catch (err) {
+        reject(err)
+      }
+    })
+    req.end()
+    req.on('error', (error) => {
+      console.error(error)
+      reject(error)
+    })
+  })
+}
+
+/**
+ * We are asking the slack server to give us channel information
+ * @param {Array} functionArray - Array of all functions which needs to be executed in parallel.
+ * @param {Function} callback - callback needs to be executed
+ */
+util.asyncServerCalls = function (functionArray, callback) {
+  console.log('Inside asyncServerCalls : begin')
+  async.parallel(functionArray, callback)
+  console.log('Inside asyncServerCalls : end')
 }
 
 module.exports = util

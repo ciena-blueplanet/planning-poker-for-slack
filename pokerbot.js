@@ -135,6 +135,18 @@ pokerbot.root = function (req, res, next) {
       pokerbot.pokerDataModel[jiraId].channelId['members'] = channel.members.length
       pokerbot.pokerDataModel[jiraId].channelId['membersList'] = []
       pokerbot.pokerDataModel[jiraId].channelId['membersList'] = channel.members
+      let memberId, miisingMemberArray
+      for (let index = 0; index < channel.members.length; index++) {
+        memberId = channel.members[index]
+        if (!pokerbot.allUsersInTeam.hasOwnProperty(memberId)) {
+          miisingMemberArray.push(memberId)
+        }
+      }
+      if (miisingMemberArray.length > 0) {
+        console.log('Information for ' + miisingMemberArray.length + ' members are not present.')
+        console.log('Getting the info from slack server')
+        pokerbot.addNewUsersInTeam(miisingMemberArray)
+      }
       console.log(pokerbot.pokerDataModel)
     })
     .catch((err) => {
@@ -251,6 +263,58 @@ pokerbot.vote = function (req, res, next) {
   }
   console.log('Option vote : end')
   return res.status(200).json(responseEphemeral)
+}
+
+/**
+ * We are asking the slack server to give us INformation of all users in channel
+ */
+pokerbot.getAllUsersInTeam = function () {
+  console.log('Inside getAllUsersInTeam : begin')
+  util.getAllUsersInTeam()
+  .then((users) => {
+    for (let index = 0; index < users.length; index++) {
+      pokerbot.allUsersInTeam[users[index].id] = users[index].name
+    }
+    console.log('Got all users in team from  slack.')
+    console.log(pokerbot.allUsersInTeam)
+    console.log('Inside getAllUsersInTeam : end')
+  })
+  .catch((err) => {
+    console.error(err)
+    console.log('Inside getAllUsersInTeam : end')
+  })
+}
+
+/**
+ * We are asking the slack server to give us channel information
+ * @param {Array} userIdArray - Array of all new users.
+ */
+pokerbot.addNewUsersInTeam = function (userIdArray) {
+  console.log('Inside addNewUsersInTeam : begin')
+  let functionArray = []
+  let newFunction
+  for (let index = 0; index < userIdArray.length; index++) {
+    let userId = userIdArray[index]
+    newFunction = function () {
+      console.log('Executing util.getUserInTeam with userId : ' + userId)
+      util.getUserInTeam(userId)
+      .then((user) => {
+        console.log('Got user in team from  slack.')
+        console.log(user)
+        pokerbot.allUsersInTeam[user.id] = user.name
+      })
+      .catch((err) => {
+        console.error(err)
+      })
+    }
+    functionArray.push(newFunction)
+  }
+  if (functionArray.length > 0) {
+    util.asyncServerCalls(functionArray, function () {
+      console.log('All users have been added')
+    })
+  }
+  console.log('Inside addNewUsersInTeam : end')
 }
 
 module.exports = pokerbot
