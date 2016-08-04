@@ -5,8 +5,8 @@ const maxPlayTime = require('./config/schedule.json').maxPlayTime
 const gameInterval = require('./config/schedule.json').gameInterval
 const token = require('./config/auth.json').access_token
 const __ = require('lodash')
-
 let util = {}
+util.fibonacci = [1, 2, 3, 5, 8, 13, 21, 34, '?']
 
 /**
  * We are asking the slack server to give us channel information
@@ -89,27 +89,39 @@ util.sortArrayBasedOnObjectProperty = function (items, prop) {
 */
 util.getVotingResult = function (jiraId, pokerDataModel) {
   console.log('Util getVotingResult : begin')
-  const fibonacci = [1, 2, 3, 5, 8, 13, 21, 34, 55]
   // let pokerDataModel = require('./pokerbot').pokerDataModel
   let userRatingArray = []
+  let userAbstainedArray = []
   if (pokerDataModel.hasOwnProperty(jiraId)) {
     let votingDataModel = pokerDataModel[jiraId].voting
     for (let prop in votingDataModel) {
-      userRatingArray.push(votingDataModel[prop])
+      if (votingDataModel[prop].rating > 0) {
+        userRatingArray.push(votingDataModel[prop])
+      } else {
+        userAbstainedArray.push(votingDataModel[prop])
+      }
     }
   }
   console.log(userRatingArray)
   let sortedUserRatingArray = util.sortArrayBasedOnObjectProperty(userRatingArray, 'rating')
   console.log(sortedUserRatingArray)
+  let responseResult = ''
+  if (userAbstainedArray.length > 0) {
+    responseResult = '\nFollowing members have abstained from voting : \n'
+    for (let index = 0; index < userAbstainedArray.length; index++) {
+      responseResult += userAbstainedArray[index].userName + '\n'
+    }
+  }
   if (sortedUserRatingArray.length > 0) {
     let leastUserVotingModel = sortedUserRatingArray[0]
     console.log(leastUserVotingModel)
     let leastUserVoting = leastUserVotingModel.rating
     let maxUserVotingModel = sortedUserRatingArray[sortedUserRatingArray.length - 1]
     console.log(maxUserVotingModel)
+
     let maxUserVoting = maxUserVotingModel.rating
-    let leastUserVotingIndex = fibonacci.indexOf(leastUserVoting)
-    let maxUserVotingIndex = fibonacci.indexOf(maxUserVoting)
+    let leastUserVotingIndex = util.fibonacci.indexOf(leastUserVoting)
+    let maxUserVotingIndex = util.fibonacci.indexOf(maxUserVoting)
     let sum = 0
     for (let index = 0; index < sortedUserRatingArray.length; index++) {
       sum = sum + parseInt(sortedUserRatingArray[index].rating)
@@ -121,18 +133,19 @@ util.getVotingResult = function (jiraId, pokerDataModel) {
     console.log('Average rating : ' + avgRating)
     if (maxUserVotingIndex - leastUserVotingIndex > 1) {
       console.log('Util getVotingResult : end')
+      // responseResult =
       return 'Planning for ' + jiraId + ' is complete.' +
       'Minimum vote : ' + leastUserVotingModel.rating + ' by ' + leastUserVotingModel.userName +
       ', Maximum vote : ' + maxUserVotingModel.rating + ' by ' + maxUserVotingModel.userName +
-      ', Average vote : ' + avgRating
+      ', Average vote : ' + avgRating + responseResult
     } else {
       console.log('All rating are in expected range')
       console.log('Util getVotingResult : end')
-      return 'Planning for ' + jiraId + ' is complete. Average vote : ' + avgRating
+      return 'Planning for ' + jiraId + ' is complete. Average vote : ' + avgRating + responseResult
     }
   } else {
     console.log('Util getVotingResult : end')
-    return 'Planning for ' + jiraId + ' is complete. Average vote : 0'
+    return 'Planning for ' + jiraId + ' is complete. Average vote : 0' + responseResult
   }
 }
 
