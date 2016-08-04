@@ -135,7 +135,8 @@ pokerbot.root = function (req, res, next) {
       pokerbot.pokerDataModel[jiraId].channelId['members'] = channel.members.length
       pokerbot.pokerDataModel[jiraId].channelId['membersList'] = []
       pokerbot.pokerDataModel[jiraId].channelId['membersList'] = channel.members
-      let memberId, miisingMemberArray
+      let memberId
+      let miisingMemberArray = []
       for (let index = 0; index < channel.members.length; index++) {
         memberId = channel.members[index]
         if (!pokerbot.allUsersInTeam.hasOwnProperty(memberId)) {
