@@ -146,7 +146,9 @@ pokerbot.root = function (req, res, next) {
       if (miisingMemberArray.length > 0) {
         console.log('Information for ' + miisingMemberArray.length + ' members are not present.')
         console.log('Getting the info from slack server')
-        pokerbot.addNewUsersInTeam(miisingMemberArray)
+        pokerbot.addNewUsersInTeam(miisingMemberArray, function () {
+          console.log('All users are added.')
+        })
       }
       console.log(pokerbot.pokerDataModel)
     })
@@ -289,8 +291,9 @@ pokerbot.getAllUsersInTeam = function () {
 /**
  * We are asking the slack server to give us channel information
  * @param {Array} userIdArray - Array of all new users.
+ * @param {Function} callback - callback to be executed..
  */
-pokerbot.addNewUsersInTeam = function (userIdArray) {
+pokerbot.addNewUsersInTeam = function (userIdArray, callback) {
   console.log('Inside addNewUsersInTeam : begin')
   let functionArray = []
   let newFunction
@@ -311,9 +314,7 @@ pokerbot.addNewUsersInTeam = function (userIdArray) {
     functionArray.push(newFunction)
   }
   if (functionArray.length > 0) {
-    util.asyncServerCalls(functionArray, function () {
-      console.log('All users have been added')
-    })
+    util.asyncServerCalls(functionArray, callback)
   }
   console.log('Inside addNewUsersInTeam : end')
 }

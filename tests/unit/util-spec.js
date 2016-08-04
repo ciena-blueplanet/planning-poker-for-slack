@@ -3,6 +3,7 @@
 const sinon = require('sinon')
 const expect = require('chai').expect
 const util = require('./../../util')
+const pokerbot = require('./../../pokerbot')
 
 describe('util', () => {
   let sandbox
@@ -27,5 +28,12 @@ describe('util', () => {
     expect(sortedArray[1].rating).to.be.equal(3)
     expect(sortedArray[2].rating).to.be.equal(5)
     expect(sortedArray[3].rating).to.be.equal(8)
+  })
+
+  it('Test util.asyncServerCalls is called ', () => {
+    let userIdArray = ['ACVCV', 'ASDD', 'ASFHJK']
+    let spyAsyncServerCalls = sinon.spy(util, 'asyncServerCalls')
+    pokerbot.addNewUsersInTeam(userIdArray, function () {})
+    sinon.assert.calledOnce(spyAsyncServerCalls)
   })
 })

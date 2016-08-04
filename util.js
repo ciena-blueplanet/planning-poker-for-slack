@@ -6,7 +6,6 @@ const gameInterval = require('./config/schedule.json').gameInterval
 const token = require('./config/auth.json').access_token
 const async = require('async')
 const __ = require('lodash')
-
 let util = {}
 
 /**
