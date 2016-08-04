@@ -5,8 +5,8 @@ const maxPlayTime = require('./config/schedule.json').maxPlayTime
 const gameInterval = require('./config/schedule.json').gameInterval
 const token = require('./config/auth.json').access_token
 const __ = require('lodash')
-
 let util = {}
+util.fibonacci = [1, 2, 3, 5, 8, 13, 21, 34, '?']
 
 /**
  * We are asking the slack server to give us channel information
@@ -89,7 +89,6 @@ util.sortArrayBasedOnObjectProperty = function (items, prop) {
 */
 util.getVotingResult = function (jiraId, pokerDataModel) {
   console.log('Util getVotingResult : begin')
-  const fibonacci = [1, 2, 3, 5, 8, 13, 21, 34, '?']
   // let pokerDataModel = require('./pokerbot').pokerDataModel
   let userRatingArray = []
   let userAbstainedArray = []
@@ -119,9 +118,10 @@ util.getVotingResult = function (jiraId, pokerDataModel) {
     let leastUserVoting = leastUserVotingModel.rating
     let maxUserVotingModel = sortedUserRatingArray[sortedUserRatingArray.length - 1]
     console.log(maxUserVotingModel)
+
     let maxUserVoting = maxUserVotingModel.rating
-    let leastUserVotingIndex = fibonacci.indexOf(leastUserVoting)
-    let maxUserVotingIndex = fibonacci.indexOf(maxUserVoting)
+    let leastUserVotingIndex = util.fibonacci.indexOf(leastUserVoting)
+    let maxUserVotingIndex = util.fibonacci.indexOf(maxUserVoting)
     let sum = 0
     for (let index = 0; index < sortedUserRatingArray.length; index++) {
       sum = sum + parseInt(sortedUserRatingArray[index].rating)

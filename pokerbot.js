@@ -1,13 +1,12 @@
 'use strict'
 
 const UserRating = require('./model/user-rating')
-let util = require('./util')
 const IN_CHANNEL = 'in_channel'
 const EPHEMERAL = 'ephemeral'
 const token = require('./config/auth.json').access_token
+let util = require('./util')
 let pokerbot = {}
 pokerbot.pokerDataModel = {} //  It is an object with key as jira-id and value as object having poker details e.g {"JIRA-1234":{"channelId":"server","craetedOn":"12121212",userId1:{UserRating1}}}
-// token = ''
 
 /**
  * We have received a request to start or stop the poker planning
@@ -99,20 +98,20 @@ pokerbot.root = function (req, res, next) {
       callback_id: 'planning-poker',
       actions: []
     }
-    const fibonacci = [1, 2, 3, 5, 8, 13, 21, 34, '?']
-    for (var index = 0; index < fibonacci.length; index++) {
+
+    for (var index = 0; index < util.fibonacci.length; index++) {
       let action = {}
-      action.name = fibonacci[index]
-      action.text = fibonacci[index]
+      action.name = util.fibonacci[index]
+      action.text = util.fibonacci[index]
       action.type = 'button'
-      action.value = fibonacci[index]
+      action.value = util.fibonacci[index]
       action.confirm = {
         title: 'Are you sure ?',
-        text: 'Are you sure you want to vote ' + fibonacci[index] + '  ?',
+        text: 'Are you sure you want to vote ' + util.fibonacci[index] + '  ?',
         ok_text: 'Yes',
         dismiss_text: 'No'
       }
-      if (isNaN(fibonacci[index])) {
+      if (isNaN(util.fibonacci[index])) {
         action.confirm.text = 'Are you sure you want to abstain from voting?'
       }
       if (index < 5) {
