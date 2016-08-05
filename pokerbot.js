@@ -63,6 +63,10 @@ pokerbot.root = function (req, res, next) {
     } else {
       responseText = util.getVotingResult(jiraId, pokerbot.pokerDataModel)
       responseText = responseText + ' Thanks for voting.'
+      let unPlayedUsersName = util.getAllUnplayedUersForGame(pokerbot, jiraId)
+      if (unPlayedUsersName) {
+        responseText = responseText + unPlayedUsersName
+      }
       responseStopRequest = {
         response_type: IN_CHANNEL,
         text: responseText
@@ -178,25 +182,7 @@ pokerbot.root = function (req, res, next) {
         text: responseText
       }
     } else {
-      let votingModel = pokerModel.voting
-      let keys = Object.keys(votingModel)
-      let unPlayedUserMap = {}
-      console.log(pokerModel.channelId.membersList)
-      console.log(pokerbot.allUsersInTeam)
-      for (let index = 0; index < pokerModel.channelId.membersList.length; index++) {
-        console.log(pokerModel.channelId.membersList[index])
-        if (keys.indexOf(pokerModel.channelId.membersList[index]) < 0) {
-          unPlayedUserMap[pokerModel.channelId.membersList[index]] =
-          pokerbot.allUsersInTeam[pokerModel.channelId.membersList[index]]
-        }
-      }
-      console.log(unPlayedUserMap)
-      let unPlayedUsersNames = 'Following are the players who have not voted :'
-      for (let prop in unPlayedUserMap) {
-        unPlayedUsersNames += '\n' + unPlayedUserMap[prop]
-      }
-      console.log(unPlayedUsersNames)
-      responseText = unPlayedUsersNames
+      responseText = util.getAllUnplayedUersForGame(pokerbot, jiraId)
       responseStopRequest = {
         response_type: IN_CHANNEL,
         text: responseText
@@ -251,6 +237,10 @@ pokerbot.vote = function (req, res, next) {
       let responseText
       responseText = util.getVotingResult(jiraId, pokerbot.pokerDataModel)
       responseText = responseText + ' Thanks for voting.'
+      let unPlayedUsersName = util.getAllUnplayedUersForGame(pokerbot, jiraId)
+      if (unPlayedUsersName) {
+        responseText = responseText + unPlayedUsersName
+      }
       responseEphemeral = {
         response_type: IN_CHANNEL,
         text: responseText

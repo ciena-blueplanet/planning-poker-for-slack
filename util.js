@@ -140,6 +140,7 @@ util.getVotingResult = function (jiraId, pokerDataModel) {
       avgRating = avgRating.toFixed(2)
     }
     console.log('Average rating : ' + avgRating)
+
     if (maxUserVotingIndex - leastUserVotingIndex > 1) {
       console.log('Util getVotingResult : end')
       return 'Planning for ' + jiraId + ' is complete.' +
@@ -149,7 +150,8 @@ util.getVotingResult = function (jiraId, pokerDataModel) {
     } else {
       console.log('All rating are in expected range')
       console.log('Util getVotingResult : end')
-      return 'Planning for ' + jiraId + ' is complete. Average vote : ' + avgRating + responseResult
+      return 'Planning for ' + jiraId + ' is complete. Average vote : ' +
+      avgRating + responseResult
     }
   } else {
     console.log('Util getVotingResult : end')
@@ -176,6 +178,11 @@ util.runSchedularForInProgressJira = function (pokerDataModel) {
       if (seconds > maxPlayTime) {
         responseText = util.getVotingResult(prop, pokerDataModel)
         responseText = responseText + ' Thanks for voting.'
+        let pokerbot = require('./pokerbot')
+        let unPlayedUsersName = util.getAllUnplayedUersForGame(pokerbot, prop)
+        if (unPlayedUsersName) {
+          responseText = responseText + unPlayedUsersName
+        }
         delete pokerDataModel[prop]
         that.postMessageToChannel(token, channelId, responseText)
       } else {
@@ -279,6 +286,37 @@ util.asyncServerCalls = function (functionArray, callback) {
   console.log('Inside asyncServerCalls : begin')
   async.parallel(functionArray, callback)
   console.log('Inside asyncServerCalls : end')
+}
+
+/**
+ * We are asking the slack server to give us channel information
+ * @param {Object} pokerbot - pokerbot object.
+ * @param {String} jiraId - jiraId for the game in progress.
+ *@returns {String} Name of all unvoted users.
+ */
+util.getAllUnplayedUersForGame = function (pokerbot, jiraId) {
+  console.log('Inside getAllUnplayedUersForGame : begin')
+  let pokerModel = pokerbot.pokerDataModel[jiraId]
+  let votingModel = pokerModel.voting
+  let keys = Object.keys(votingModel)
+  let unPlayedUserMap = {}
+  let unPlayedUsersNames
+  if (pokerModel.channelId.membersList) {
+    for (let index = 0; index < pokerModel.channelId.membersList.length; index++) {
+      console.log(pokerModel.channelId.membersList[index])
+      if (keys.indexOf(pokerModel.channelId.membersList[index]) < 0) {
+        unPlayedUserMap[pokerModel.channelId.membersList[index]] =
+        pokerbot.allUsersInTeam[pokerModel.channelId.membersList[index]]
+      }
+    }
+    unPlayedUsersNames = '\n Following are the players who have not voted :'
+    for (let prop in unPlayedUserMap) {
+      unPlayedUsersNames += '\n' + unPlayedUserMap[prop]
+    }
+  }
+  console.log(unPlayedUsersNames)
+  console.log('Inside getAllUnplayedUersForGame : begin')
+  return unPlayedUsersNames
 }
 
 module.exports = util
