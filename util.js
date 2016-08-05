@@ -177,12 +177,12 @@ util.runSchedularForInProgressJira = function (pokerDataModel) {
       seconds = Math.floor((differenceTravel) / (1000))
       if (seconds > maxPlayTime) {
         responseText = util.getVotingResult(prop, pokerDataModel)
-        responseText = responseText + ' Thanks for voting.'
         let pokerbot = require('./pokerbot')
         let unPlayedUsersName = util.getAllUnplayedUersForGame(pokerbot, prop)
         if (unPlayedUsersName) {
           responseText = responseText + unPlayedUsersName
         }
+        responseText = responseText + ' Thanks for voting.'
         delete pokerDataModel[prop]
         that.postMessageToChannel(token, channelId, responseText)
       } else {

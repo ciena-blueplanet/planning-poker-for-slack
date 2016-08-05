@@ -62,11 +62,11 @@ pokerbot.root = function (req, res, next) {
       }
     } else {
       responseText = util.getVotingResult(jiraId, pokerbot.pokerDataModel)
-      responseText = responseText + ' Thanks for voting.'
       let unPlayedUsersName = util.getAllUnplayedUersForGame(pokerbot, jiraId)
       if (unPlayedUsersName) {
         responseText = responseText + unPlayedUsersName
       }
+      responseText = responseText + '\nThanks for voting.'
       responseStopRequest = {
         response_type: IN_CHANNEL,
         text: responseText
