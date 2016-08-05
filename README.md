@@ -42,6 +42,7 @@
 ## Examples
 ```
 /planning-poker start JIRA-1234
+/planning-poker status  JIRA-1234
 /planning-poker stop  JIRA-1234
 
 ```
