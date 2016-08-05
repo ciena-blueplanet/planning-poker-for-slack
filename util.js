@@ -310,7 +310,7 @@ util.getAllUnplayedUersForGame = function (pokerbot, jiraId) {
       }
     }
     if (Object.keys(unPlayedUserMap).length > 0) {
-      unPlayedUsersNames = '\n Following are the players who have not voted :'
+      unPlayedUsersNames = 'Following are the players who have not voted :'
       for (let prop in unPlayedUserMap) {
         unPlayedUsersNames += '\n' + unPlayedUserMap[prop]
       }
