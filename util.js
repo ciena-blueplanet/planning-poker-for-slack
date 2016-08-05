@@ -300,7 +300,7 @@ util.getAllUnplayedUersForGame = function (pokerbot, jiraId) {
   let votingModel = pokerModel.voting
   let keys = Object.keys(votingModel)
   let unPlayedUserMap = {}
-  let unPlayedUsersNames
+  let unPlayedUsersNames = ''
   if (pokerModel.channelId.membersList) {
     for (let index = 0; index < pokerModel.channelId.membersList.length; index++) {
       console.log(pokerModel.channelId.membersList[index])
@@ -309,13 +309,15 @@ util.getAllUnplayedUersForGame = function (pokerbot, jiraId) {
         pokerbot.allUsersInTeam[pokerModel.channelId.membersList[index]]
       }
     }
-    unPlayedUsersNames = '\n Following are the players who have not voted :'
-    for (let prop in unPlayedUserMap) {
-      unPlayedUsersNames += '\n' + unPlayedUserMap[prop]
+    if (Object.keys(unPlayedUserMap).length > 0) {
+      unPlayedUsersNames = '\n Following are the players who have not voted :'
+      for (let prop in unPlayedUserMap) {
+        unPlayedUsersNames += '\n' + unPlayedUserMap[prop]
+      }
     }
   }
   console.log(unPlayedUsersNames)
-  console.log('Inside getAllUnplayedUersForGame : begin')
+  console.log('Inside getAllUnplayedUersForGame : end')
   return unPlayedUsersNames
 }
 
