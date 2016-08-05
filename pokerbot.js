@@ -240,8 +240,7 @@ pokerbot.vote = function (req, res, next) {
       responseEphemeral = {
         response_type: IN_CHANNEL,
         replace_original: true,
-        // text: responseText
-        text: 'HELOO'
+        text: 'Planning for ' + jiraId + ' is complete.'
       }
       util.postMessageToChannel(token, pokerbot.pokerDataModel[jiraId].channelId.id, responseText)
       delete pokerbot.pokerDataModel[jiraId]
