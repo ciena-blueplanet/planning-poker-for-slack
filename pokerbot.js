@@ -243,6 +243,7 @@ pokerbot.vote = function (req, res, next) {
       }
       responseEphemeral = {
         response_type: IN_CHANNEL,
+        replace_original: false,
         text: responseText
       }
       delete pokerbot.pokerDataModel[jiraId]
