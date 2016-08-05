@@ -1,0 +1,7 @@
+{
+  "startPayload": {
+    "actions": [{"value": "?"}],
+    "user": {"name": "user", "id": 1},
+    "original_message": {"text": ""}
+  }
+}
