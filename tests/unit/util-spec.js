@@ -36,4 +36,12 @@ describe('util', () => {
     pokerbot.addNewUsersInTeam(userIdArray, function () {})
     sinon.assert.calledOnce(spyAsyncServerCalls)
   })
+
+  it('Test util.getAllUnplayedUersForGame is called ', () => {
+    let pokerbot = {}
+    pokerbot.pokerDataModel = require('./pokerDataModel.json')
+    pokerbot.allUsersInTeam = require('./poker-all-users.json')
+    let spyAsyncServerCalls = util.getAllUnplayedUersForGame(pokerbot, 'JIRA-1234')
+    expect(spyAsyncServerCalls).to.contain('testuser5')
+  })
 })
