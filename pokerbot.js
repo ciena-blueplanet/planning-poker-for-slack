@@ -233,20 +233,18 @@ pokerbot.vote = function (req, res, next) {
     let votingMap = pokerbot.pokerDataModel[jiraId].voting
     let keys = Object.keys(votingMap)
     if (pokerbot.pokerDataModel[jiraId].channelId.members === keys.length) {
-      console.log('All member have voted so closing the game now.')
-      let responseText
-      responseText = util.getVotingResult(jiraId, pokerbot.pokerDataModel)
-      responseText = responseText + ' Thanks for voting.'
-      let unPlayedUsersName = util.getAllUnplayedUersForGame(pokerbot, jiraId)
-      if (unPlayedUsersName) {
-        responseText = responseText + unPlayedUsersName
-      }
-      responseEphemeral = {
-        response_type: IN_CHANNEL,
-        replace_original: false,
-        text: responseText
-      }
-      delete pokerbot.pokerDataModel[jiraId]
+     console.log('All member have voted so closing the game now.')
+     let responseText
+     responseText = util.getVotingResult(jiraId, pokerbot.pokerDataModel)
+     responseText = responseText + ' Thanks for voting.'
+     responseEphemeral = {
+       response_type: IN_CHANNEL,
+       //replace_original: false,
+       //text: responseText
+       text: ''
+     }
+     delete pokerbot.pokerDataModel[jiraId]
+     util.postMessageToChannel(token, pokerbot.pokerDataModel[jiraId].channelId.id, responseText)
     }
   } else {
     responseEphemeral = {
