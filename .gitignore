@@ -1,0 +1,7 @@
+/node_modules
+.git/
+/config/slack-app-key.json
+/config/channel-name.json
+npm-debug.log
+.*.swpa
+coverage/
