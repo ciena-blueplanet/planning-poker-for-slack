@@ -243,8 +243,9 @@ pokerbot.vote = function (req, res, next) {
        //text: responseText
        text: ''
      }
-     delete pokerbot.pokerDataModel[jiraId]
      util.postMessageToChannel(token, pokerbot.pokerDataModel[jiraId].channelId.id, responseText)
+     delete pokerbot.pokerDataModel[jiraId]
+     
     }
   } else {
     responseEphemeral = {
