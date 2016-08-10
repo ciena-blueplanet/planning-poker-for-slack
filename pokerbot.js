@@ -148,23 +148,17 @@ pokerbot.root = function (req, res, next) {
       pokerbot.pokerDataModel[jiraId].channelId['members'] = channel.members.length
       pokerbot.pokerDataModel[jiraId].channelId['membersList'] = []
       pokerbot.pokerDataModel[jiraId].channelId['membersList'] = channel.members
-      // let memberId
+      let memberId
       let missingMembers = []
-      for (let index = 0; index < channel.members.length; index++) {
-        console.log(' channel.members  xxxxxxxxxxxxx' + channel.members[index] + '\n')
-      }
-      missingMembers = _.filter(channel.members, (item) => {
+      /*missingMembers = _.filter(channel.members, (item) => {
         return pokerbot.allUsersInTeam.hasOwnProperty(item)
-      })
-      for (let index = 0; index < missingMembers.length; index++) {
-        console.log(' missingMembers   xxxxxxxxxxxxx' + missingMembers[index] + '\n')
-      }
-      /* for (let index = 0; index < channel.members.length; index++) {
+      })*/
+      for (let index = 0; index < channel.members.length; index++) {
         memberId = channel.members[index]
         if (!pokerbot.allUsersInTeam.hasOwnProperty(memberId)) {
           missingMembers.push(memberId)
         }
-      }*/
+      }
       if (missingMembers.length > 0) {
         console.log('Information for ' + missingMembers.length + ' members are not present.')
         console.log('Getting the info from slack server')
