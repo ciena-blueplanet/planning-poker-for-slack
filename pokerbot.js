@@ -35,6 +35,7 @@ pokerbot.root = function (req, res, next) {
 
   // Bad command syntax.
   const validCommand = _.includes(['start', 'stop', 'status'], option)
+  console.log("xxxxxxxxxxxxx " + validCommand);
   if (validCommand || jiraId === undefined) {
     console.log('Option wrong : begin')
     let responseForBadRequestFormat = {
