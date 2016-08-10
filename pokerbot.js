@@ -35,7 +35,6 @@ pokerbot.root = function (req, res, next) {
 
   // Bad command syntax.
   const validCommand = _.includes(['start', 'stop', 'status'], option)
-  console.log("xxxxxxxxxxxxx " + validCommand);
   if (!validCommand || jiraId === undefined) {
     console.log('Option wrong : begin')
     let responseForBadRequestFormat = {
@@ -150,13 +149,16 @@ pokerbot.root = function (req, res, next) {
       pokerbot.pokerDataModel[jiraId].channelId['membersList'] = []
       pokerbot.pokerDataModel[jiraId].channelId['membersList'] = channel.members
       let memberId
-      let missingMembers = []
-      for (let index = 0; index < channel.members.length; index++) {
+      //let missingMembers = []
+      let missingMembers = _.filter(channel.members, (item) => {
+        return pokerbot.allUsersInTeam.hasOwnProperty(item)
+      })
+      /*for (let index = 0; index < channel.members.length; index++) {
         memberId = channel.members[index]
         if (!pokerbot.allUsersInTeam.hasOwnProperty(memberId)) {
           missingMembers.push(memberId)
         }
-      }
+      }*/
       if (missingMembers.length > 0) {
         console.log('Information for ' + missingMembers.length + ' members are not present.')
         console.log('Getting the info from slack server')
