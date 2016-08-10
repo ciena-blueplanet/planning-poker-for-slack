@@ -1,7 +1,6 @@
 'use strict'
 
-//const _ = require('lodash')
-import _ from 'lodash'
+const _ = require('lodash')
 const UserRating = require('./model/user-rating')
 const IN_CHANNEL = 'in_channel'
 const EPHEMERAL = 'ephemeral'
@@ -34,7 +33,7 @@ pokerbot.root = function (req, res, next) {
   console.log('Channel Id  : ' + channelId)
   console.log('Token Id  : ' + token)
 
-  // Bad command syntex.
+  // Bad command syntax.
   const validCommand = _.includes(['start', 'stop', 'status'], option)
   if (validCommand || jiraId === undefined) {
     console.log('Option wrong : begin')
@@ -179,8 +178,6 @@ pokerbot.root = function (req, res, next) {
   }
 
   // Get the status of game
-  const validCommand = _.includes(['start', 'stop', 'status'], option)
-  if (validCommand || jiraId === undefined) {
   if (option === 'status' && (pokerbot.pokerDataModel.hasOwnProperty(jiraId))) {
     console.log('Option status : begin')
     console.log(pokerbot.pokerDataModel)
