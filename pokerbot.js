@@ -1,13 +1,21 @@
 'use strict'
 
+const _ = require('lodash')
 const UserRating = require('./model/user-rating')
 const IN_CHANNEL = 'in_channel'
 const EPHEMERAL = 'ephemeral'
 const token = require('./config/auth.json').access_token
 let util = require('./util')
+
+/**
+ * @typedef {Object} pokerbot
+ * @property {Object} pokerDataModel - Has a key as jira-id and value as object having poker details
+   e.g {"JIRA-1234":{"channelId":"server","craetedOn":"12121212",userId1:{UserRating1}}}
+ * @property {Object} allUsersInTeam - Has a key as user-id and value containing an object containg the info of user
+  */
 let pokerbot = {}
-pokerbot.pokerDataModel = {} //  It is an object with key as jira-id and value as object having poker details e.g {"JIRA-1234":{"channelId":"server","craetedOn":"12121212",userId1:{UserRating1}}}
-pokerbot.allUsersInTeam = {} //  It is an object with key as user-id and value containing an object containg the info of user
+pokerbot.pokerDataModel = {}
+pokerbot.allUsersInTeam = {}
 
 /**
  * We have received a request to start or stop the poker planning
@@ -26,7 +34,8 @@ pokerbot.root = function (req, res, next) {
   console.log('Token Id  : ' + token)
 
   // Bad command syntex.
-  if ((option !== 'start' && option !== 'stop' && option !== 'status') || jiraId === undefined) {
+  const validCommand = _.includes(['start', 'stop', 'status'], option)
+  if (validCommand || jiraId === undefined) {
     console.log('Option wrong : begin')
     let responseForBadRequestFormat = {
       response_type: EPHEMERAL,
@@ -62,9 +71,9 @@ pokerbot.root = function (req, res, next) {
       }
     } else {
       responseText = util.getVotingResult(jiraId, pokerbot.pokerDataModel)
-      let unPlayedUsersName = util.getAllUnplayedUersForGame(pokerbot, jiraId)
-      if (unPlayedUsersName) {
-        responseText = responseText + unPlayedUsersName
+      let unPlayedUserNames = util.getAllUnplayedUersForGame(pokerbot, jiraId)
+      if (unPlayedUserNames) {
+        responseText = responseText + unPlayedUserNames
       }
       responseText = responseText + '\nThanks for voting.'
       responseStopRequest = {
@@ -140,17 +149,17 @@ pokerbot.root = function (req, res, next) {
       pokerbot.pokerDataModel[jiraId].channelId['membersList'] = []
       pokerbot.pokerDataModel[jiraId].channelId['membersList'] = channel.members
       let memberId
-      let miisingMemberArray = []
+      let missingMembers = []
       for (let index = 0; index < channel.members.length; index++) {
         memberId = channel.members[index]
         if (!pokerbot.allUsersInTeam.hasOwnProperty(memberId)) {
-          miisingMemberArray.push(memberId)
+          missingMembers.push(memberId)
         }
       }
-      if (miisingMemberArray.length > 0) {
-        console.log('Information for ' + miisingMemberArray.length + ' members are not present.')
+      if (missingMembers.length > 0) {
+        console.log('Information for ' + missingMembers.length + ' members are not present.')
         console.log('Getting the info from slack server')
-        pokerbot.addNewUsersInTeam(miisingMemberArray, function () {
+        pokerbot.addNewUsersInTeam(missingMembers, function () {
           console.log('All users are added.')
         })
       }
@@ -257,7 +266,7 @@ pokerbot.vote = function (req, res, next) {
 }
 
 /**
- * We are asking the slack server to give us INformation of all users in channel
+ * We are asking the slack server to give us information of all users in channel
  */
 pokerbot.getAllUsersInTeam = function () {
   console.log('Inside getAllUsersInTeam : begin')
