@@ -1,6 +1,7 @@
 'use strict'
 
-const _ = require('lodash')
+//const _ = require('lodash')
+import _ from 'lodash'
 const UserRating = require('./model/user-rating')
 const IN_CHANNEL = 'in_channel'
 const EPHEMERAL = 'ephemeral'
