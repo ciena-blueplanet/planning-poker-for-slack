@@ -149,11 +149,17 @@ pokerbot.root = function (req, res, next) {
       pokerbot.pokerDataModel[jiraId].channelId['membersList'] = []
       pokerbot.pokerDataModel[jiraId].channelId['membersList'] = channel.members
       let memberId
-      //let missingMembers = []
-      let missingMembers = _.filter(channel.members, (item) => {
+      let missingMembers = []
+      for (let index = 0; index < channel.members.length; index++) {
+        console.log('xxxxxxxxxxxxx' + channel.members[index] + '\n');
+      }
+      missingMembers = _.filter(channel.members, (item) => {
         return pokerbot.allUsersInTeam.hasOwnProperty(item)
       })
-      /*for (let index = 0; index < channel.members.length; index++) {
+      for (let index = 0; index < cmissingMembers.length; index++) {
+        console.log('xxxxxxxxxxxxx' + missingMembers[index] + '\n');
+      }
+      /* for (let index = 0; index < channel.members.length; index++) {
         memberId = channel.members[index]
         if (!pokerbot.allUsersInTeam.hasOwnProperty(memberId)) {
           missingMembers.push(memberId)
