@@ -178,6 +178,8 @@ pokerbot.root = function (req, res, next) {
   }
 
   // Get the status of game
+  const validCommand = _.includes(['start', 'stop', 'status'], option)
+  if (validCommand || jiraId === undefined) {
   if (option === 'status' && (pokerbot.pokerDataModel.hasOwnProperty(jiraId))) {
     console.log('Option status : begin')
     console.log(pokerbot.pokerDataModel)
