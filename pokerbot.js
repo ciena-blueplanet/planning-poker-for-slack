@@ -287,21 +287,24 @@ pokerbot.getAllUsersInTeam = function () {
  */
 pokerbot.addNewUsersInTeam = function (userIdArray, callback) {
   console.log('Inside addNewUsersInTeam : begin')
+  let promises = []
+  let promise
   for (let index = 0; index < userIdArray.length; index++) {
-    let userId = userIdArray[index]
-    util.getUserInTeam(userId)
-    .then((user) => {
-      console.log('Got user in team from  slack.')
-      console.log(user)
-      pokerbot.allUsersInTeam[user.id] = user.name
-      if (callback !== undefined) {
-        callback()
-      }
-    })
-    .catch((err) => {
-      console.error(err)
-    })
+    promise = util.getUserInTeam(userIdArray[index])
+    promises.push(promise)
   }
+  console.log('Number of promises to be resolved : ' + promise.length)
+  Promise.all(promises).then(users => {
+    _(users).forEach(function (user) {
+      pokerbot.allUsersInTeam[user.id] = user.name
+    })
+    if (callback !== undefined) {
+      callback()
+    }
+  },
+  reason => {
+    console.log(reason)
+  })
   console.log('Inside addNewUsersInTeam : end')
 }
 
