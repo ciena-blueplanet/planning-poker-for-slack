@@ -148,17 +148,9 @@ pokerbot.root = function (req, res, next) {
       pokerbot.pokerDataModel[jiraId].channelId['members'] = channel.members.length
       pokerbot.pokerDataModel[jiraId].channelId['membersList'] = []
       pokerbot.pokerDataModel[jiraId].channelId['membersList'] = channel.members
-      let memberId
-      let missingMembers = []
-      /*missingMembers = _.filter(channel.members, (item) => {
+      let missingMembers = _.filter(channel.members, (item) => {
         return pokerbot.allUsersInTeam.hasOwnProperty(item)
-      })*/
-      for (let index = 0; index < channel.members.length; index++) {
-        memberId = channel.members[index]
-        if (!pokerbot.allUsersInTeam.hasOwnProperty(memberId)) {
-          missingMembers.push(memberId)
-        }
-      }
+      })
       if (missingMembers.length > 0) {
         console.log('Information for ' + missingMembers.length + ' members are not present.')
         console.log('Getting the info from slack server')
@@ -295,26 +287,20 @@ pokerbot.getAllUsersInTeam = function () {
  */
 pokerbot.addNewUsersInTeam = function (userIdArray, callback) {
   console.log('Inside addNewUsersInTeam : begin')
-  let functionArray = []
-  let newFunction
   for (let index = 0; index < userIdArray.length; index++) {
     let userId = userIdArray[index]
-    newFunction = function () {
-      console.log('Executing util.getUserInTeam with userId : ' + userId)
-      util.getUserInTeam(userId)
-      .then((user) => {
-        console.log('Got user in team from  slack.')
-        console.log(user)
-        pokerbot.allUsersInTeam[user.id] = user.name
-      })
-      .catch((err) => {
-        console.error(err)
-      })
-    }
-    functionArray.push(newFunction)
-  }
-  if (functionArray.length > 0) {
-    util.asyncServerCalls(functionArray, callback)
+    util.getUserInTeam(userId)
+    .then((user) => {
+      console.log('Got user in team from  slack.')
+      console.log(user)
+      pokerbot.allUsersInTeam[user.id] = user.name
+      if (callback !== undefined) {
+        callback()
+      }
+    })
+    .catch((err) => {
+      console.error(err)
+    })
   }
   console.log('Inside addNewUsersInTeam : end')
 }

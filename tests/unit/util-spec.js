@@ -32,9 +32,9 @@ describe('util', () => {
 
   it('Test util.asyncServerCalls is called ', () => {
     let userIdArray = ['ACVCV', 'ASDD', 'ASFHJK']
-    let spyAsyncServerCalls = sinon.spy(util, 'asyncServerCalls')
+    let spyGetUserInTeamCall = sinon.spy(util, 'getUserInTeam')
     pokerbot.addNewUsersInTeam(userIdArray, function () {})
-    sinon.assert.calledOnce(spyAsyncServerCalls)
+    sinon.assert.calledThrice(spyGetUserInTeamCall)
   })
 
   it('Test util.getAllUnplayedUersForGame is called ', () => {
