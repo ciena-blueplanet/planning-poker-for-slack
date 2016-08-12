@@ -149,7 +149,7 @@ pokerbot.root = function (req, res, next) {
       pokerbot.pokerDataModel[jiraId].channelId['membersList'] = []
       pokerbot.pokerDataModel[jiraId].channelId['membersList'] = channel.members
       let missingMembers = _.filter(channel.members, (item) => {
-        return pokerbot.allUsersInTeam.hasOwnProperty(item)
+        return (!pokerbot.allUsersInTeam.hasOwnProperty(item))
       })
       if (missingMembers.length > 0) {
         console.log('Information for ' + missingMembers.length + ' members are not present.')
@@ -301,9 +301,6 @@ pokerbot.addNewUsersInTeam = function (userIdArray, callback) {
     if (callback !== undefined) {
       callback()
     }
-  },
-  reason => {
-    console.log(reason)
   })
   console.log('Inside addNewUsersInTeam : end')
 }
