@@ -2,13 +2,13 @@
   "JIRA-1234": {
     "createdOn": 1469855608495,
     "channelId": {
-      "id": "C1ML2QAJV", "name": "planning-poker", "members": 4
+      "id": "C1ML2QAJV", "name": "planning-poker", "members": 5,"membersList":["U1MKN7AJA","U1MKN7AJB","U1MKN7AJC","U1MKN7AJD","U1MKN7AJE"]
     },
     "voting": {
-      "U1MKN7AJC": {"userId": "U1MKN7AJC" , "userName": "satpal" , "rating": 5},
-      "U1MKN7AJC": {"userId": "U1MKN7AJC" , "userName": "satpal" , "rating": 3},
-      "U1MKN7AJC": {"userId": "U1MKN7AJC" , "userName": "satpal" , "rating": 8},
-      "U1MKN7AJC": {"userId": "U1MKN7AJC" , "userName": "satpal" , "rating": 2}
+      "U1MKN7AJA": {"userId": "U1MKN7AJA" , "userName": "testuser1" , "rating": 5},
+      "U1MKN7AJB": {"userId": "U1MKN7AJB" , "userName": "testuser1" , "rating": 3},
+      "U1MKN7AJC": {"userId": "U1MKN7AJC" , "userName": "testuser1" , "rating": 8},
+      "U1MKN7AJD": {"userId": "U1MKN7AJD" , "userName": "testuser1" , "rating": 2}
     }
   }
 }

@@ -4,6 +4,7 @@ const https = require('https')
 const maxPlayTime = require('./config/schedule.json').maxPlayTime
 const gameInterval = require('./config/schedule.json').gameInterval
 const token = require('./config/auth.json').access_token
+const async = require('async')
 const __ = require('lodash')
 let util = {}
 util.fibonacci = [1, 2, 3, 5, 8, 13, 21, 34, '?']
@@ -23,15 +24,24 @@ util.getChannelInfo = function (token, channelId) {
   console.log(extServerOptions)
   return new Promise((resolve, reject) => {
     let req = https.request(extServerOptions, (res) => {
-      res.on('data', (d) => {
-        // process.stdout.write(d)
-        resolve(JSON.parse(d.toString()).channel)
+      let response = ''
+      res.on('data', (chunk) => {
+        if (chunk !== null && chunk !== '') {
+          response += chunk
+        }
+      })
+      res.on('end', function () {
+        try {
+          console.log(response.toString())
+          resolve(JSON.parse(response.toString()).channel)
+        } catch (err) {
+          resolve({})
+        }
       })
     })
     req.end()
     req.on('error', (error) => {
       console.error(error)
-      // return JSON.parse(error)
       reject(error)
     })
   })
@@ -89,7 +99,6 @@ util.sortArrayBasedOnObjectProperty = function (items, prop) {
 */
 util.getVotingResult = function (jiraId, pokerDataModel) {
   console.log('Util getVotingResult : begin')
-  // let pokerDataModel = require('./pokerbot').pokerDataModel
   let userRatingArray = []
   let userAbstainedArray = []
   if (pokerDataModel.hasOwnProperty(jiraId)) {
@@ -131,9 +140,9 @@ util.getVotingResult = function (jiraId, pokerDataModel) {
       avgRating = avgRating.toFixed(2)
     }
     console.log('Average rating : ' + avgRating)
+
     if (maxUserVotingIndex - leastUserVotingIndex > 1) {
       console.log('Util getVotingResult : end')
-      // responseResult =
       return 'Planning for ' + jiraId + ' is complete.' +
       'Minimum vote : ' + leastUserVotingModel.rating + ' by ' + leastUserVotingModel.userName +
       ', Maximum vote : ' + maxUserVotingModel.rating + ' by ' + maxUserVotingModel.userName +
@@ -141,7 +150,8 @@ util.getVotingResult = function (jiraId, pokerDataModel) {
     } else {
       console.log('All rating are in expected range')
       console.log('Util getVotingResult : end')
-      return 'Planning for ' + jiraId + ' is complete. Average vote : ' + avgRating + responseResult
+      return 'Planning for ' + jiraId + ' is complete. Average vote : ' +
+      avgRating + responseResult
     }
   } else {
     console.log('Util getVotingResult : end')
@@ -154,10 +164,9 @@ util.getVotingResult = function (jiraId, pokerDataModel) {
  * @param {Object} pokerDataModel - pokerDataModel having all in-progress jira
 */
 util.runSchedularForInProgressJira = function (pokerDataModel) {
-  console.log('Util runScheduler : begin')
+  console.log('Util runSchedularForInProgressJira : begin')
   let that = this
   setInterval(function () {
-    // let pokerDataModel = require('./pokerbot').pokerDataModel
     let currentEpocTime = (new Date()).getTime()
     console.log('Running schedular to see all live planning. Current time : ' + currentEpocTime)
     let startedTimeOfJira, differenceTravel, seconds, channelId, responseText
@@ -168,6 +177,11 @@ util.runSchedularForInProgressJira = function (pokerDataModel) {
       seconds = Math.floor((differenceTravel) / (1000))
       if (seconds > maxPlayTime) {
         responseText = util.getVotingResult(prop, pokerDataModel)
+        let pokerbot = require('./pokerbot')
+        let unPlayedUsersName = util.getAllUnplayedUersForGame(pokerbot, prop)
+        if (unPlayedUsersName) {
+          responseText = responseText + unPlayedUsersName
+        }
         responseText = responseText + ' Thanks for voting.'
         delete pokerDataModel[prop]
         that.postMessageToChannel(token, channelId, responseText)
@@ -178,7 +192,133 @@ util.runSchedularForInProgressJira = function (pokerDataModel) {
       }
     }
   }, gameInterval * 1000)
-  console.log('Util runScheduler : end')
+  console.log('Util runSchedularForInProgressJira : end')
+}
+
+/**
+ * We are asking the slack server to give us channel information
+ * @param {String} token - token id issued to us by slack-server
+ * @returns {Promise} promise - All users info issued to us by slack-server
+ */
+util.getAllUsersInTeam = function () {
+  let extServerOptions = {
+    hostname: 'slack.com',
+    path: '/api/users.list?token=' + token,
+    method: 'GET'
+  }
+  console.log(extServerOptions)
+  return new Promise((resolve, reject) => {
+    let req = https.request(extServerOptions, (res) => {
+      let response = ''
+      try {
+        res.on('data', (chunk) => {
+          if (chunk !== null && chunk !== '') {
+            response += chunk
+          }
+        })
+        res.on('end', function () {
+          try {
+            console.log(response.toString())
+            resolve(JSON.parse(response.toString()).members)
+          } catch (err) {
+            resolve([])
+          }
+        })
+      } catch (err) {
+        reject(err)
+      }
+    })
+    req.end()
+    req.on('error', (error) => {
+      console.error(error)
+      reject(error)
+    })
+  })
+}
+
+/**
+ * We are asking the slack server to give us channel information
+ * @param {String} userId - userId issued to us by slack-server
+ * @returns {Promise} promise - All users info issued to us by slack-server
+ */
+util.getUserInTeam = function (userId) {
+  let extServerOptions = {
+    hostname: 'slack.com',
+    path: '/api/users.info?token=' + token + '&user=' + userId,
+    method: 'GET'
+  }
+  console.log(extServerOptions)
+  return new Promise((resolve, reject) => {
+    let req = https.request(extServerOptions, (res) => {
+      let response = ''
+      try {
+        res.on('data', (chunk) => {
+          if (chunk !== null && chunk !== '') {
+            response += chunk
+          }
+        })
+        res.on('end', function () {
+          try {
+            console.log(response.toString())
+            resolve(JSON.parse(response.toString()).user)
+          } catch (err) {
+            resolve([])
+          }
+        })
+      } catch (err) {
+        reject(err)
+      }
+    })
+    req.end()
+    req.on('error', (error) => {
+      console.error(error)
+      reject(error)
+    })
+  })
+}
+
+/**
+ * We are asking the slack server to give us channel information
+ * @param {Array} functionArray - Array of all functions which needs to be executed in parallel.
+ * @param {Function} callback - callback needs to be executed
+ */
+util.asyncServerCalls = function (functionArray, callback) {
+  console.log('Inside asyncServerCalls : begin')
+  async.parallel(functionArray, callback)
+  console.log('Inside asyncServerCalls : end')
+}
+
+/**
+ * We are asking the slack server to give us channel information
+ * @param {Object} pokerbot - pokerbot object.
+ * @param {String} jiraId - jiraId for the game in progress.
+ *@returns {String} Name of all unvoted users.
+ */
+util.getAllUnplayedUersForGame = function (pokerbot, jiraId) {
+  console.log('Inside getAllUnplayedUersForGame : begin')
+  let pokerModel = pokerbot.pokerDataModel[jiraId]
+  let votingModel = pokerModel.voting
+  let keys = Object.keys(votingModel)
+  let unPlayedUserMap = {}
+  let unPlayedUsersNames = ''
+  if (pokerModel.channelId.membersList) {
+    for (let index = 0; index < pokerModel.channelId.membersList.length; index++) {
+      console.log(pokerModel.channelId.membersList[index])
+      if (keys.indexOf(pokerModel.channelId.membersList[index]) < 0) {
+        unPlayedUserMap[pokerModel.channelId.membersList[index]] =
+        pokerbot.allUsersInTeam[pokerModel.channelId.membersList[index]]
+      }
+    }
+    if (Object.keys(unPlayedUserMap).length > 0) {
+      unPlayedUsersNames = 'Following are the players who have not voted :'
+      for (let prop in unPlayedUserMap) {
+        unPlayedUsersNames += '\n' + unPlayedUserMap[prop]
+      }
+    }
+  }
+  console.log(unPlayedUsersNames)
+  console.log('Inside getAllUnplayedUersForGame : end')
+  return unPlayedUsersNames
 }
 
 module.exports = util

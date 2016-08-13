@@ -1,12 +1,21 @@
 'use strict'
 
+const _ = require('lodash')
 const UserRating = require('./model/user-rating')
 const IN_CHANNEL = 'in_channel'
 const EPHEMERAL = 'ephemeral'
 const token = require('./config/auth.json').access_token
 let util = require('./util')
+
+/**
+ * @typedef {Object} pokerbot
+ * @property {Object} pokerDataModel - Has a key as jira-id and value as object having poker details
+   e.g {"JIRA-1234":{"channelId":"server","craetedOn":"12121212",userId1:{UserRating1}}}
+ * @property {Object} allUsersInTeam - Has a key as user-id and value containing an object containg the info of user
+  */
 let pokerbot = {}
-pokerbot.pokerDataModel = {} //  It is an object with key as jira-id and value as object having poker details e.g {"JIRA-1234":{"channelId":"server","craetedOn":"12121212",userId1:{UserRating1}}}
+pokerbot.pokerDataModel = {}
+pokerbot.allUsersInTeam = {}
 
 /**
  * We have received a request to start or stop the poker planning
@@ -23,19 +32,21 @@ pokerbot.root = function (req, res, next) {
   const channelId = req.body.channel_id
   console.log('Channel Id  : ' + channelId)
   console.log('Token Id  : ' + token)
-  // Bad command syntex.
-  if ((option !== 'start' && option !== 'stop') || jiraId === undefined) {
+
+  // Bad command syntax.
+  const validCommand = _.includes(['start', 'stop', 'status'], option)
+  if (!validCommand || jiraId === undefined) {
     console.log('Option wrong : begin')
     let responseForBadRequestFormat = {
       response_type: EPHEMERAL,
-      text: 'Please enter the command in correct format e.g. /planning-poker start or stop JIRA-1001'
+      text: 'Please enter the command in correct format e.g. /planning-poker start or stop or status JIRA-1001'
     }
     console.log('Option wrong : end')
     return res.status(200).json(responseForBadRequestFormat)
   }
 
  // Closing the unstarted Jira Planning.
-  if (option === 'stop' && (!pokerbot.pokerDataModel.hasOwnProperty(jiraId))) {
+  if ((option === 'stop' || option === 'status') && (!pokerbot.pokerDataModel.hasOwnProperty(jiraId))) {
     console.log('Option stop : begin')
     let responseForUnstartedJira = {
       response_type: EPHEMERAL,
@@ -60,7 +71,11 @@ pokerbot.root = function (req, res, next) {
       }
     } else {
       responseText = util.getVotingResult(jiraId, pokerbot.pokerDataModel)
-      responseText = responseText + ' Thanks for voting.'
+      let unPlayedUserNames = util.getAllUnplayedUersForGame(pokerbot, jiraId)
+      if (unPlayedUserNames) {
+        responseText = responseText + unPlayedUserNames
+      }
+      responseText = responseText + '\nThanks for voting.'
       responseStopRequest = {
         response_type: IN_CHANNEL,
         text: responseText
@@ -131,6 +146,18 @@ pokerbot.root = function (req, res, next) {
       pokerbot.pokerDataModel[jiraId].channelId['id'] = channel.id
       pokerbot.pokerDataModel[jiraId].channelId['name'] = channel.name
       pokerbot.pokerDataModel[jiraId].channelId['members'] = channel.members.length
+      pokerbot.pokerDataModel[jiraId].channelId['membersList'] = []
+      pokerbot.pokerDataModel[jiraId].channelId['membersList'] = channel.members
+      let missingMembers = _.filter(channel.members, (item) => {
+        return (!pokerbot.allUsersInTeam.hasOwnProperty(item))
+      })
+      if (missingMembers.length > 0) {
+        console.log('Information for ' + missingMembers.length + ' members are not present.')
+        console.log('Getting the info from slack server')
+        pokerbot.addNewUsersInTeam(missingMembers, function () {
+          console.log('All users are added.')
+        })
+      }
       console.log(pokerbot.pokerDataModel)
     })
     .catch((err) => {
@@ -143,6 +170,30 @@ pokerbot.root = function (req, res, next) {
     }
     console.log('Option start : end')
     return res.status(200).json(response)
+  }
+
+  // Get the status of game
+  if (option === 'status' && (pokerbot.pokerDataModel.hasOwnProperty(jiraId))) {
+    console.log('Option status : begin')
+    console.log(pokerbot.pokerDataModel)
+    let pokerModel = pokerbot.pokerDataModel[jiraId]
+    let responseText, responseStopRequest
+    if (pokerModel.channelId.id !== channelId) {
+      responseText = 'This game was not started in this channel.' +
+      'Please go to channel ' + pokerModel.channelId.name + ' to stop or get status of the game.'
+      responseStopRequest = {
+        response_type: EPHEMERAL,
+        text: responseText
+      }
+    } else {
+      responseText = util.getAllUnplayedUersForGame(pokerbot, jiraId)
+      responseStopRequest = {
+        response_type: IN_CHANNEL,
+        text: responseText
+      }
+    }
+    console.log('Option status : end')
+    return res.status(200).json(responseStopRequest)
   }
 }
 
@@ -164,7 +215,6 @@ pokerbot.vote = function (req, res, next) {
   }
   const userRating = new UserRating(userId, userName, vote)
   const jiraId = requestBody.original_message.text.match(/\w+-\d+$/)
-  // const jiraId = 'JIRA-' + requestBody.original_message.text.split('JIRA-')[1]
   console.log(userName + ' has voted ' + vote + ' for ' + jiraId)
   let responseEphemeral
   if (pokerbot.pokerDataModel[jiraId]) {
@@ -193,8 +243,10 @@ pokerbot.vote = function (req, res, next) {
       responseText = responseText + ' Thanks for voting.'
       responseEphemeral = {
         response_type: IN_CHANNEL,
-        text: responseText
+        replace_original: true,
+        text: 'Planning for ' + jiraId + ' is complete.'
       }
+      util.postMessageToChannel(token, pokerbot.pokerDataModel[jiraId].channelId.id, responseText)
       delete pokerbot.pokerDataModel[jiraId]
     }
   } else {
@@ -206,6 +258,51 @@ pokerbot.vote = function (req, res, next) {
   }
   console.log('Option vote : end')
   return res.status(200).json(responseEphemeral)
+}
+
+/**
+ * We are asking the slack server to give us information of all users in channel
+ */
+pokerbot.getAllUsersInTeam = function () {
+  console.log('Inside getAllUsersInTeam : begin')
+  util.getAllUsersInTeam()
+  .then((users) => {
+    for (let index = 0; index < users.length; index++) {
+      pokerbot.allUsersInTeam[users[index].id] = users[index].name
+    }
+    console.log('Got all users in team from  slack.')
+    console.log(pokerbot.allUsersInTeam)
+    console.log('Inside getAllUsersInTeam : end')
+  })
+  .catch((err) => {
+    console.error(err)
+    console.log('Inside getAllUsersInTeam : end')
+  })
+}
+
+/**
+ * We are asking the slack server to give us channel information
+ * @param {Array} userIdArray - Array of all new users.
+ * @param {Function} callback - callback to be executed..
+ */
+pokerbot.addNewUsersInTeam = function (userIdArray, callback) {
+  console.log('Inside addNewUsersInTeam : begin')
+  let promises = []
+  let promise
+  for (let index = 0; index < userIdArray.length; index++) {
+    promise = util.getUserInTeam(userIdArray[index])
+    promises.push(promise)
+  }
+  console.log('Number of promises to be resolved : ' + promise.length)
+  Promise.all(promises).then(users => {
+    _(users).forEach(function (user) {
+      pokerbot.allUsersInTeam[user.id] = user.name
+    })
+    if (callback !== undefined) {
+      callback()
+    }
+  })
+  console.log('Inside addNewUsersInTeam : end')
 }
 
 module.exports = pokerbot

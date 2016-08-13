@@ -1,4 +1,5 @@
 {
   "gameInterval" : 90,
-  "maxPlayTime" :  300
+  "maxPlayTime" :  300,
+  "usersUpdateFreequency" :  200
 }
